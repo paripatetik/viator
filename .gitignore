@@ -1,0 +1,25 @@
+# dependencies
+node_modules
+
+# next
+.next
+out
+
+# env
+.env
+.env.* 
+!.env.example
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# local tooling
+.vercel
+.netlify
