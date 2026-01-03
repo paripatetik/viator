@@ -48,7 +48,7 @@ const {
     <section className="pb-6">
       <div className="container mx-auto px-4">
         <h2 className={`${playfair.className} text-3xl md:text-4xl font-extrabold text-center uppercase tracking-wider text-[#416472] mb-6 mt-6 md:mt-12`}> 
-          Дописи за темою
+          Наші Розвідки
         </h2>
         {/* chips */}
         <CategoryPicker categories={cats} selected={selected} onToggle={toggle} />

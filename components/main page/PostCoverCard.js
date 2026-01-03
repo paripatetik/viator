@@ -96,7 +96,7 @@ export default function PostCoverCard({ post, isActive = false, className = "" }
           >
             {/* Title */}
             <h3
-              className="text-2xl md:text-3xl font-semibold leading-tight uppercase tracking-wide"
+              className="text-2xl md:text-xl font-semibold leading-tight uppercase tracking-wide"
               dangerouslySetInnerHTML={{ __html: post.title.rendered }}
             />
 
@@ -132,9 +132,9 @@ export default function PostCoverCard({ post, isActive = false, className = "" }
                         key={c.id}
                         className={clsx(
                           // Peach pill like the screenshot
-                          "px-4 py-1.5 rounded-full bg-[#e9a97f]/90 text-black",
+                          "px-3 py-1 rounded-full bg-[#f7e7d7] text-black",
                           "font-serif uppercase tracking-wide",
-                          "text-xs md:text-sm",
+                          "text-sm",
                           // Subtle depth
                           "shadow-[inset_0_-1px_0_rgba(0,0,0,0.06)] border border-black/10",
                           "whitespace-nowrap"
@@ -149,12 +149,12 @@ export default function PostCoverCard({ post, isActive = false, className = "" }
               </div>
 
               {/* Date & Author */}
-              <p className="order-2 lg:order-1 text-sm md:text-base opacity-90">
+              <p className="order-2 lg:order-1 text-sm md:text-base text-nowrap opacity-90">
                 {date}
                 {author && (
                   <>
                     {" "}|{" "}
-                    <span className="uppercase">{author}</span>
+                    <span className=" ">{author}</span>
                   </>
                 )}
               </p>

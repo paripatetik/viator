@@ -14,10 +14,10 @@ export default function CategoryChip({ id, name, active, onToggle }) {
     <button
       onClick={() => onToggle(id)}
        className={`${inter.className}
-              px-5 py-2 rounded-full tracking-wide text-xl whitespace-nowrap
-              transition-all duration-300 ease-in-out 
-              ${active ? "border-4 border-[#94B4C1]" : "border border-transparent text-black"}
-              bg-[#DEAA79] text-slate-900`}
+              px-4 py-2 rounded-full tracking-wide text-base whitespace-nowrap
+              transition-all duration-300 ease-in-out uppercase border-2 
+              ${active ? " border-black/80" : "border-white text-black"}
+              bg-[#94B4C1]/70 text-slate-900`}
 >
       {name}
     </button>

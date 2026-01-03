@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { BookOpen } from "lucide-react";
+
 import MobileCategorySheet from "./MobileCategorySheet";
-import CategoryChip from "./CategotyChip";     // ← import the new chip
+import CategoryChip from "./CategotyChip"; // як у тебе (якщо це опечатка — виправ на "./CategoryChip")
 
 /**
  * Presentational picker for category chips.
@@ -13,9 +15,14 @@ import CategoryChip from "./CategotyChip";     // ← import the new chip
 export default function CategoryPicker({ categories = [], selected, onToggle }) {
   const [sheetOpen, setSheetOpen] = useState(false);
 
-  // helper to decide if a chip is active
   const isActive = (id) =>
     id === "all" ? selected.size === 0 : selected.has(id);
+
+  // список вибраних категорій для мобайла
+  const selectedCats = useMemo(() => {
+    if (!selected || selected.size === 0) return [];
+    return categories.filter((c) => selected.has(c.id));
+  }, [categories, selected]);
 
   // ----- desktop & mobile chip list ----------------------------
   const chipList = (
@@ -45,15 +52,45 @@ export default function CategoryPicker({ categories = [], selected, onToggle }) 
         {chipList}
       </div>
 
-      {/* mobile trigger */}
-      <div className="sm:hidden pb-6 flex justify-end">
+      {/* mobile trigger + selected under it */}
+      <div className="sm:hidden pb-6 flex flex-col items-end gap-3">
         <button
+          type="button"
           onClick={() => setSheetOpen(true)}
-          className="flex items-center gap-2 px-4 py-2 text-white text-xl tracking-wider uppercase"
-          style={{ backgroundColor: "#DEAA79" }}
+          className="flex items-center gap-1 px-3 py-2 rounded bg-[#94B4C1]/75 text-base uppercase"
+          
+          aria-label="Відкрити список тем"
         >
-          Обрати тему <span>▼</span>
+          
+          <span>Теми</span>
+          <BookOpen size={19} strokeWidth={2} />
         </button>
+
+        {/* selected pills */}
+        <div className="flex flex-wrap gap-2 justify-start w-[100%]">
+          {selected.size === 0 ? (
+            <button
+              type="button"
+              onClick={() => onToggle("all")}
+              className=" px-3 py-1 rounded-full bg-[#f7e7d7] text-black uppercase"
+              title="Зараз: усі теми"
+            >
+              Усі
+            </button>
+          ) : (
+            selectedCats.map((c) => (
+              <button
+                key={c.id}
+                type="button"
+                onClick={() => onToggle(c.id)} // тап = зняти цю категорію
+                className="px-3 py-1 rounded-full bg-[#f7e7d7] text-black uppercase text-sm"
+                title="Торкнись, щоб прибрати"
+              >
+                {c.name}
+              </button>
+            ))
+          )}
+        </div>
       </div>
 
       {/* bottom-sheet with the same chips */}

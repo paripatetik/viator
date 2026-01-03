@@ -150,13 +150,13 @@ export default function PostPage({ post }) {
 
       {/* rest of the page inside normal container */}
       <main className="container mx-auto px-6 lg:px-10 pb-10 pt-7
-                     flex flex-col min-[900px]:flex-row gap-10 justify-center">
+                     flex flex-col min-[900px]:flex-row min-[900px]:gap-11 justify-center">
         <TocCard toc={toc} onSelect={scrollToHeading} />
         <article
           ref={articleRef}
           className={`${garamond.className} flex-1 prose max-w-5xl text-[19px] lg:text-[23px] text-black
                      prose-img:max-w-full prose-img:h-auto prose-pre:overflow-x-auto
-                     prose-code:break-words break-words leading-8 text-justify prose-p:mt-2 prose-p:mb-3`} 
+                     prose-code:break-words break-words leading-8 text-pretty prose-p:mt-2 prose-p:mb-3 mt-[22px] min-[900px]:mt-[39px]`} 
           dangerouslySetInnerHTML={{ __html: html }}
         />
       </main>

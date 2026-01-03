@@ -54,7 +54,7 @@ export default function MobileCategorySheet({
               <button
                 onClick={onClose}
                 aria-label="Close"
-                className="text-6xl leading-none p-3 -m-3 text-red-900 weight-bold"
+                className="text-6xl leading-none p-3 -m-3 text-black weight-bold"
               >
                 &times;
               </button>

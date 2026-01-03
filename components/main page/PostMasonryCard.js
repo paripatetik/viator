@@ -46,24 +46,24 @@ export default function PostMasonryCard({ post }) {
       </Link>
 
       {/* ── text block ─ */}
-      <div className="bg-white p-5 space-y-3">
+      <div className=" p-5 space-y-3 ">
         <Link href={`/posts/${post.slug}`}>
           <h3
-            className="text-xl font-semibold leading-snug uppercase p-2 bg-[#FFF2DB] text-black text-center mb-2"
+            className="text-xl font-semibold leading-snug uppercase p-2 bg-[#f7e7d7]/70 text-black text-center mb-2"
             dangerouslySetInnerHTML={{ __html: post.title.rendered }}
           />
         </Link>
 
         {excerpt && (
           <p
-            className="text-slate-700 leading-snug text-justify"
+            className="text-slate-700 leading-snug text-pretty"
             dangerouslySetInnerHTML={{ __html: excerpt }}
           />
         )}
 
         {/* meta column */}
         <div className="flex flex-col gap-1 pt-3 border-t border-slate-200">
-          <Meta icon={<Clock size={16} />} label={`${minutes} хв читання`} />
+          <Meta icon={<Clock size={16} />} label={`${minutes} хв`} />
           <Meta icon={<Tag size={16} />} label={categoryLabel} />
           {author && <Meta icon={<User size={16} />} label={author} />}
         </div>
