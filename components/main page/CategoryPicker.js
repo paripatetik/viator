@@ -2,37 +2,22 @@ import { useMemo, useState } from "react";
 import { BookOpen } from "lucide-react";
 
 import MobileCategorySheet from "./MobileCategorySheet";
-import CategoryChip from "./CategotyChip"; // як у тебе (якщо це опечатка — виправ на "./CategoryChip")
+import CategoryChip from "./CategotyChip";
 
-/**
- * Presentational picker for category chips.
- *
- * props:
- *  - categories : [{ id, name }]
- *  - selected   : Set    (empty = “all”)
- *  - onToggle   : fn(id | "all")
- */
 export default function CategoryPicker({ categories = [], selected, onToggle }) {
   const [sheetOpen, setSheetOpen] = useState(false);
 
   const isActive = (id) =>
     id === "all" ? selected.size === 0 : selected.has(id);
 
-  // список вибраних категорій для мобайла
   const selectedCats = useMemo(() => {
     if (!selected || selected.size === 0) return [];
     return categories.filter((c) => selected.has(c.id));
   }, [categories, selected]);
 
-  // ----- desktop & mobile chip list ----------------------------
   const chipList = (
     <>
-      <CategoryChip
-        id="all"
-        name="Усі"
-        active={isActive("all")}
-        onToggle={onToggle}
-      />
+      <CategoryChip id="all" name="Усі" active={isActive("all")} onToggle={onToggle} />
       {categories.map((c) => (
         <CategoryChip
           key={c.id}
@@ -47,32 +32,41 @@ export default function CategoryPicker({ categories = [], selected, onToggle }) 
 
   return (
     <>
-      {/* desktop chips */}
-      <div className="hidden sm:flex gap-3 overflow-x-auto pb-6 mb-4 flex-wrap">
+      {/* DESKTOP — варіант A: WRAP без скролу (не ріже translate/shadow) */}
+      <div className="hidden sm:flex flex-wrap gap-3 mb-4 pb-6 pt-2 -mt-2 overflow-visible">
         {chipList}
       </div>
 
-      {/* mobile trigger + selected under it */}
+      {/*
+      // DESKTOP — варіант B: СКРОЛ без wrap (якщо реально треба overflow-x-auto)
+      <div className="hidden sm:block mb-4 overflow-visible">
+        <div className="overflow-x-auto py-3 -my-3">
+          <div className="flex gap-3 w-max">
+            {chipList}
+          </div>
+        </div>
+        <div className="pb-6" />
+      </div>
+      */}
+
+      {/* MOBILE trigger + selected under it */}
       <div className="sm:hidden pb-6 flex flex-col items-end gap-3">
         <button
           type="button"
           onClick={() => setSheetOpen(true)}
           className="flex items-center gap-1 px-3 py-2 rounded bg-[#94B4C1]/75 text-base uppercase"
-          
           aria-label="Відкрити список тем"
         >
-          
           <span>Теми</span>
           <BookOpen size={19} strokeWidth={2} />
         </button>
 
-        {/* selected pills */}
-        <div className="flex flex-wrap gap-2 justify-start w-[100%]">
+        <div className="flex flex-wrap gap-2 justify-start w-full">
           {selected.size === 0 ? (
             <button
               type="button"
               onClick={() => onToggle("all")}
-              className=" px-3 py-1 rounded-full bg-[#f7e7d7] text-black uppercase"
+              className="px-3 py-1 rounded-full bg-[#f7e7d7] text-black uppercase"
               title="Зараз: усі теми"
             >
               Усі
@@ -82,7 +76,7 @@ export default function CategoryPicker({ categories = [], selected, onToggle }) 
               <button
                 key={c.id}
                 type="button"
-                onClick={() => onToggle(c.id)} // тап = зняти цю категорію
+                onClick={() => onToggle(c.id)}
                 className="px-3 py-1 rounded-full bg-[#f7e7d7] text-black uppercase text-sm"
                 title="Торкнись, щоб прибрати"
               >
@@ -93,7 +87,6 @@ export default function CategoryPicker({ categories = [], selected, onToggle }) 
         </div>
       </div>
 
-      {/* bottom-sheet with the same chips */}
       <MobileCategorySheet open={sheetOpen} onClose={() => setSheetOpen(false)}>
         <div className="flex flex-wrap gap-2">{chipList}</div>
       </MobileCategorySheet>

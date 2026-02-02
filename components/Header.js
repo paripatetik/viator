@@ -36,13 +36,17 @@ export default function Header() {
 
   return (
     <>
-      {/* ────── HEADER (always visible) ────── */}
+      {/* ────── HEADER  ────── */}
    
 <header
   id="site-header"
-  className="fixed inset-x-0 top-0 z-40 h-16 md:h-20
-             bg-[#94B4C1]/90 backdrop-blur-md border-b border-black/10 shadow-sm
-             transition-all duration-300">
+  className={`fixed inset-x-0 top-0 z-40 h-16 md:h-20
+    transition-[background-color,box-shadow,backdrop-filter,transform] duration-300
+    ${isSticky
+      ? "bg-[#94B4C1]/95 backdrop-blur-md shadow-lg border-b border-black/10"
+      : "bg-transparent backdrop-blur-0 shadow-none border-b border-transparent"
+    }
+  `}>
   <div className="container mx-auto h-full flex items-center px-4 sm:px-6 lg:px-8 gap-7 md:gap-10">
     <Link href="/" className="flex items-center gap-2 lg:gap-3"> 
       <div className="w-14 md:w-16 h-full flex items-center justify-center"> 
@@ -74,10 +78,8 @@ export default function Header() {
   </div>
 </button>
 
-{/* BACKDROP / DRAWER (z below burger) */}
-{open && (
-  <div className="fixed inset-0 bg-black/40 z-40 md:hidden" onClick={toggle} />
-)}
+{/* DRAWER */}
+
 <aside className={`fixed inset-0 w-full h-full md:hidden z-50
                    bg-gradient-to-r from-slate-100 via-white to-slate-200
                    bg-opacity-95 backdrop-blur-md shadow-xl

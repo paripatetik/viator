@@ -13,7 +13,7 @@ import { ProgressCircle }  from '@/components/post page/ProgressCircle';
 import SameAuthorSection   from '@/components/post page/SameAuthorSection';
 import SameCategorySection from '@/components/post page/SameCategorySection';
 
-import useCitations from '@/lib/hooks/UseCitations';
+
 
 import {inter, playfair, garamond} from '@/lib/fonts';
 
@@ -38,6 +38,7 @@ export default function PostPage({ post }) {
   const headerH     = useHeaderHeight();
   const articleRef  = useRef(null);
   const { html, toc, readingTime } = usePostContent(post.content.rendered);
+
   const progress    = useScrollProgress(articleRef);
   
   // Track the scroll listener reference

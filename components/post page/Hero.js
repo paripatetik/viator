@@ -33,8 +33,8 @@ export function Hero({
         {/* make this container “relative” so we can absolutely-position the meta row on xs */}
         <div className="container relative mx-auto px-6 pb-14 text-white">
           <h1
-            className="max-w-3xl font-extrabold leading-tight
-                       text-4xl sm:text-5xl md:text-6xl"
+            className="font-extrabold leading-tight
+                       text-3xl sm:text-5xl md:text-6xl"
             dangerouslySetInnerHTML={{ __html: title }}
           />
           <div className="h-1 w-20 bg-[#94B4C1] mt-4" />

@@ -10,29 +10,47 @@ export default function NewsletterForm({ className = "" }) {
   const onChange = (e) =>
     setValues((v) => ({ ...v, [e.target.name]: e.target.value }));
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    setStatus("loading");
-    setMessage("");
+const onSubmit = async (e) => {
 
-    const { error } = await supabase
-      .from("subscribers")
-      .insert([{ name: values.name.trim(), email: values.email.trim() }]);
+  console.log("SUPABASE_URL", process.env.NEXT_PUBLIC_SUPABASE_URL);
+console.log("ANON", process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.slice(0, 12));
+  e.preventDefault();
+  setStatus("loading");
+  setMessage("");
 
-    if (error) {
-      // duplicate e-mail throws code 23505 (unique violation)
-      setMessage(
-        error.code === "23505"
-          ? "Ви вже підписані на розсилку 🙂"
-          : "Сталася помилка, спробуйте пізніше."
-      );
-      setStatus("error");
-    } else {
-      setStatus("success");
-      setMessage("Дякуємо! Перевірте пошту для підтвердження ✉️");
-      setValues({ name: "", email: "" });
-    }
-  };
+  const email = values.email.trim();
+  const name = values.name.trim();
+
+  const fnUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/super-processor`;
+
+  const resp = await fetch(fnUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, // сюди sb_publishable_...
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+    },
+    body: JSON.stringify({ email, name, source: "viator" }),
+  });
+
+  const data = await resp.json().catch(() => ({}));
+
+  if (!resp.ok) {
+    setMessage("Сталася помилка, спробуйте пізніше.");
+    setStatus("error");
+    return;
+  }
+
+  if (data?.already) {
+    setMessage("Ви вже підписані на розсилку 🙂");
+    setStatus("error");
+    return;
+  }
+
+  setStatus("success");
+  setMessage("Дякуємо! Тепер ви у нашій розсилці ✉️");
+  setValues({ name: "", email: "" });
+};
 
   return (
     <form

@@ -72,7 +72,7 @@ export default function MissionPage() {
 
         {/* HERO */}
         <section id="mission-hero" className="relative">
-          <MissionHero headerHeight={headerH} />
+          <MissionHero headerHeight={headerH}  />
         </section>
 
         {/* ПЕРШІ СЕКЦІЇ (звичайний лейаут) */}
@@ -93,9 +93,9 @@ export default function MissionPage() {
         {lastSection && (
           <section
             id={lastSection.id}
-            className="py-10 md:py-16 bg-[#F7F3EC]"
+            className="py-10 md:py-16 bg-[#F7F3EC] text-justify"
           >
-            <div className="container max-w-4xl mx-auto px-6 text-center"> 
+            <div className="container max-w-4xl mx-auto px-6 text-justify"> 
               {/* Заголовок */}
               <h2
                 className={`${garamond.className} text-3xl md:text-4xl font-extrabold text-center uppercase tracking-wider text-[#416472] mb-6`}
@@ -105,7 +105,7 @@ export default function MissionPage() {
 
               {/* Текст */} 
               <div
-                className={`${playfair.className} space-y-4 md:space-y-5 text-lg md:text-xl leading-relaxed text-justify md:text-center`}
+                className={`${playfair.className} space-y-4 md:space-y-5 text-lg md:text-xl leading-relaxed text-justify`}
               >
                 {lastSection.paras.map((p, i) => (
                   <p key={i}>{p}</p>

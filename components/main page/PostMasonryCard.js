@@ -1,7 +1,10 @@
 // components/PostMasonryCard.js
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { Clock, Tag, User } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
 
 // Word-count fallback (200 wpm), used only if reading_time is missing
 function readTime(html = "") {
@@ -9,16 +12,15 @@ function readTime(html = "") {
   return Math.max(1, Math.ceil(text.split(" ").length / 200));
 }
 
-export default function PostMasonryCard({ post }) {
+export default function PostMasonryCard({ post, index = 0 }) {
   const img =
     post._embedded?.["wp:featuredmedia"]?.[0]?.source_url || "/fallback.jpg";
 
-  // ← multiple categories, joined with commas
+  // multiple categories, joined with commas
   const categoryLabel = (() => {
-    const names =
-      (post._embedded?.["wp:term"]?.[0] || [])
-        .map((t) => t?.name)
-        .filter(Boolean);
+    const names = (post._embedded?.["wp:term"]?.[0] || [])
+      .map((t) => t?.name)
+      .filter(Boolean);
     return names.length ? names.join(", ") : "Без категорії";
   })();
 
@@ -29,46 +31,75 @@ export default function PostMasonryCard({ post }) {
     .replace(/\s+/g, " ")
     .trim();
 
-  const minutes =
-    Number(post.reading_time) || readTime(post.content?.rendered);
+  const minutes = Number(post.reading_time) || readTime(post.content?.rendered);
+
+  const prefersReducedMotion = useReducedMotion();
+  const dir = index % 2 === 0 ? -1 : 1;
+
+  // subtle: small x offset + tiny y + slight scale + soft blur
+  const card = {
+    hidden: {
+      opacity: 0,
+      x: prefersReducedMotion ? 0 : dir * 12,
+      y: prefersReducedMotion ? 0 : 6,
+      scale: prefersReducedMotion ? 1 : 0.995,
+      filter: prefersReducedMotion ? "none" : "blur(1px)",
+    },
+    show: {
+      opacity: 1,
+      x: 0,
+      y: 0,
+      scale: 1,
+      filter: "blur(0px)",
+      transition: { duration: 0.85, ease: [0.22, 0.61, 0.36, 1] },
+    },
+  };
 
   return (
-    <article className="break-inside-avoid mb-6 shadow-lg rounded-lg overflow-hidden ring-1 ring-slate-200 hover:scale-[1.015] transition-transform">
-      {/* ── image ─ */}
-      <Link href={`/posts/${post.slug}`}>
-        <Image
-          src={img}
-          alt={post.title.rendered}
-          width={600}
-          height={400}
-          className="w-full h-auto object-cover"
-        />
-      </Link>
-
-      {/* ── text block ─ */}
-      <div className=" p-5 space-y-3 ">
+    // wrapper animates; article keeps hover:scale working (no transform conflict)
+    <motion.div
+      variants={card}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.18, margin: "0px 0px -10% 0px" }}
+      className="break-inside-avoid mb-6"
+    >
+      <article className="shadow-lg rounded-lg overflow-hidden ring-1 ring-slate-200 hover:scale-[1.015] transition-transform will-change-transform">
+        {/* image */}
         <Link href={`/posts/${post.slug}`}>
-          <h3
-            className="text-xl font-semibold leading-snug uppercase p-2 bg-[#f7e7d7]/70 text-black text-center mb-2"
-            dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+          <Image
+            src={img}
+            alt={post.title.rendered}
+            width={600}
+            height={400}
+            className="w-full h-auto object-cover"
           />
         </Link>
 
-        {excerpt && (
-          <p
-            className="text-slate-700 leading-snug text-pretty"
-            dangerouslySetInnerHTML={{ __html: excerpt }}
-          />
-        )}
+        {/* text block */}
+        <div className="p-5 space-y-3">
+          <Link href={`/posts/${post.slug}`}>
+            <h3
+              className="text-xl font-semibold leading-snug uppercase p-2 bg-[#f7e7d7]/70 text-black text-center mb-2"
+              dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+            />
+          </Link>
 
-        {/* meta column */}
-        <div className="flex flex-col gap-1 pt-3 border-t border-slate-200">
-          <Meta icon={<Clock size={16} />} label={`${minutes} хв`} />
-          <Meta icon={<Tag size={16} />} label={categoryLabel} />
-          {author && <Meta icon={<User size={16} />} label={author} />}
+          {excerpt && (
+            <p
+              className="text-slate-700 leading-snug text-pretty"
+              dangerouslySetInnerHTML={{ __html: excerpt }}
+            />
+          )}
+
+          <div className="flex flex-col gap-1 pt-3 border-t border-slate-200">
+            <Meta icon={<Clock size={16} />} label={`${minutes} хв`} />
+            <Meta icon={<Tag size={16} />} label={categoryLabel} />
+            {author && <Meta icon={<User size={16} />} label={author} />}
+          </div>
         </div>
-      </div>
-    </article>
+      </article>
+    </motion.div>
   );
 }
 

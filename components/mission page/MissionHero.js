@@ -3,19 +3,41 @@
 
 import Image from "next/image";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import { inter, playfair, garamond } from "@/lib/fonts";
 
 export default function MissionHero({
   headerHeight = 0,
   title = "Майстерня мислення Viator",
   subtitle = "Вічне повернення до філософії",
-  icons = ["/imgs/icons/V.png","/imgs/icons/I.png","/imgs/icons/A.png","/imgs/icons/T.png","/imgs/icons/O.png","/imgs/icons/R.png"],
+  icons = [
+    "/imgs/icons/V.png",
+    "/imgs/icons/I.png",
+    "/imgs/icons/A.png",
+    "/imgs/icons/T.png",
+    "/imgs/icons/O.png",
+    "/imgs/icons/R.png",
+  ],
   maxVisible = 2,
   tickMs = 1100,
   fadeMs = 420,
-  // allow overriding if your file is png/webp; default assumes .jpg
   bgSrc = "/imgs/banner 4.png",
+
+  // Nietzsche config
+  nietzscheSrc = "/imgs/nietzsche-1.png",
+  showNietzsche = true,
+  nietzscheHorizontalPos = 25,
+  
+  // Kant config
+  kantSrc = "/imgs/kant.png",
+  showKant = true,
 }) {
   const prefersReducedMotion = useReducedMotion();
 
@@ -23,12 +45,14 @@ export default function MissionHero({
   const IMG_FRAC_SM = 0.78;
   const IMG_FRAC_MD = 0.66;
   const ICON_FRAC = 0.18;
-  const GAP_FRAC  = 0.11;
-  const EDGE_PAD  = 0.02;
+  const GAP_FRAC = 0.11;
+  const EDGE_PAD = 0.02;
 
   const ANGLES = useMemo(() => [-90, -30, 30, 90, 150, -150], []);
 
+  const heroRef = useRef(null);
   const stageRef = useRef(null);
+
   const [stageSize, setStageSize] = useState(0);
   const [ready, setReady] = useState(false);
 
@@ -43,21 +67,23 @@ export default function MissionHero({
   useEffect(() => {
     const el = stageRef.current;
     if (!el) return;
+
     const ro = new ResizeObserver(() => {
       const s = Math.round(Math.min(el.clientWidth, el.clientHeight));
       setStageSize(s);
-      if (!ready && s > 0) setReady(true);
+      setReady((prev) => (prev ? true : s > 0));
     });
+
     ro.observe(el);
     return () => ro.disconnect();
-  }, [ready]);
+  }, []);
 
   const imgFrac = stageSize && stageSize < 420 ? IMG_FRAC_SM : IMG_FRAC_MD;
 
-  const imgW   = stageSize * imgFrac;
-  const iconW  = stageSize * ICON_FRAC;
-  const gapPx  = stageSize * GAP_FRAC;
-  const padPx  = stageSize * EDGE_PAD;
+  const imgW = stageSize * imgFrac;
+  const iconW = stageSize * ICON_FRAC;
+  const gapPx = stageSize * GAP_FRAC;
+  const padPx = stageSize * EDGE_PAD;
 
   const maxCenterR = Math.max(0, stageSize / 2 - iconW / 2 - padPx);
   const minCenterR = Math.max(0, imgW / 2 + gapPx);
@@ -71,10 +97,12 @@ export default function MissionHero({
 
   useEffect(() => {
     if (prefersReducedMotion || !ready || R <= 0) return;
+
     const id = setInterval(() => {
       const nextKey = keyCounter.current++;
       const angleIdx = angleIdxRef.current % ANGLES.length;
-      const iconIdx  = angleIdx % icons.length;
+      const iconIdx = angleIdx % icons.length;
+
       angleIdxRef.current = (angleIdxRef.current + 1) % ANGLES.length;
 
       setActive((prev) => {
@@ -83,8 +111,9 @@ export default function MissionHero({
         return next;
       });
     }, tickMs);
+
     return () => clearInterval(id);
-  }, [prefersReducedMotion, ready, R, ANGLES.length, icons.length, maxVisible, tickMs]);
+  }, [prefersReducedMotion, ready, R, ANGLES, icons.length, maxVisible, tickMs]);
 
   const toXY = (angleIdx) => {
     const a = (ANGLES[angleIdx] * Math.PI) / 180;
@@ -93,13 +122,63 @@ export default function MissionHero({
 
   const easeOut = [0.22, 0.61, 0.36, 1];
 
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+
+  // Ніцше - вилазить знизу на десктопі
+  const yPercentDesktop = useTransform(
+    scrollYProgress,
+    [0, 0.15, 0.50, 0.75, 1],
+    [100, 70, 0, -8, -8]
+  );
+
+  // Кант - синхронізований з Ніцше, але трохи нижче
+ const yPercentKant = useTransform(
+    scrollYProgress,
+    [0, 0.15, 0.50, 0.75, 1],
+    [100, 70, 0, 0, 0]
+  );
+
+  // Ніцше зліва на мобілках - зупиняється раніше
+  const xPercentMobileLeft = useTransform(
+    scrollYProgress,
+    [0, 0.15, 0.40, 0.60, 1],
+    [-100, -60, 0, 0, 0]
+  );
+
+  // Кант справа на мобілках - зупиняється раніше
+    const xPercentMobileRight = useTransform(
+    scrollYProgress,
+    [0, 0.01, 0.20, 0.40, 1],
+    [100, 60, 0, 0, 0]
+  );
+  
+  const nYDesktop = useTransform(yPercentDesktop, (v) => `${v}%`);
+  const nYKant = useTransform(yPercentKant, (v) => `${v}%`);
+  const nXMobileLeft = useTransform(xPercentMobileLeft, (v) => `${v}%`);
+  const nXMobileRight = useTransform(xPercentMobileRight, (v) => `${v}%`);
+
+  const nOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.08, 0.25, 1],
+    [0, 0.3, 1, 1]
+  );
+
+  const nScale = useTransform(
+    scrollYProgress,
+    [0, 0.3, 0.7, 1],
+    [1.02, 1.06, 1.05, 1.05]
+  );
+
   return (
     <section
-      className={`relative w-full ${inter.className} mb-9`}
+      ref={heroRef}
+      className={`relative w-full overflow-hidden ${inter.className} mb-9`}
       style={{ minHeight: `calc(100vh - ${headerHeight}px)` }}
       aria-label="Mission hero"
     >
-      {/* Background image layer */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <Image
           src={bgSrc}
@@ -109,27 +188,132 @@ export default function MissionHero({
           sizes="100vw"
           className="object-cover"
         />
-        {/* Soft overlay for contrast; tweak opacity as needed */}
         <div className="absolute inset-0 bg-slate-900/40" />
-        {/* Optional vertical gradient to lift text area */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/35" />
       </div>
+
+      {/* НІЦШЕ */}
+      {showNietzsche && !prefersReducedMotion && (
+        <>
+          {/* Мобілка */}
+          <motion.div
+            aria-hidden
+            className="pointer-events-none absolute left-0 top-[70%] z-20 md:hidden"
+            style={{
+              x: nXMobileLeft,
+              rotate: 20,
+              opacity: nOpacity,
+              scale: nScale,
+              filter: "drop-shadow(0 16px 28px rgba(0,0,0,0.35))",
+            }}
+          >
+            <img
+              src={nietzscheSrc}
+              alt=""
+              style={{ 
+                width: 'auto',
+                height: 'auto',
+                maxWidth: '200px',
+                filter: "drop-shadow(0 0 20px rgba(0,0,0,0.2))"
+              }}
+            />
+          </motion.div>
+
+          {/* Десктоп */}
+          <motion.div
+            aria-hidden
+            className="pointer-events-none absolute bottom-0 z-20 hidden md:block"
+            style={{
+              left: '22px',
+              y: nYDesktop,
+              opacity: nOpacity,
+              scale: nScale,
+              filter: "drop-shadow(0 16px 28px rgba(0,0,0,0.35))",
+            }}
+          >
+            <img
+              src={nietzscheSrc}
+              alt=""
+              style={{ 
+                width: 'min(320px, 28vw)',
+                height: 'auto',
+                filter: "drop-shadow(0 0 20px rgba(0,0,0,0.2))"
+              }}
+            />
+          </motion.div>
+        </>
+      )}
+
+      {/* КАНТ */}
+      {showKant && !prefersReducedMotion && (
+        <>
+          {/* Мобілка */}
+          <motion.div
+            aria-hidden
+            className="pointer-events-none absolute right-0 top-[35%] z-20 md:hidden"
+            style={{
+              x: nXMobileRight,
+              rotate: -10,
+              opacity: nOpacity,
+              scale: nScale,
+              filter: "drop-shadow(0 16px 28px rgba(0,0,0,0.35))",
+            }}
+          >
+            <img
+              src={kantSrc}
+              alt=""
+              style={{ 
+                width: 'auto',
+                height: 'auto',
+                maxWidth: '120px',
+                filter: "drop-shadow(0 0 20px rgba(0,0,0,0.2))"
+              }}
+            />
+          </motion.div>
+
+          {/* Десктоп */}
+          <motion.div
+            aria-hidden
+            className="pointer-events-none absolute bottom-0 z-20 hidden md:block"
+            style={{
+              right: '22px',
+              y: nYKant,
+              opacity: nOpacity,
+              scale: nScale,
+              filter: "drop-shadow(0 16px 28px rgba(0,0,0,0.35))",
+            }}
+          >
+            <img
+              src={kantSrc}
+              alt=""
+              style={{ 
+                width: 'min(320px, 28vw)',
+                height: 'auto',
+                filter: "drop-shadow(0 0 20px rgba(0,0,0,0.2))"
+              }}
+            />
+          </motion.div>
+        </>
+      )}
 
       <div
         className="relative mx-auto flex min-h-[calc(100vh-var(--hh))] w-full flex-col text-white"
         style={{ ["--hh"]: `${headerHeight}px` }}
       >
-        {/* Title */}
         <div className="flex items-end justify-center px-6 pt-6 pb-10">
-          <h1 className={`${playfair.className} text-center text-4xl font-extrabold tracking-wider uppercase md:text-6xl drop-shadow text-white`}>
+          <h1
+            className={`${playfair.className} text-center text-4xl font-extrabold tracking-wider uppercase md:text-6xl drop-shadow text-white`}
+          >
             {title}
           </h1>
         </div>
 
-        {/* Stage */}
         <div className="flex flex-1 items-center justify-center px-6">
-          <div ref={stageRef} className="relative isolate" style={{ width: STAGE_CSS, height: STAGE_CSS }}>
-            {/* Central image (responsive fraction) */}
+          <div
+            ref={stageRef}
+            className="relative isolate"
+            style={{ width: STAGE_CSS, height: STAGE_CSS }}
+          >
             <div
               className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
               style={{ width: `calc(${imgFrac} * ${STAGE_CSS})` }}
@@ -154,7 +338,6 @@ export default function MissionHero({
               </div>
             </div>
 
-            {/* Icon ring */}
             {!prefersReducedMotion && ready && R > 0 && (
               <div className="pointer-events-none absolute inset-0">
                 <AnimatePresence initial={false}>
@@ -172,7 +355,10 @@ export default function MissionHero({
                           exit={{ opacity: 0 }}
                           transition={{ duration: fadeMs / 1000, ease: easeOut }}
                         >
-                          <CircleIcon sizePx={stageSize * ICON_FRAC} src={icons[iconIdx]} />
+                          <CircleIcon
+                            sizePx={stageSize * ICON_FRAC}
+                            src={icons[iconIdx]}
+                          />
                         </motion.div>
                       </div>
                     );
@@ -183,9 +369,10 @@ export default function MissionHero({
           </div>
         </div>
 
-        {/* Subtitle */}
         <div className="flex items-start justify-center px-6 pb-10 md:pb-12">
-          <p className={`${garamond.className} text-lg sm:text-xl lg:text-2xl text-center bg-black/70 p-2`}>
+          <p
+            className={`${garamond.className} text-lg sm:text-xl lg:text-2xl text-center bg-black/70 p-2`}
+          >
             {subtitle}
           </p>
         </div>
@@ -199,9 +386,18 @@ function CircleIcon({ src, sizePx }) {
   return (
     <div
       className="overflow-hidden rounded-full shadow-md ring-1 ring-black/5 bg-white/95 backdrop-blur-[0.5px]"
-      style={{ width: `${size}px`, height: `${size}px`, filter: "drop-shadow(0 8px 14px rgba(0,0,0,0.15))" }}
+      style={{
+        width: `${size}px`,
+        height: `${size}px`,
+        filter: "drop-shadow(0 8px 14px rgba(0,0,0,0.15))",
+      }}
     >
-      <img src={src} alt="" className="h-full w-full object-cover" draggable="false" />
+      <img
+        src={src}
+        alt=""
+        className="h-full w-full object-cover"
+        draggable="false"
+      />
     </div>
   );
 }
