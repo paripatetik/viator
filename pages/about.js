@@ -115,7 +115,7 @@ export default function AboutPage() {
               from="right"
               name="Саган Максим"
               subtitle="Співзасновник · Оптимістичний Скептик"
-              // photoSrc="/imgs/team/maksym.jpg"
+              photoSrc="/imgs/max.png"
             >
               Магістр філософії. Перший загорівся ідеєю Viator. Автор дописів на
               теми проблем пізнання, науки, релігії та історії думки. Розробник
