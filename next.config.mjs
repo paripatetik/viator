@@ -2,7 +2,12 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["localhost"],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cms.viator.com.ua',
+      },
+    ],
   },
   devIndicators: false,
 };
