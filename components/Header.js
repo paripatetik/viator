@@ -1,23 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Mail } from "lucide-react";
 import NavLinks from "@/components/NavLinks";
 import SocialLinks from "@/components/SocialLinks";
-
 import { inter, playfair, garamond } from '@/lib/fonts';
-
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   const toggle = () => setOpen((o) => !o);
 
-  // Initialize from current scroll position immediately —
-  // prevents flash when browser restores scroll on reload
-  const [isSticky, setIsSticky] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return window.scrollY > 50;
-  });
+  const [isSticky, setIsSticky] = useState(false);
+
+  // Suppress transition on first render so the header "snaps" to the correct
+  // sticky/non-sticky state without a visible flash on production (SSG hydration).
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     if (open) {
@@ -29,97 +26,85 @@ export default function Header() {
   }, [open]);
 
   useEffect(() => {
-    // Sync immediately on mount in case browser restored scroll position
-    setIsSticky(window.scrollY > 50);
+    // Read real scroll immediately on mount — before any animation fires
+    const current = window.scrollY > 50;
+    setIsSticky(current);
 
-    const handleScroll = () => {
-      setIsSticky(window.scrollY > 50);
-    };
-
+    const handleScroll = () => setIsSticky(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll, { passive: true });
+
+    // Only enable transitions AFTER first correct state is painted
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => setMounted(true));
+    });
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <>
-      {/* ────── HEADER  ────── */}
       <header
         id="site-header"
-        className={`fixed inset-x-0 top-0 z-40 h-16 md:h-20
-          transition-[background-color,box-shadow,backdrop-filter,transform] duration-300
-          ${isSticky
+        className={[
+          "fixed inset-x-0 top-0 z-40 h-16 md:h-20",
+          // transitions only after mount — prevents SSR→hydration flash
+          mounted
+            ? "transition-[background-color,box-shadow,backdrop-filter] duration-300"
+            : "",
+          isSticky
             ? "bg-[#94B4C1]/95 backdrop-blur-md shadow-lg border-b border-black/10"
-            : "bg-transparent backdrop-blur-0 shadow-none border-b border-transparent"
-          }
-        `}>
+            : "bg-transparent backdrop-blur-0 shadow-none border-b border-transparent",
+        ].join(" ")}
+      >
         <div className="container mx-auto h-full flex items-center px-4 sm:px-6 lg:px-8 gap-7 md:gap-10">
-          <Link href="/" className="flex items-center gap-2 lg:gap-3"> 
-            <div className="w-14 md:w-16 h-full flex items-center justify-center"> 
-              <Image src="/imgs/logo.png" alt="Viator logo" width={70} height={70} className="object-contain w-full h-full hover:animate-pulse" priority /> 
-            </div> 
-            <span className={`${playfair.className} italic text-2xl md:text-3xl lg:text-[35px] font-bold tracking-tight`}> Viator </span> 
+          <Link href="/" className="flex items-center gap-2 lg:gap-3">
+            <div className="w-14 md:w-16 h-full flex items-center justify-center">
+              <Image
+                src="/imgs/logo.png"
+                alt="Viator logo"
+                width={70}
+                height={70}
+                className="object-contain w-full h-full hover:animate-pulse"
+                priority
+              />
+            </div>
+            <span className={`${playfair.className} italic text-2xl md:text-3xl lg:text-[35px] font-bold tracking-tight`}>
+              Viator
+            </span>
           </Link>
           <NavLinks variant="desktop" />
           <div className="ml-auto"><SocialLinks variant="header" /></div>
         </div>
       </header>
 
-      {/* BURGER (outside header, aligned to it) */}
+      {/* BURGER */}
       <button
         aria-label="Toggle mobile menu"
         onClick={toggle}
-        className="
-          md:hidden fixed top-0 right-4 sm:right-6 lg:right-8
-          w-14 h-16 z-[60] grid place-items-center
-        "
+        className="md:hidden fixed top-0 right-4 sm:right-6 lg:right-8 w-14 h-16 z-[60] grid place-items-center"
       >
         <div className="relative w-9 h-[22px]">
-          <span className={`absolute left-0 w-full h-[3px] bg-gray-900 rounded transition-transform duration-300 origin-center
-            ${open ? "rotate-45 top-[9.5px]" : "top-0"}`} />
-          <span className={`absolute left-0 top-[9.5px] w-full h-[3px] bg-gray-900 rounded transition-opacity duration-200
-            ${open ? "opacity-0" : "opacity-100"}`} />
-          <span className={`absolute left-0 w-full h-[3px] bg-gray-900 rounded transition-transform duration-300 origin-center
-            ${open ? "-rotate-45 top-[9.5px]" : "bottom-0"}`} />
+          <span className={`absolute left-0 w-full h-[3px] bg-gray-900 rounded transition-transform duration-300 origin-center ${open ? "rotate-45 top-[9.5px]" : "top-0"}`} />
+          <span className={`absolute left-0 top-[9.5px] w-full h-[3px] bg-gray-900 rounded transition-opacity duration-200 ${open ? "opacity-0" : "opacity-100"}`} />
+          <span className={`absolute left-0 w-full h-[3px] bg-gray-900 rounded transition-transform duration-300 origin-center ${open ? "-rotate-45 top-[9.5px]" : "bottom-0"}`} />
         </div>
       </button>
 
       {/* DRAWER */}
-      <aside className={`fixed inset-0 w-full h-full md:hidden z-50
-                         bg-gradient-to-r from-slate-100 via-white to-slate-200
-                         bg-opacity-95 backdrop-blur-md shadow-xl
-                         transform transition-transform duration-300
-                         ${open ? "translate-x-0" : "translate-x-full"}`}>
-        
+      <aside className={`fixed inset-0 w-full h-full md:hidden z-50 bg-gradient-to-r from-slate-100 via-white to-slate-200 bg-opacity-95 backdrop-blur-md shadow-xl transform transition-transform duration-300 ${open ? "translate-x-0" : "translate-x-full"}`}>
         <div className="flex flex-col items-center gap-8 px-6 py-10 h-full overflow-y-auto">
-          {/* Big logo */}
-          <Image src="/imgs/logo.png" alt="Viator logo" width={140} height={140} className="animate-pulse"/>
-
-          {/* Search bar */}
+          <Image src="/imgs/logo.png" alt="Viator logo" width={140} height={140} className="animate-pulse" />
           <div className="relative w-full max-w-sm">
             <input
               type="search"
               placeholder="Search…"
               className="w-full border rounded-lg py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
-            <svg
-              className="w-5 h-5 absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.65 4.65a7.5 7.5 0 0011.98 11.98z"
-              />
+            <svg className="w-5 h-5 absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.65 4.65a7.5 7.5 0 0011.98 11.98z" />
             </svg>
           </div>
-
-          {/* Nav links */}
           <NavLinks variant="drawer" onClick={toggle} />
-
-          {/* Contact & Socials */}
           <div className="mt-auto flex flex-col items-center gap-7 text-gray-700 text-3xl">
             <div className="flex gap-4 justify-center">
               <Mail size={28} />

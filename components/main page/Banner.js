@@ -1,32 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import clsx from "clsx";
 import { playfair } from "@/lib/fonts";
 
-/**
- * useSafeHeight — captures window.innerHeight ONCE on mount.
- * Never updates on scroll, so iOS Safari chrome show/hide doesn't cause reflow.
- * Falls back to CSS svh on SSR and while JS hasn't run yet.
- */
-function useSafeHeight(headerSelector = "#site-header") {
-  const [height, setHeight] = useState(null); // null = use CSS fallback
-
-  useEffect(() => {
-    const header = document.querySelector(headerSelector);
-    const headerH = header ? header.offsetHeight : 0;
-    // Capture ONCE. Do not add resize/scroll listeners.
-    setHeight(window.innerHeight - headerH);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  return height;
-}
-
 export default function Banner({ title, subtitle, imgSrc, headerSelector = "#site-header" }) {
   const [isMobile, setIsMobile] = useState(false);
   const [pauseText, setPauseText] = useState(false);
-  const [pauseImg, setPauseImg]   = useState(false);
+  const [pauseImg, setPauseImg] = useState(false);
 
-  const safeHeight = useSafeHeight(headerSelector);
+  // Stable pixel height captured once on mount — prevents iOS Safari
+  // viewport height changes from causing layout reflow while scrolling.
+  const [stableH, setStableH] = useState(null);
 
   useEffect(() => {
     const update = () => setIsMobile(window.innerWidth < 768);
@@ -35,19 +19,22 @@ export default function Banner({ title, subtitle, imgSrc, headerSelector = "#sit
     return () => window.removeEventListener("resize", update);
   }, []);
 
-  // On mobile: use the JS-captured pixel height to avoid any viewport-unit reflow.
-  // On desktop: CSS svh is fine (no mobile chrome show/hide).
-  const sectionStyle = isMobile && safeHeight
-    ? {
-        height: `${safeHeight}px`,
-        minHeight: `${safeHeight}px`,
-        marginTop: "var(--header-h)",
-      }
-    : {
-        height: "calc(100svh - var(--header-h))",
-        minHeight: "calc(100svh - var(--header-h))",
-        marginTop: "var(--header-h)",
-      };
+  useEffect(() => {
+    // Capture once, never update on scroll/resize so iOS chrome hide/show
+    // doesn't trigger reflow. On desktop this stays null (CSS svh handles it).
+    if (window.innerWidth < 768) {
+      const header = document.querySelector(headerSelector);
+      const headerH = header ? header.offsetHeight : 0;
+      setStableH(window.innerHeight - headerH);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // On mobile: use JS-captured px height (stable, no reflow)
+  // On desktop: CSS svh is fine
+  const sectionStyle =
+    isMobile && stableH
+      ? { height: `${stableH}px`, marginTop: "var(--header-h)" }
+      : { height: "calc(100svh - var(--header-h))", marginTop: "var(--header-h)" };
 
   return (
     <section
@@ -79,7 +66,7 @@ export default function Banner({ title, subtitle, imgSrc, headerSelector = "#sit
             "w-full md:max-w-2xl",
             "bg-black/30 md:backdrop-blur-sm"
           )}
-          onMouseEnter={() => { if (!isMobile) setPauseText(true);  }}
+          onMouseEnter={() => { if (!isMobile) setPauseText(true); }}
           onMouseLeave={() => { if (!isMobile) setPauseText(false); }}
           style={
             !isMobile
