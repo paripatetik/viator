@@ -1,17 +1,32 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import clsx from "clsx";
 import { playfair } from "@/lib/fonts";
 
-export default function Banner({
-  title,
-  subtitle,
-  imgSrc,
-  headerSelector = "#site-header",
-}) {
+/**
+ * useSafeHeight — captures window.innerHeight ONCE on mount.
+ * Never updates on scroll, so iOS Safari chrome show/hide doesn't cause reflow.
+ * Falls back to CSS svh on SSR and while JS hasn't run yet.
+ */
+function useSafeHeight(headerSelector = "#site-header") {
+  const [height, setHeight] = useState(null); // null = use CSS fallback
+
+  useEffect(() => {
+    const header = document.querySelector(headerSelector);
+    const headerH = header ? header.offsetHeight : 0;
+    // Capture ONCE. Do not add resize/scroll listeners.
+    setHeight(window.innerHeight - headerH);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return height;
+}
+
+export default function Banner({ title, subtitle, imgSrc, headerSelector = "#site-header" }) {
   const [isMobile, setIsMobile] = useState(false);
   const [pauseText, setPauseText] = useState(false);
-  const [pauseImg, setPauseImg] = useState(false);
+  const [pauseImg, setPauseImg]   = useState(false);
+
+  const safeHeight = useSafeHeight(headerSelector);
 
   useEffect(() => {
     const update = () => setIsMobile(window.innerWidth < 768);
@@ -20,22 +35,25 @@ export default function Banner({
     return () => window.removeEventListener("resize", update);
   }, []);
 
-  const handleMobileToggle = () => {
-    if (!isMobile) return;
-    setPauseImg((p) => !p);
-  };
-
-  return (
-    <section
-      style={{
-        /* svh = "small viewport height" — stable value, does NOT change when
-           the mobile browser toolbar slides in/out. Prevents the banner jump. */
+  // On mobile: use the JS-captured pixel height to avoid any viewport-unit reflow.
+  // On desktop: CSS svh is fine (no mobile chrome show/hide).
+  const sectionStyle = isMobile && safeHeight
+    ? {
+        height: `${safeHeight}px`,
+        minHeight: `${safeHeight}px`,
+        marginTop: "var(--header-h)",
+      }
+    : {
         height: "calc(100svh - var(--header-h))",
         minHeight: "calc(100svh - var(--header-h))",
         marginTop: "var(--header-h)",
-      }}
+      };
+
+  return (
+    <section
+      style={sectionStyle}
       className="relative w-full overflow-hidden"
-      onClick={handleMobileToggle}
+      onClick={() => isMobile && setPauseImg((p) => !p)}
     >
       <Image
         src={imgSrc}
@@ -47,11 +65,7 @@ export default function Banner({
           "object-cover object-left md:object-center",
           isMobile && "viator-banner-img-pan"
         )}
-        style={
-          isMobile
-            ? { animationPlayState: pauseImg ? "paused" : "running" }
-            : undefined
-        }
+        style={isMobile ? { animationPlayState: pauseImg ? "paused" : "running" } : undefined}
       />
 
       <div
@@ -63,10 +77,9 @@ export default function Banner({
             "relative flex flex-col justify-between h-full text-white",
             "px-6 py-12 sm:px-10 sm:py-14 md:px-14 lg:px-20",
             "w-full md:max-w-2xl",
-            "bg-black/30",
-            "md:backdrop-blur-sm"
+            "bg-black/30 md:backdrop-blur-sm"
           )}
-          onMouseEnter={() => { if (!isMobile) setPauseText(true); }}
+          onMouseEnter={() => { if (!isMobile) setPauseText(true);  }}
           onMouseLeave={() => { if (!isMobile) setPauseText(false); }}
           style={
             !isMobile

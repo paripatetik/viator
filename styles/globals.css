@@ -9,6 +9,12 @@
   }
 }
 
-
+/*
+  Reserve scrollbar space so content never shifts when scrollbar
+  appears/disappears on page load. Fixes the ~15px layout jump.
+*/
+html {
+  scrollbar-gutter: stable;
+}
 
 @plugin "@tailwindcss/typography"
