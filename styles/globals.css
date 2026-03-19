@@ -1,4 +1,12 @@
 @import "tailwindcss";
 
-@plugin "@tailwindcss/typography"
+:root {
+  --header-h: 4rem;
+}
+@media (min-width: 768px) {
+  :root {
+    --header-h: 5rem;
+  }
+}
 
+@plugin "@tailwindcss/typography"
