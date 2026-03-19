@@ -1,18 +1,12 @@
 // pages/mission.js
 "use client";
 import Image from "next/image";
-
 import Head from "next/head";
-
-import { playfair, garamond } from "@/lib/fonts";
 import { useHeaderHeight } from "@/lib/hooks/useHeaderHeight";
-
+import { playfair, garamond } from "@/lib/fonts";
 import SECTIONS from "@/components/mission page/missionSections";
-
 import MissionHero from "@/components/mission page/MissionHero";
-import MissionSection, {
-  LottieLoop,
-} from "@/components/mission page/MissionSection";
+import MissionSection from "@/components/mission page/MissionSection";
 
 const LOTTIES = {
   traveler: "/animations/traveller_anim 1.json",
@@ -22,6 +16,7 @@ const LOTTIES = {
 };
 
 export default function MissionPage() {
+  // needed only for MissionHero parallax calculations
   const headerH = useHeaderHeight();
 
   const mainSections = SECTIONS.slice(0, -1);
@@ -38,7 +33,8 @@ export default function MissionPage() {
       </Head>
 
       <main className="min-h-screen text-justify">
-        <div style={{ height: headerH }} aria-hidden />
+        {/* spacer uses CSS variable — no JS flash */}
+        <div style={{ height: "var(--header-h)" }} aria-hidden />
 
         <section id="mission-hero" className="relative">
           <MissionHero headerHeight={headerH} />

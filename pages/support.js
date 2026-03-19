@@ -1,25 +1,22 @@
 // pages/support.js
 import Image from "next/image";
 import Link from "next/link";
-import { useHeaderHeight } from "@/lib/hooks/useHeaderHeight";
 import { playfair, garamond } from "@/lib/fonts";
 
 export default function SupportPage() {
-  const headerH = useHeaderHeight();
-
   return (
     <>
-      {/* ===== HERO / БАНЕР НА ВЕСЬ ЕКРАН ===== */}
+      {/* HERO — CSS variable, no JS needed */}
       <section
         className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden
                    md:left-0 md:right-0 md:ml-0 md:mr-0 md:w-full px-6 pt-6 pb-10"
         style={{
-          height: `calc(100dvh - ${headerH}px)`,
-          marginTop: headerH,
+          height: "calc(100dvh - var(--header-h))",
+          marginTop: "var(--header-h)",
         }}
       >
         <Image
-          src="/imgs/banner-support.png" // поклади сюди свій banner-support
+          src="/imgs/banner-support.png"
           alt="Підтримати Viator"
           fill
           priority
@@ -42,9 +39,7 @@ export default function SupportPage() {
         </div>
       </section>
 
-      {/* ===== ОСНОВНИЙ КОНТЕНТ ===== */}
       <main className="container mx-auto px-6 lg:px-10 py-12 lg:py-16 space-y-16">
-        {/* вступний текст */}
         <section
           className={`${garamond.className} max-w-3xl mx-auto text-[19px] lg:text-[22px] leading-relaxed space-y-4 text-justify`}
         >
@@ -62,7 +57,6 @@ export default function SupportPage() {
           </p>
         </section>
 
-        {/* Patreon */}
         <section className="max-w-3xl p-2 ml-auto mr-auto mb-6">
           <h2
             className={`${playfair.className} text-3xl md:text-4xl font-extrabold text-center uppercase tracking-wider text-[#416472] mb-6`}
@@ -72,16 +66,15 @@ export default function SupportPage() {
 
           <div className="flex justify-center">
             <SupportButton
-              href="https://www.patreon.com/viator" // заміниш на свій URL
-              imgSrc="/imgs/icons/patreon1.png" // зображення-кнопка Patreon
+              href="https://www.patreon.com/viator"
+              imgSrc="/imgs/icons/patreon1.png"
               alt="Підтримати Viator на Patreon"
             />
           </div>
         </section>
 
-        {/* Разові донати */}
         <section className="max-w-3xl mx-auto space-y-5 mt-10">
-           <h2
+          <h2
             className={`${playfair.className} text-3xl md:text-4xl font-extrabold text-center uppercase tracking-wider text-[#416472] mb-6`}
           >
             Підтримати разовим донатом
@@ -89,13 +82,13 @@ export default function SupportPage() {
 
           <div className="flex flex-col gap-4 md:flex-row justify-center md:gap-6">
             <SupportButton
-              href="https://privatbank.example.com" // сюди твій лінк
+              href="https://privatbank.example.com"
               imgSrc="/imgs/icons/privat.png"
               alt="Підтримати через ПриватБанк"
               label="ПриватБанк"
             />
             <SupportButton
-              href="https://monobank.example.com" // і сюди
+              href="https://monobank.example.com"
               imgSrc="/imgs/icons/monobank.jpeg"
               alt="Підтримати через Monobank"
               label="Monobank"
@@ -107,10 +100,6 @@ export default function SupportPage() {
   );
 }
 
-/**
- * Кнопка-посилання з «зображенням посилання».
- * imgSrc → будь-який банер/іконка, що лежить у /public/image/…
- */
 function SupportButton({ href, imgSrc, alt, label }) {
   return (
     <Link
@@ -128,9 +117,7 @@ function SupportButton({ href, imgSrc, alt, label }) {
         />
       </div>
       {label && (
-        <span
-          className={`${garamond.className} mt-2 text-sm md:text-base text-slate-700`}
-        >
+        <span className={`${garamond.className} mt-2 text-sm md:text-base text-slate-700`}>
           {label}
         </span>
       )}

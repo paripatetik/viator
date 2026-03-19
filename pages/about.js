@@ -6,6 +6,7 @@ import { useHeaderHeight } from "@/lib/hooks/useHeaderHeight";
 import { playfair, garamond } from "@/lib/fonts";
 
 export default function AboutPage() {
+  // still needed for the BelievePanel scroll calculation
   const headerH = useHeaderHeight();
 
   const beliefs = useMemo(
@@ -19,13 +20,13 @@ export default function AboutPage() {
 
   return (
     <>
-      {/* ===== HERO ===== */}
+      {/* HERO — uses CSS variable, no JS needed for first paint */}
       <section
         className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden
                    md:left-0 md:right-0 md:ml-0 md:mr-0 md:w-full"
         style={{
-          height: `calc(100dvh - ${headerH}px)`,
-          marginTop: headerH,
+          height: "calc(100dvh - var(--header-h))",
+          marginTop: "var(--header-h)",
         }}
       >
         <Image
@@ -55,10 +56,8 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ===== ОСНОВНИЙ ТЕКСТ ===== */}
       <main className="container max-w-4xl mx-auto px-6 lg:px-10 py-12 lg:py-16 space-y-16">
         <section className="mx-auto space-y-10">
-          {/* рамка (анімація: заїзд знизу при вході у viewport) */}
           <motion.div
             initial={{ opacity: 0, y: 42 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -76,13 +75,12 @@ export default function AboutPage() {
               </p>
 
               <p>
-                За ним стоїть невеличка команда ентузіастів, об’єднаних інтересом
+                За ним стоїть невеличка команда ентузіастів, яка поділяє інтерес
                 до мислення.
               </p>
             </div>
           </motion.div>
 
-          {/* ===== ВІРИМО: один великий блок на екран, фокус по скролу, лінії між items ===== */}
           <BelievePanel
             items={beliefs}
             headerOffset={headerH}
@@ -90,7 +88,6 @@ export default function AboutPage() {
           />
         </section>
 
-        {/* ===== КОМАНДА ===== */}
         <section className="container mx-auto space-y-8">
           <h2
             className={`${playfair.className} text-3xl md:text-4xl font-extrabold text-center uppercase tracking-wider text-[#416472]`}
@@ -128,18 +125,14 @@ export default function AboutPage() {
   );
 }
 
-/* =========================
-   BelievePanel: великий блок на екран + фокус по скролу
-   ЛІНІЯ МІЖ items (конектори), а не “фоном під капсулами”
-   ========================= */
 function BelievePanel({ items, headerOffset = 0, garamondClassName = "" }) {
   const sectionRef = useRef(null);
-  const [t, setT] = useState(0); // 0..(n-1) з дробами
+  const [t, setT] = useState(0);
   const n = Math.max(1, items.length);
 
   const stickyTop = Math.max(0, headerOffset + 18);
 
-  const perStepVh = 95; // 80..120 (більше = повільніше)
+  const perStepVh = 95;
   const leadInVh = 16;
   const tailVh = 16;
   const driverH = 100 + leadInVh + Math.max(0, n - 1) * perStepVh + tailVh;
@@ -157,12 +150,9 @@ function BelievePanel({ items, headerOffset = 0, garamondClassName = "" }) {
       const rect = sec.getBoundingClientRect();
       const pageY = window.scrollY || window.pageYOffset;
       const topY = pageY + rect.top;
-
       const startY = topY - stickyTop;
-
       const leadInPx = (leadInVh / 100) * window.innerHeight;
       const stepPx = (perStepVh / 100) * window.innerHeight;
-
       const y = pageY - startY;
 
       if (y <= leadInPx) {
@@ -190,7 +180,6 @@ function BelievePanel({ items, headerOffset = 0, garamondClassName = "" }) {
     };
   }, [n, stickyTop, perStepVh, leadInVh]);
 
-  // gridTemplateRows: auto (item) + 1fr (connector) + auto (item) ...
   const rows = [];
   for (let i = 0; i < n; i++) {
     rows.push("auto");
@@ -202,15 +191,11 @@ function BelievePanel({ items, headerOffset = 0, garamondClassName = "" }) {
     <section ref={sectionRef} className="relative" style={{ height: `${driverH}vh` }}>
       <div className="sticky" style={{ top: stickyTop }}>
         <div
-          className="relative mx-auto w-full max-w-4xl rounded-[26px] bg-transparent
-                     overflow-hidden"
+          className="relative mx-auto w-full max-w-4xl rounded-[26px] bg-transparent overflow-hidden"
           style={{ height: `calc(100vh - ${stickyTop}px - 18px)` }}
         >
           <div className="relative z-10 h-full px-6 py-10">
-            <div
-              className="grid h-full items-center"
-              style={{ gridTemplateRows }}
-            >
+            <div className="grid h-full items-center" style={{ gridTemplateRows }}>
               {items.map((text, i) => (
                 <Fragment key={i}>
                   <BelieveStackItem
@@ -222,7 +207,6 @@ function BelievePanel({ items, headerOffset = 0, garamondClassName = "" }) {
                     {text}
                   </BelieveStackItem>
 
-                  {/* Конектор між items: це і є “лінія між блоками” */}
                   {i < n - 1 && (
                     <div
                       aria-hidden
@@ -242,7 +226,7 @@ function BelievePanel({ items, headerOffset = 0, garamondClassName = "" }) {
 function BelieveStackItem({ index, children, i, t, garamondClassName }) {
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
-  const ad = Math.abs(i - t); // 0..∞
+  const ad = Math.abs(i - t);
   const wLin = clamp(1 - ad, 0, 1);
   const w = wLin * wLin * (3 - 2 * wLin);
 
@@ -289,9 +273,6 @@ function BelieveStackItem({ index, children, i, t, garamondClassName }) {
   );
 }
 
-/* =========================
-   Team cards: left/right
-   ========================= */
 function TeamMember({ name, subtitle, children, photoSrc, photoAlt, from = "left" }) {
   const x0 = from === "right" ? 64 : -64;
 
