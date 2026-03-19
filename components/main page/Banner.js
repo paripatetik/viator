@@ -1,16 +1,29 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import Image from "next/image";
 import clsx from "clsx";
 import { playfair } from "@/lib/fonts";
+
+// useLayoutEffect on client, useEffect on server (SSR safe)
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 export default function Banner({ title, subtitle, imgSrc, headerSelector = "#site-header" }) {
   const [isMobile, setIsMobile] = useState(false);
   const [pauseText, setPauseText] = useState(false);
   const [pauseImg, setPauseImg] = useState(false);
 
-  // Stable pixel height captured once on mount — prevents iOS Safari
-  // viewport height changes from causing layout reflow while scrolling.
+  // null = use CSS fallback (SSR + desktop)
+  // number = stable px height captured before first paint (mobile only)
   const [stableH, setStableH] = useState(null);
+
+  // useLayoutEffect fires before paint — no visible frame with wrong height
+  useIsomorphicLayoutEffect(() => {
+    if (window.innerWidth >= 768) return; // desktop: CSS svh is fine
+    const header = document.querySelector(headerSelector);
+    const headerH = header ? header.offsetHeight : 0;
+    setStableH(window.innerHeight - headerH);
+    // Intentionally no resize/scroll listener — height must stay stable
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const update = () => setIsMobile(window.innerWidth < 768);
@@ -19,18 +32,6 @@ export default function Banner({ title, subtitle, imgSrc, headerSelector = "#sit
     return () => window.removeEventListener("resize", update);
   }, []);
 
-  useEffect(() => {
-    // Capture once, never update on scroll/resize so iOS chrome hide/show
-    // doesn't trigger reflow. On desktop this stays null (CSS svh handles it).
-    if (window.innerWidth < 768) {
-      const header = document.querySelector(headerSelector);
-      const headerH = header ? header.offsetHeight : 0;
-      setStableH(window.innerHeight - headerH);
-    }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // On mobile: use JS-captured px height (stable, no reflow)
-  // On desktop: CSS svh is fine
   const sectionStyle =
     isMobile && stableH
       ? { height: `${stableH}px`, marginTop: "var(--header-h)" }

@@ -1,20 +1,21 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Mail } from "lucide-react";
 import NavLinks from "@/components/NavLinks";
 import SocialLinks from "@/components/SocialLinks";
-import { inter, playfair, garamond } from '@/lib/fonts';
+import { playfair } from '@/lib/fonts';
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   const toggle = () => setOpen((o) => !o);
 
+  // Always start false — matches SSR output exactly.
+  // Never read window.scrollY on mount: on production, the browser can briefly
+  // restore a non-zero scroll position before useScrollRestoration resets it,
+  // which causes a one-frame isSticky=true flash. Starting at false and only
+  // updating on actual user scroll events eliminates the flash entirely.
   const [isSticky, setIsSticky] = useState(false);
-
-  // Suppress transition on first render so the header "snaps" to the correct
-  // sticky/non-sticky state without a visible flash on production (SSG hydration).
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     if (open) {
@@ -26,18 +27,8 @@ export default function Header() {
   }, [open]);
 
   useEffect(() => {
-    // Read real scroll immediately on mount — before any animation fires
-    const current = window.scrollY > 50;
-    setIsSticky(current);
-
     const handleScroll = () => setIsSticky(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll, { passive: true });
-
-    // Only enable transitions AFTER first correct state is painted
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => setMounted(true));
-    });
-
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -47,10 +38,7 @@ export default function Header() {
         id="site-header"
         className={[
           "fixed inset-x-0 top-0 z-40 h-16 md:h-20",
-          // transitions only after mount — prevents SSR→hydration flash
-          mounted
-            ? "transition-[background-color,box-shadow,backdrop-filter] duration-300"
-            : "",
+          "transition-[background-color,box-shadow,backdrop-filter] duration-300",
           isSticky
             ? "bg-[#94B4C1]/95 backdrop-blur-md shadow-lg border-b border-black/10"
             : "bg-transparent backdrop-blur-0 shadow-none border-b border-transparent",
