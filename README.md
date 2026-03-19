@@ -16,7 +16,7 @@ Headless blog frontend built with Next.js, using WordPress as a backend via REST
 - Clean, minimal UI focused on readability
 
 ## Live
-[Add link here]
+https://viator.com.ua/
 
 ## About
 Designed and developed independently, including UI, content structure, and API integration.
