@@ -6,7 +6,6 @@ import { useHeaderHeight } from "@/lib/hooks/useHeaderHeight";
 import { playfair, garamond } from "@/lib/fonts";
 
 export default function AboutPage() {
-  // still needed for the BelievePanel scroll calculation
   const headerH = useHeaderHeight();
 
   const beliefs = useMemo(
@@ -20,12 +19,11 @@ export default function AboutPage() {
 
   return (
     <>
-      {/* HERO — uses CSS variable, no JS needed for first paint */}
+      {/* HERO — full-width without the -ml-[50vw] trick that causes horizontal scroll */}
       <section
-        className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden
-                   md:left-0 md:right-0 md:ml-0 md:mr-0 md:w-full"
+        className="relative w-full overflow-hidden"
         style={{
-          height: "calc(100dvh - var(--header-h))",
+          height: "calc(100svh - var(--header-h))",
           marginTop: "var(--header-h)",
         }}
       >
@@ -88,7 +86,9 @@ export default function AboutPage() {
           />
         </section>
 
-        <section className="container mx-auto space-y-8">
+        {/* overflow-x:clip isolates framer-motion x-slide animations (±64px)
+            without creating a scroll container, so nothing else breaks */}
+        <section className="container mx-auto space-y-8" style={{ overflowX: "clip" }}>
           <h2
             className={`${playfair.className} text-3xl md:text-4xl font-extrabold text-center uppercase tracking-wider text-[#416472]`}
           >
@@ -195,7 +195,7 @@ function BelievePanel({ items, headerOffset = 0, garamondClassName = "" }) {
           style={{ height: `calc(100vh - ${stickyTop}px - 18px)` }}
         >
           <div className="relative z-10 h-full px-6 py-10">
-            <div className="grid h-full items-center" style={{ gridTemplateRows }}>
+            <div className="grid h-full items-center text-center" style={{ gridTemplateRows }}>
               {items.map((text, i) => (
                 <Fragment key={i}>
                   <BelieveStackItem

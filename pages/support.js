@@ -6,12 +6,11 @@ import { playfair, garamond } from "@/lib/fonts";
 export default function SupportPage() {
   return (
     <>
-      {/* HERO — CSS variable, no JS needed */}
+      {/* HERO — full-width without -ml-[50vw] trick */}
       <section
-        className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden
-                   md:left-0 md:right-0 md:ml-0 md:mr-0 md:w-full px-6 pt-6 pb-10"
+        className="relative w-full overflow-hidden px-6 pt-6 pb-10"
         style={{
-          height: "calc(100dvh - var(--header-h))",
+          height: "calc(100svh - var(--header-h))",
           marginTop: "var(--header-h)",
         }}
       >

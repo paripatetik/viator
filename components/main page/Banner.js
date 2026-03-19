@@ -28,8 +28,10 @@ export default function Banner({
   return (
     <section
       style={{
-        height: "calc(100dvh - var(--header-h))",
-        minHeight: "calc(100dvh - var(--header-h))",
+        /* svh = "small viewport height" — stable value, does NOT change when
+           the mobile browser toolbar slides in/out. Prevents the banner jump. */
+        height: "calc(100svh - var(--header-h))",
+        minHeight: "calc(100svh - var(--header-h))",
         marginTop: "var(--header-h)",
       }}
       className="relative w-full overflow-hidden"
