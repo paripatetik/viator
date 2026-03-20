@@ -22,10 +22,7 @@ export default function AboutPage() {
       {/* HERO — full-width without the -ml-[50vw] trick that causes horizontal scroll */}
       <section
         className="relative w-full overflow-hidden"
-        style={{
-          height: "calc(100svh - var(--header-h))",
-          marginTop: "var(--header-h)",
-        }}
+        style={{ height: "var(--hero-h)" }}
       >
         <Image
           src="/imgs/banner-about 1.png"

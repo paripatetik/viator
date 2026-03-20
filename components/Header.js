@@ -46,7 +46,7 @@ export default function Header() {
       >
         <div className="container mx-auto h-full flex items-center px-4 sm:px-6 lg:px-8 gap-7 md:gap-10">
           <Link href="/" className="flex items-center gap-2 lg:gap-3">
-            <div className="w-14 md:w-16 h-full flex items-center justify-center">
+            <div className="w-14 h-14 md:w-16 md:h-16 shrink-0 flex items-center justify-center">
               <Image
                 src="/imgs/logo.png"
                 alt="Viator logo"

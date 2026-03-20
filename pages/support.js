@@ -9,10 +9,7 @@ export default function SupportPage() {
       {/* HERO — full-width without -ml-[50vw] trick */}
       <section
         className="relative w-full overflow-hidden px-6 pt-6 pb-10"
-        style={{
-          height: "calc(100svh - var(--header-h))",
-          marginTop: "var(--header-h)",
-        }}
+        style={{ height: "var(--hero-h)" }}
       >
         <Image
           src="/imgs/banner-support.png"

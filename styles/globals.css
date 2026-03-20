@@ -2,6 +2,15 @@
 
 :root {
   --header-h: 4rem;
+  --hero-vh: 100vh;
+  --hero-h: calc(var(--hero-vh) - var(--header-h));
+}
+
+@supports (height: 100svh) {
+  :root {
+    --hero-vh: 100svh;
+    --hero-h: calc(var(--hero-vh) - var(--header-h));
+  }
 }
 @media (min-width: 768px) {
   :root {
@@ -18,4 +27,3 @@ html {
 }
 
 @plugin "@tailwindcss/typography"
-

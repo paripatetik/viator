@@ -12,10 +12,7 @@ export function Hero({
   return (
     <section
       className="relative w-full overflow-hidden"
-      style={{
-        height: "calc(100svh - var(--header-h))",
-        marginTop: "var(--header-h)",
-      }}
+      style={{ height: "var(--hero-h)" }}
     >
       <Image
         src={img}

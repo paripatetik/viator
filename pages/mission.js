@@ -2,7 +2,6 @@
 "use client";
 import Image from "next/image";
 import Head from "next/head";
-import { useHeaderHeight } from "@/lib/hooks/useHeaderHeight";
 import { playfair, garamond } from "@/lib/fonts";
 import SECTIONS from "@/components/mission page/missionSections";
 import MissionHero from "@/components/mission page/MissionHero";
@@ -16,9 +15,6 @@ const LOTTIES = {
 };
 
 export default function MissionPage() {
-  // needed only for MissionHero parallax calculations
-  const headerH = useHeaderHeight();
-
   const mainSections = SECTIONS.slice(0, -1);
   const lastSection = SECTIONS[SECTIONS.length - 1];
 
@@ -33,11 +29,8 @@ export default function MissionPage() {
       </Head>
 
       <main className="min-h-screen text-justify">
-        {/* spacer uses CSS variable — no JS flash */}
-        <div style={{ height: "var(--header-h)" }} aria-hidden />
-
         <section id="mission-hero" className="relative">
-          <MissionHero headerHeight={headerH} />
+          <MissionHero />
         </section>
 
         <div className="w-full">

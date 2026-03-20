@@ -14,7 +14,6 @@ import {
 import { inter, playfair, garamond } from "@/lib/fonts";
 
 export default function MissionHero({
-  headerHeight = 0,
   title = "Майстерня мислення Viator",
   subtitle = "Вічне повернення до філософії",
   icons = [
@@ -176,7 +175,7 @@ export default function MissionHero({
     <section
       ref={heroRef}
       className={`relative w-full overflow-hidden ${inter.className} mb-9`}
-      style={{ minHeight: `calc(100vh - ${headerHeight}px)` }}
+      style={{ minHeight: "var(--hero-h)" }}
       aria-label="Mission hero"
     >
       <div className="pointer-events-none absolute inset-0 -z-10">
@@ -207,9 +206,12 @@ export default function MissionHero({
               filter: "drop-shadow(0 16px 28px rgba(0,0,0,0.35))",
             }}
           >
-            <img
+            <Image
               src={nietzscheSrc}
               alt=""
+              width={845}
+              height={891}
+              sizes="200px"
               style={{ 
                 width: 'auto',
                 height: 'auto',
@@ -231,9 +233,12 @@ export default function MissionHero({
               filter: "drop-shadow(0 16px 28px rgba(0,0,0,0.35))",
             }}
           >
-            <img
+            <Image
               src={nietzscheSrc}
               alt=""
+              width={845}
+              height={891}
+              sizes="(min-width: 768px) 28vw, 320px"
               style={{ 
                 width: 'min(320px, 28vw)',
                 height: 'auto',
@@ -259,9 +264,12 @@ export default function MissionHero({
               filter: "drop-shadow(0 16px 28px rgba(0,0,0,0.35))",
             }}
           >
-            <img
+            <Image
               src={kantSrc}
               alt=""
+              width={1007}
+              height={1218}
+              sizes="120px"
               style={{ 
                 width: 'auto',
                 height: 'auto',
@@ -283,9 +291,12 @@ export default function MissionHero({
               filter: "drop-shadow(0 16px 28px rgba(0,0,0,0.35))",
             }}
           >
-            <img
+            <Image
               src={kantSrc}
               alt=""
+              width={1007}
+              height={1218}
+              sizes="(min-width: 768px) 28vw, 320px"
               style={{ 
                 width: 'min(320px, 28vw)',
                 height: 'auto',
@@ -297,8 +308,8 @@ export default function MissionHero({
       )}
 
       <div
-        className="relative mx-auto flex min-h-[calc(100vh-var(--hh))] w-full flex-col text-white"
-        style={{ ["--hh"]: `${headerHeight}px` }}
+        className="relative mx-auto flex w-full flex-col text-white"
+        style={{ minHeight: "var(--hero-h)" }}
       >
         <div className="flex items-end justify-center px-6 pt-6 pb-10">
           <h1
@@ -392,9 +403,12 @@ function CircleIcon({ src, sizePx }) {
         filter: "drop-shadow(0 8px 14px rgba(0,0,0,0.15))",
       }}
     >
-      <img
+      <Image
         src={src}
         alt=""
+        width={size}
+        height={size}
+        sizes={`${size}px`}
         className="h-full w-full object-cover"
         draggable="false"
       />

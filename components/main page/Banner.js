@@ -1,45 +1,21 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import clsx from "clsx";
 import { playfair } from "@/lib/fonts";
 
-const useIsomorphicLayoutEffect =
-  typeof window !== "undefined" ? useLayoutEffect : useEffect;
-
-export default function Banner({ title, subtitle, imgSrc, headerSelector = "#site-header" }) {
+export default function Banner({ title, subtitle, imgSrc }) {
   const [pauseText, setPauseText] = useState(false);
   const [pauseImg, setPauseImg] = useState(false);
-
-  // Capture stable height in px BEFORE first paint.
-  // On mobile, iOS Safari changes innerHeight when its chrome slides in/out —
-  // any viewport unit (svh/dvh/vh) will reflow. Px captured once = no reflow.
-  // On desktop stableH stays null and CSS handles it fine.
-  const [stableH, setStableH] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
 
-  useIsomorphicLayoutEffect(() => {
-    const mobile = window.innerWidth < 768;
-    setIsMobile(mobile);
+  useEffect(() => {
+    const update = () => setIsMobile(window.innerWidth < 768);
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
 
-    if (mobile) {
-      const header = document.querySelector(headerSelector);
-      const headerH = header ? header.offsetHeight : 0;
-      // Capture once — intentionally NO resize/scroll listener
-      setStableH(window.innerHeight - headerH);
-    }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const sectionStyle = isMobile && stableH
-    ? {
-        // Fixed px height: immune to iOS chrome show/hide
-        height: `${stableH}px`,
-        maxHeight: `${stableH}px`,
-        marginTop: "var(--header-h)",
-      }
-    : {
-        height: "calc(100svh - var(--header-h))",
-        marginTop: "var(--header-h)",
-      };
+  const sectionStyle = { height: "var(--hero-h)" };
 
   return (
     <section

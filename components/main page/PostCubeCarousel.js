@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useLayoutEffect, useMemo, useCallback } from "react";
+import { useState, useMemo } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Navigation, Pagination, Keyboard } from "swiper/modules";
 import "swiper/css";
@@ -14,24 +14,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import PostCoverCard from "./PostCoverCard";
 import { playfair } from "@/lib/fonts";
 
-const useIsomorphicLayoutEffect =
-  typeof window !== "undefined" ? useLayoutEffect : useEffect;
-
-function useStableHeight(selector = "#site-header") {
-  const [height, setHeight] = useState(null);
-
-  useIsomorphicLayoutEffect(() => {
-    const header = document.querySelector(selector);
-    const headerH = header ? header.offsetHeight : 0;
-    setHeight(window.innerHeight - headerH);
-    // No resize listener — height must stay stable on mobile
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  return height;
-}
-
 export default function PostsCubeCarousel({ posts = [] }) {
-  const stableH = useStableHeight();
   const displayPosts = useMemo(() => posts.slice(0, 7), [posts]);
   const [activeIdx, setActiveIdx] = useState(0);
   const prefersReducedMotion = useReducedMotion();
@@ -52,11 +35,6 @@ export default function PostsCubeCarousel({ posts = [] }) {
     },
   };
 
-  // Use stable px height — same as banner, so they never shift relative to each other
-  const sectionStyle = stableH
-    ? { height: `${stableH}px` }
-    : { height: "calc(100svh - var(--header-h))" };
-
   return (
     <motion.section
       variants={fromTop}
@@ -64,7 +42,7 @@ export default function PostsCubeCarousel({ posts = [] }) {
       whileInView="show"
       viewport={{ once: true, amount: 0.25, margin: "0px 0px -12% 0px" }}
       className="bg-slate-100/90 flex flex-col pb-6"
-      style={sectionStyle}
+      style={{ height: "var(--hero-h)" }}
     >
       <div className="container mx-auto px-4 flex flex-col flex-1 relative">
         <h2
