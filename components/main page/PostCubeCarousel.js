@@ -1,7 +1,6 @@
-// components/main page/PostsCubeCarousel.js
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useLayoutEffect, useMemo, useCallback } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Navigation, Pagination, Keyboard } from "swiper/modules";
 import "swiper/css";
@@ -15,31 +14,28 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import PostCoverCard from "./PostCoverCard";
 import { playfair } from "@/lib/fonts";
 
-function useHeaderHeight() {
-  const [height, setHeight] = useState(0);
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
-  const measure = useCallback(() => {
-    const header = document.getElementById("site-header");
-    setHeight(header ? header.offsetHeight : 0);
-  }, []);
+function useStableHeight(selector = "#site-header") {
+  const [height, setHeight] = useState(null);
 
-  useEffect(() => {
-    measure();
-    window.addEventListener("resize", measure, { passive: true });
-    return () => window.removeEventListener("resize", measure);
-  }, [measure]);
+  useIsomorphicLayoutEffect(() => {
+    const header = document.querySelector(selector);
+    const headerH = header ? header.offsetHeight : 0;
+    setHeight(window.innerHeight - headerH);
+    // No resize listener — height must stay stable on mobile
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return height;
 }
 
 export default function PostsCubeCarousel({ posts = [] }) {
-  const headerH = useHeaderHeight();
+  const stableH = useStableHeight();
   const displayPosts = useMemo(() => posts.slice(0, 7), [posts]);
   const [activeIdx, setActiveIdx] = useState(0);
-
   const prefersReducedMotion = useReducedMotion();
 
-  // subtle: tiny vertical offset + slight scale, slower, softer
   const fromTop = {
     hidden: {
       opacity: 0,
@@ -56,6 +52,11 @@ export default function PostsCubeCarousel({ posts = [] }) {
     },
   };
 
+  // Use stable px height — same as banner, so they never shift relative to each other
+  const sectionStyle = stableH
+    ? { height: `${stableH}px` }
+    : { height: "calc(100svh - var(--header-h))" };
+
   return (
     <motion.section
       variants={fromTop}
@@ -63,7 +64,7 @@ export default function PostsCubeCarousel({ posts = [] }) {
       whileInView="show"
       viewport={{ once: true, amount: 0.25, margin: "0px 0px -12% 0px" }}
       className="bg-slate-100/90 flex flex-col pb-6"
-      style={{ height: `calc(100vh - ${headerH}px)` }}
+      style={sectionStyle}
     >
       <div className="container mx-auto px-4 flex flex-col flex-1 relative">
         <h2

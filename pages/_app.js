@@ -16,6 +16,16 @@ function RouteDebug() {
     return () => router.events.off("routeChangeError", handler);
   }, [router]);
 
+  useEffect(() => {
+  new PerformanceObserver((list) => {
+    list.getEntries().forEach((e) => {
+      console.log('shift:', e.value.toFixed(4),
+        e.sources?.map(s => s.node?.id || s.node?.className?.toString().slice(0,50))
+      );
+    });
+  }).observe({ type: 'layout-shift', buffered: true });
+}, []);
+
   return null;
 }
 
