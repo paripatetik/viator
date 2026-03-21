@@ -31,6 +31,24 @@ function RouteDebug() {
 
 export default function App({ Component, pageProps }) {
   useHomeScrollRestoration();
+
+  useEffect(() => {
+    const d = window.__scrollDebug;
+    console.log('[scroll] Y at inline script:', d?.scrollYAtScript);
+    console.log('[scroll] Y at hydration:', window.scrollY);
+
+    const start = performance.now();
+    const poll = () => {
+      if (performance.now() - start < 2000) {
+        if (window.scrollY !== 0) {
+          console.warn('[scroll] Y changed AFTER hydration:', window.scrollY, 'at', performance.now() - start, 'ms');
+        }
+        requestAnimationFrame(poll);
+      }
+    };
+    requestAnimationFrame(poll);
+  }, []);
+
   return (
     <Layout>
       <RouteDebug />

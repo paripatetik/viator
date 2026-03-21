@@ -21,4 +21,14 @@ export default function Document() {
     </Html>
   );
 }
- 
+ <script
+  dangerouslySetInnerHTML={{
+    __html: `
+      history.scrollRestoration = 'manual';
+      window.__scrollDebug = {
+        scrollYAtScript: window.scrollY,
+        timestamp: performance.now()
+      };
+    `,
+  }}
+/>

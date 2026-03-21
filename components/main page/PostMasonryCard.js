@@ -1,12 +1,10 @@
-// components/PostMasonryCard.js
 "use client";
 
 import Link from "next/link";
 import Image from "next/image";
-import { Clock, Tag, User } from "lucide-react";
+import { Clock, User } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 
-// Word-count fallback (200 wpm), used only if reading_time is missing
 function readTime(html = "") {
   const text = html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
   return Math.max(1, Math.ceil(text.split(" ").length / 200));
@@ -16,13 +14,9 @@ export default function PostMasonryCard({ post, index = 0 }) {
   const img =
     post._embedded?.["wp:featuredmedia"]?.[0]?.source_url || "/fallback.jpg";
 
-  // multiple categories, joined with commas
-  const categoryLabel = (() => {
-    const names = (post._embedded?.["wp:term"]?.[0] || [])
-      .map((t) => t?.name)
-      .filter(Boolean);
-    return names.length ? names.join(", ") : "Без категорії";
-  })();
+  const categories = (post._embedded?.["wp:term"]?.[0] || [])
+    .map((t) => t?.name)
+    .filter(Boolean);
 
   const author = post._embedded?.author?.[0]?.name;
 
@@ -36,7 +30,6 @@ export default function PostMasonryCard({ post, index = 0 }) {
   const prefersReducedMotion = useReducedMotion();
   const dir = index % 2 === 0 ? -1 : 1;
 
-  // subtle: small x offset + tiny y + slight scale + soft blur
   const card = {
     hidden: {
       opacity: 0,
@@ -56,7 +49,6 @@ export default function PostMasonryCard({ post, index = 0 }) {
   };
 
   return (
-    // wrapper animates; article keeps hover:scale working (no transform conflict)
     <motion.div
       variants={card}
       initial="hidden"
@@ -64,50 +56,68 @@ export default function PostMasonryCard({ post, index = 0 }) {
       viewport={{ once: true, amount: 0.18, margin: "0px 0px -10% 0px" }}
       className="break-inside-avoid mb-6"
     >
-      <article className="shadow-lg rounded-lg overflow-hidden ring-1 ring-slate-200 hover:scale-[1.015] transition-transform will-change-transform">
-        {/* image */}
-        <Link href={`/posts/${post.slug}`}>
-          <Image
-            src={img}
-            alt={post.title.rendered}
-            width={600}
-            height={400}
-            className="w-full h-auto object-cover"
-          />
-        </Link>
+      <Link href={`/posts/${post.slug}`} className="group block">
+        <article className="rounded-2xl overflow-hidden shadow-md ring-1 ring-slate-200 hover:shadow-xl transition-shadow duration-300 bg-white">
 
-        {/* text block */}
-        <div className="p-5 space-y-3">
-          <Link href={`/posts/${post.slug}`}>
+          {/* Image */}
+          <div className="relative w-full overflow-hidden" style={{ aspectRatio: "16/9" }}>
+            <Image
+              src={img}
+              alt={post.title.rendered}
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+          </div>
+
+          {/* Text block */}
+          <div className="p-5 space-y-2">
+
+            {/* Title */}
             <h3
-              className="text-xl font-semibold leading-snug uppercase p-2 bg-[#f7e7d7]/70 text-black text-center mb-2"
+              className="text-lg font-bold leading-snug text-slate-900 group-hover:text-[#3B5560] transition-colors duration-200"
               dangerouslySetInnerHTML={{ __html: post.title.rendered }}
             />
-          </Link>
 
-          {excerpt && (
-            <p
-              className="text-slate-700 leading-snug text-pretty"
-              dangerouslySetInnerHTML={{ __html: excerpt }}
-            />
-          )}
+            {/* Accent line */}
+            <div className="w-10 h-[3px] rounded-full bg-[#94B4C1]" />
 
-          <div className="flex flex-col gap-1 pt-3 border-t border-slate-200">
-            <Meta icon={<Clock size={16} />} label={`${minutes} хв`} />
-            <Meta icon={<Tag size={16} />} label={categoryLabel} />
-            {author && <Meta icon={<User size={16} />} label={author} />}
+            {excerpt && (
+              <p className="text-slate-600 text-sm leading-relaxed pt-1">
+                {excerpt}
+              </p>
+            )}
+
+            {/* Category pills — below text, warm yellow */}
+            {categories.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {categories.map((name) => (
+                  <span
+                    key={name}
+                    className="inline-block px-3 py-0.5 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-[#FFF2DB] text-[#7A5C2E] border border-[#FFAB5B]/40"
+                  >
+                    {name}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {/* Footer */}
+            <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs text-slate-400">
+              <div className="flex items-center gap-1">
+                <Clock size={13} />
+                <span>{minutes} хв</span>
+              </div>
+              {author && (
+                <div className="flex items-center gap-1">
+                  <User size={13} />
+                  <span>{author}</span>
+                </div>
+              )}
+            </div>
+
           </div>
-        </div>
-      </article>
+        </article>
+      </Link>
     </motion.div>
-  );
-}
-
-function Meta({ icon, label }) {
-  return (
-    <span className="flex items-center gap-2 text-xs text-slate-600">
-      {icon}
-      {label}
-    </span>
   );
 }
