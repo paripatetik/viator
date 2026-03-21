@@ -59,13 +59,15 @@ export default function PostMasonryCard({ post, index = 0 }) {
       <Link href={`/posts/${post.slug}`} className="group block">
         <article className="rounded-2xl overflow-hidden shadow-md ring-1 ring-slate-200 hover:shadow-xl transition-shadow duration-300 bg-white">
 
-          {/* Image */}
-          <div className="relative w-full overflow-hidden" style={{ aspectRatio: "16/9" }}>
+          {/* Image — natural height, no crop */}
+          <div className="w-full overflow-hidden">
             <Image
               src={img}
               alt={post.title.rendered}
-              fill
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
+              width={800}
+              height={600}
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="w-full h-auto transition-transform duration-500 group-hover:scale-105"
             />
           </div>
 
