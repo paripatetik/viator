@@ -3,7 +3,9 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { inter, playfair, garamond } from "@/lib/fonts";
+import { inter, playfair } from "@/lib/fonts";
+import { layoutStyles } from "@/lib/styles";
+import SectionHeading from "@/components/ui/SectionHeading";
 
 /* ------------------- SHARED SEQUENTIAL LOADING ------------------- */
 // single lottie-web import for the whole page
@@ -215,14 +217,12 @@ export default function MissionSection({
   ref={sectionRef}
   className={`pt-8 lg:pt-10 pb-4 lg:pb-5 ${inter.className}`}
 >
-  <div className="container mx-auto px-6">
+  <div className={layoutStyles.page}>
     <div className="max-w-5xl mx-auto">
       {title && (
-        <h2
-          className={`${garamond.className} text-3xl md:text-4xl font-extrabold text-center uppercase tracking-wider text-[#416472] mb-6`}
-        >
+        <SectionHeading font="garamond" className="mb-6">
           {title}
-        </h2>
+        </SectionHeading>
       )}
 
       <div

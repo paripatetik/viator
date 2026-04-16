@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Clock } from "lucide-react";
+import { accentStyles, heroHeightStyle, heroStyles } from "@/lib/styles";
 
 export function Hero({
   title,
@@ -10,10 +11,7 @@ export function Hero({
   epigraph,
 }) {
   return (
-    <section
-      className="relative w-full overflow-hidden"
-      style={{ height: "var(--hero-h)" }}
-    >
+    <section className={heroStyles.root} style={heroHeightStyle}>
       <Image
         src={img}
         alt=""
@@ -30,7 +28,7 @@ export function Hero({
             className="font-extrabold leading-tight text-3xl sm:text-5xl md:text-6xl"
             dangerouslySetInnerHTML={{ __html: title }}
           />
-          <div className="h-1 w-20 bg-[#94B4C1] mt-4" />
+          <div className={accentStyles.shortRule} />
 
           <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:justify-between">
             {epigraph && (

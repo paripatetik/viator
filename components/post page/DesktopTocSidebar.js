@@ -86,7 +86,7 @@ export default function DesktopTocSidebar({ toc = [], img, onSelect, articleRef 
   return (
     <aside className="hidden lg:block w-[260px] xl:w-[300px] shrink-0" aria-label="Зміст статті">
       <div className="sticky" style={{ top: headerH + 16 }}>
-        <div className="rounded-xl bg-[#94B4C1]/20 ring-1 ring-slate-200 p-4">
+        <div className="rounded-xl bg-viator-sky/20 ring-1 ring-slate-200 p-4">
           <h2 className="text-xl font-semibold mb-3">Зміст</h2>
           <ol className="space-y-2">
             {toc.map(({ id, text }) => (
@@ -99,8 +99,8 @@ export default function DesktopTocSidebar({ toc = [], img, onSelect, articleRef 
                   className={clsx(
                     "block w-full text-left transition-colors",
                     active === id
-                      ? "text-[#8EB7C6] font-semibold"
-                      : "text-slate-700 hover:text-[#8EB7C6]"
+                      ? "text-viator-muted-blue font-semibold"
+                      : "text-slate-700 hover:text-viator-muted-blue"
                   )}
                 >
                   {text}

@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -40,7 +42,7 @@ export default function Header() {
           "fixed inset-x-0 top-0 z-40 h-16 md:h-20",
           "transition-[background-color,box-shadow,backdrop-filter] duration-300",
           isSticky
-            ? "bg-[#94B4C1]/95 backdrop-blur-md shadow-lg border-b border-black/10"
+            ? "bg-viator-sky/95 backdrop-blur-md shadow-lg border-b border-black/10"
             : "bg-transparent backdrop-blur-0 shadow-none border-b border-transparent",
         ].join(" ")}
       >

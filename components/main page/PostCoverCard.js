@@ -46,7 +46,7 @@ export default function PostCoverCard({ post, isActive = false, className = "" }
       href={`/posts/${post.slug}`}
       {...hoverEvents}
       className={clsx(
-        "group relative block w-full h-full rounded-xl overflow-hidden select-none bg-black shadow-xl border-3 border-[#94B4C1]/75 transition-transform duration-500",
+        "group relative block w-full h-full rounded-xl overflow-hidden select-none bg-black shadow-xl border-3 border-viator-sky/75 transition-transform duration-500",
         !isActive && "pointer-events-none cursor-default",
         className
       )}

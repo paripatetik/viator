@@ -12,7 +12,8 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import PostCoverCard from "./PostCoverCard";
-import { playfair } from "@/lib/fonts";
+import { heroHeightStyle, layoutStyles } from "@/lib/styles";
+import SectionHeading from "@/components/ui/SectionHeading";
 
 export default function PostsCubeCarousel({ posts = [] }) {
   const displayPosts = useMemo(() => posts.slice(0, 7), [posts]);
@@ -42,14 +43,12 @@ export default function PostsCubeCarousel({ posts = [] }) {
       whileInView="show"
       viewport={{ once: true, amount: 0.25, margin: "0px 0px -12% 0px" }}
       className="bg-slate-100/90 flex flex-col pb-6"
-      style={{ height: "var(--hero-h)" }}
+      style={heroHeightStyle}
     >
-      <div className="container mx-auto px-4 flex flex-col flex-1 relative">
-        <h2
-          className={`${playfair.className} text-3xl md:text-4xl font-extrabold text-center uppercase tracking-wider text-[#416472] pb-6 mt-6 md:mt-12`}
-        >
+      <div className={`${layoutStyles.pageCompact} flex flex-col flex-1 relative`}>
+        <SectionHeading className="pb-6 mt-6 md:mt-12">
           Останні публікації
-        </h2>
+        </SectionHeading>
 
         <Swiper
           effect="coverflow"

@@ -60,7 +60,7 @@ export function TocCard({ toc = [], onSelect, defaultOpen = true }) {
     <>
       {/* MOBILE (card on top). Hidden ≥900px) */}
  <nav className="min-[900px]:hidden">
-  <div className="rounded-xl bg-[#94B4C1]/30 p-4 shadow-sm ring-1 ring-slate-100">
+  <div className="rounded-xl bg-viator-sky/30 p-4 shadow-sm ring-1 ring-slate-100">
     <button
       type="button"
       onClick={() => setOpen(!open)}
@@ -81,7 +81,7 @@ export function TocCard({ toc = [], onSelect, defaultOpen = true }) {
       {open && (
         <motion.ol
           id="toc-list"
-          className="overflow-hidden mt-3 space-y-3 list-disc pl-5 marker:text-[#8EB7C6] text-[15px] leading-6"
+          className="overflow-hidden mt-3 space-y-3 list-disc pl-5 marker:text-viator-muted-blue text-[15px] leading-6"
           initial={{ height: 0, opacity: 0, y: -6 }}
           animate={{ height: "auto", opacity: 1, y: 0 }}
           exit={{ height: 0, opacity: 0, y: -6 }}
@@ -92,7 +92,7 @@ export function TocCard({ toc = [], onSelect, defaultOpen = true }) {
               <button
                 type="button"
                 onClick={() => onSelect(id)}   // ← simple & reliable
-                className="text-left transition-colors hover:text-[#8EB7C6] text-slate-700"
+                className="text-left transition-colors hover:text-viator-muted-blue text-slate-700"
               >
                 {text}
               </button>
@@ -123,8 +123,8 @@ export function TocCard({ toc = [], onSelect, defaultOpen = true }) {
                     className={[
                       "block w-full text-left py-1 rounded-md transition-all duration-200",
                       isActive
-                        ? "font-semibold text-[#0f3b57] bg-[#E7F1F5] -mr-[6px] pr-4 pl-2 border-r-4 border-[#0f3b57]"
-                        : "pl-3 pr-2 text-slate-600 hover:text-[#0f3b57]"
+                        ? "font-semibold text-viator-toc-active bg-viator-note -mr-[6px] pr-4 pl-2 border-r-4 border-viator-toc-active"
+                        : "pl-3 pr-2 text-slate-600 hover:text-viator-toc-active"
                     ].join(" ")}
                   >
                     {text}

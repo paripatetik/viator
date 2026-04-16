@@ -1,5 +1,25 @@
 @import "tailwindcss";
 
+@theme {
+  --color-viator-sky: #94B4C1;
+  --color-viator-ink: #416472;
+  --color-viator-sun: #FFAB5B;
+  --color-viator-cream: #FFF2DB;
+  --color-viator-paper: #F7F3EC;
+  --color-viator-line: #C1D6E2;
+  --color-viator-clay: #DEAA79;
+  --color-viator-deep: #3B5560;
+  --color-viator-muted-blue: #8EB7C6;
+  --color-viator-toc-active: #0f3b57;
+  --color-viator-note: #E7F1F5;
+  --color-viator-progress-track: #E0F0F6;
+  --color-viator-soft-blue: #EAF1F4;
+  --color-viator-dark: #1E2A32;
+  --color-viator-category: #7A5C2E;
+  --color-viator-pale: #F5FAFE;
+  --color-viator-pale-border: #D4E5EE;
+}
+
 :root {
   --header-h: 4rem;
   --hero-vh: 100vh;

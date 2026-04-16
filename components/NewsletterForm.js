@@ -1,6 +1,7 @@
-"use client";                          // if you’re on Next 13/14 App Router
+"use client";
+
 import { useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import Button from "@/components/ui/Button";
 
 export default function NewsletterForm({ className = "" }) {
   const [values, setValues] = useState({ name: "", email: "" });
@@ -78,13 +79,12 @@ console.log("ANON", process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.slice(0, 12));
         className="w-full bg-transparent border-b border-black py-3 placeholder-gray-400 focus:outline-none"
       />
 
-      <button
+      <Button
         type="submit"
         disabled={status === "loading"}
-        className="bg-[#FFAB5B] border-2 border-black text-black uppercase font-bold tracking-wide px-10 py-3 rounded-full hover:bg-slate-100 active:scale-95 transition disabled:opacity-60"
       >
         {status === "loading" ? "Надсилаємо..." : "Підписатися"}
-      </button>
+      </Button>
 
       {message && (
         <p

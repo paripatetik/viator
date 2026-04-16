@@ -1,10 +1,14 @@
+"use client";
+
 import { useState, useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import usePostsByCategories from "@/lib/hooks/usePostsByCategories";
 import CategoryPicker from "./CategoryPicker";
 import PostMasonryCard from "./PostMasonryCard";
-import { playfair } from "@/lib/fonts";
+import Button from "@/components/ui/Button";
+import SectionHeading from "@/components/ui/SectionHeading";
+import { layoutStyles } from "@/lib/styles";
 
 const fade = { hidden: { opacity: 0, y: 6 }, visible: { opacity: 1, y: 0 } };
 const PER_PAGE = 10; // ask WP for 10 posts per page
@@ -46,12 +50,10 @@ const {
   /* ---------------------------- UI -------------------------- */
   return (
 <section className="pb-6 overflow-visible">
-  <div className="container mx-auto px-4 overflow-visible">
-    <h2
-      className={`${playfair.className} text-3xl md:text-4xl font-extrabold text-center uppercase tracking-wider text-[#416472] mb-6 mt-6 md:mt-12`}
-    >
+  <div className={`${layoutStyles.pageCompact} overflow-visible`}>
+    <SectionHeading className="mb-6 mt-6 md:mt-12">
       Наші Розвідки
-    </h2>
+    </SectionHeading>
 
     {/* chips: top buffer so hover lift doesn't get clipped */}
     <div className="relative z-20 overflow-visible pt-4 -mt-4 pb-2">
@@ -96,13 +98,12 @@ const {
 
               {hasMore && !loading && (
                 <div className="mt-10 text-center">
-                  <button
+                  <Button
+                    variant="loadMore"
                     onClick={loadNextPage}
-                    className="px-6 py-3 text-xl font-semibold text-white rounded-full"
-                    style={{ backgroundColor: "#DEAA79" }}
                   >
                     Більше дописів
-                  </button>
+                  </Button>
                 </div>
               )}
             </>

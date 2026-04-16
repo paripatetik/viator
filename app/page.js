@@ -3,19 +3,19 @@ import PostsCubeCarousel from "@/components/main page/PostCubeCarousel";
 import CategorySection from "@/components/main page/CategorySection";
 import { getPosts, getAllCategories } from "@/lib/api/rest";
 
-export async function getStaticProps() {
+export const revalidate = 600;
+
+export const metadata = {
+  title: "Блог Viator",
+  description: "Наші розвідки про філософію, науку та культуру.",
+};
+
+export default async function Home() {
   const [posts, categories] = await Promise.all([
-    getPosts(8),        // first 8 for the carousel
+    getPosts(8),
     getAllCategories(),
   ]);
 
-  return {
-    props: { posts, categories },
-    revalidate: 600,
-  };
-}
-
-export default function Home({ posts, categories }) {
   return (
     <>
       <Banner

@@ -5,8 +5,6 @@ import { useEffect, useRef } from "react";
 import { AnimatePresence, motion, useScroll } from "framer-motion";
 import { garamond } from "@/lib/fonts";
 
-const BRAND = "#94B4C1";
-
 /** Fixed mobile swiper: shows exactly ONE slide.
  *  - Vertical scroll pages between slides.
  *  - Viewport uses w-full (not w-screen) so it fits inside .container.
@@ -54,7 +52,11 @@ export default function MobileSwiper({ slides, stickyTop, onIndexChange }) {
             >
               <div
                 className="mx-auto w-[92%] max-w-[680px] rounded-2xl px-5 py-7 text-center shadow-sm"
-                style={{ background: BRAND, color: "#0f172a", minHeight: "36vh" }}
+                style={{
+                  background: "var(--color-viator-sky)",
+                  color: "#0f172a",
+                  minHeight: "36vh",
+                }}
               >
                 <p className={`${garamond.className} text-[18px] leading-relaxed`}>
                   {slides[i]}

@@ -3,6 +3,7 @@ import Image from "next/image";
 import SocialLinks from "./SocialLinks";
 import NavLinks from "./NavLinks";
 import NewsletterForm from "./NewsletterForm";
+import { layoutStyles } from "@/lib/styles";
 
 /**
  * Site‑wide footer with newsletter form, logo, social links and legal nav.
@@ -11,8 +12,8 @@ import NewsletterForm from "./NewsletterForm";
 export default function Footer() {
   const thisYear = new Date().getFullYear();
   return (
-    <footer className="bg-[#FFAB5B]/90 text-white">
-      <div className="container mx-auto px-4 py-10 gap-10  ">
+    <footer className="bg-viator-sun/90 text-white">
+      <div className={`${layoutStyles.pageCompact} py-10 gap-10`}>
         <div className="flex flex-col md:flex-row md:items-stretch gap-6 md:gap-10 w-full h-auto md:h-[96px] mb-10">
       {/* Logo link */}
       <Link href="/" className=" flex items-center self-center" aria-label="На головну">
@@ -36,7 +37,7 @@ export default function Footer() {
        <div className="flex flex-col-reverse md:flex-row gap-10 justify-between md:items-start">
 
       
-        <div className="bg-[#FFF2DB] text-black p-4 rounded-lg">
+        <div className="bg-viator-cream text-black p-4 rounded-lg">
         <h2 className="text-3xl md:text-4xl font-extrabold leading-tight mb-4">
           Підписатися на Viator
         </h2>

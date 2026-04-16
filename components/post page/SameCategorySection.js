@@ -1,6 +1,8 @@
 import React from 'react'; 
 import usePostsByCategories from '@/lib/hooks/usePostsByCategories';
 import PostMasonryCard from '../main page/PostMasonryCard';
+import { layoutStyles } from "@/lib/styles";
+import SectionHeading from "@/components/ui/SectionHeading";
 
 export default function SameCategorySection({ categoryId, excludeId }) {
   // reuse your paginated hook but set perPage=3 and no chips/UI
@@ -16,10 +18,10 @@ export default function SameCategorySection({ categoryId, excludeId }) {
 
   return (
     <section className="pb-6">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-bold text-center uppercase tracking-wider pb-10">
+      <div className={layoutStyles.pageCompact}>
+        <SectionHeading font="none" variant="related" className="pb-10">
           Схожі дописи за темою
-        </h2>
+        </SectionHeading>
 
         {loading ? (
           <p className="py-12 text-center">Завантаження…</p>

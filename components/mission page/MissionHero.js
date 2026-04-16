@@ -12,6 +12,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { inter, playfair, garamond } from "@/lib/fonts";
+import { heroMinHeightStyle, heroStyles } from "@/lib/styles";
 
 export default function MissionHero({
   title = "Майстерня мислення Viator",
@@ -175,7 +176,7 @@ export default function MissionHero({
     <section
       ref={heroRef}
       className={`relative w-full overflow-hidden ${inter.className} mb-9`}
-      style={{ minHeight: "var(--hero-h)" }}
+      style={heroMinHeightStyle}
       aria-label="Mission hero"
     >
       <div className="pointer-events-none absolute inset-0 -z-10">
@@ -309,11 +310,11 @@ export default function MissionHero({
 
       <div
         className="relative mx-auto flex w-full flex-col text-white"
-        style={{ minHeight: "var(--hero-h)" }}
+        style={heroMinHeightStyle}
       >
         <div className="flex items-end justify-center px-6 pt-6 pb-10">
           <h1
-            className={`${playfair.className} text-center text-4xl font-extrabold tracking-wider uppercase md:text-6xl drop-shadow text-white`}
+            className={`${playfair.className} ${heroStyles.title}`}
           >
             {title}
           </h1>
@@ -381,9 +382,7 @@ export default function MissionHero({
         </div>
 
         <div className="flex items-start justify-center px-6 pb-10 md:pb-12">
-          <p
-            className={`${garamond.className} text-lg sm:text-xl lg:text-2xl text-center bg-black/70 p-2`}
-          >
+          <p className={`${garamond.className} ${heroStyles.subtitle}`}>
             {subtitle}
           </p>
         </div>

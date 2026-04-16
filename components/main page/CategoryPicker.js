@@ -3,6 +3,8 @@ import { BookOpen } from "lucide-react";
 
 import MobileCategorySheet from "./MobileCategorySheet";
 import CategoryChip from "./CategotyChip";
+import Button from "@/components/ui/Button";
+import { buttonStyles } from "@/lib/styles";
 
 export default function CategoryPicker({ categories = [], selected, onToggle }) {
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -51,22 +53,22 @@ export default function CategoryPicker({ categories = [], selected, onToggle }) 
 
       {/* MOBILE trigger + selected under it */}
       <div className="sm:hidden pb-6 flex flex-col items-end gap-3">
-        <button
+        <Button
+          variant="categoryTrigger"
           type="button"
           onClick={() => setSheetOpen(true)}
-          className="flex items-center gap-1 px-3 py-2 rounded bg-[#94B4C1]/75 text-base uppercase"
           aria-label="Відкрити список тем"
         >
           <span>Теми</span>
           <BookOpen size={19} strokeWidth={2} />
-        </button>
+        </Button>
 
         <div className="flex flex-wrap gap-2 justify-start w-full">
           {selected.size === 0 ? (
             <button
               type="button"
               onClick={() => onToggle("all")}
-              className="px-3 py-1 rounded-full bg-[#f7e7d7] text-black uppercase"
+              className={buttonStyles.categoryPill}
               title="Зараз: усі теми"
             >
               Усі
@@ -77,7 +79,7 @@ export default function CategoryPicker({ categories = [], selected, onToggle }) 
                 key={c.id}
                 type="button"
                 onClick={() => onToggle(c.id)}
-                className="px-3 py-1 rounded-full bg-[#f7e7d7] text-black uppercase text-sm"
+                className={`${buttonStyles.categoryPill} text-sm`}
                 title="Торкнись, щоб прибрати"
               >
                 {c.name}

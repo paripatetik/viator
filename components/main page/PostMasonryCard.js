@@ -76,12 +76,12 @@ export default function PostMasonryCard({ post, index = 0 }) {
 
             {/* Title */}
             <h3
-              className="text-lg font-bold leading-snug text-slate-900 group-hover:text-[#3B5560] transition-colors duration-200"
+              className="text-lg font-bold leading-snug text-slate-900 group-hover:text-viator-deep transition-colors duration-200"
               dangerouslySetInnerHTML={{ __html: post.title.rendered }}
             />
 
             {/* Accent line */}
-            <div className="w-10 h-[3px] rounded-full bg-[#94B4C1]" />
+            <div className="w-10 h-[3px] rounded-full bg-viator-sky" />
 
             {excerpt && (
               <p className="text-slate-600 text-sm leading-relaxed pt-1">
@@ -95,7 +95,7 @@ export default function PostMasonryCard({ post, index = 0 }) {
                 {categories.map((name) => (
                   <span
                     key={name}
-                    className="inline-block px-3 py-0.5 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-[#FFF2DB] text-[#7A5C2E] border border-[#FFAB5B]/40"
+                    className="inline-block px-3 py-0.5 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-viator-cream text-viator-category border border-viator-sun/40"
                   >
                     {name}
                   </span>

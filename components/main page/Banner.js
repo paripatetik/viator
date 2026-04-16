@@ -1,7 +1,10 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import clsx from "clsx";
 import { playfair } from "@/lib/fonts";
+import { heroHeightStyle, heroStyles } from "@/lib/styles";
 
 export default function Banner({ title, subtitle, imgSrc }) {
   const [pauseText, setPauseText] = useState(false);
@@ -15,12 +18,10 @@ export default function Banner({ title, subtitle, imgSrc }) {
     return () => window.removeEventListener("resize", update);
   }, []);
 
-  const sectionStyle = { height: "var(--hero-h)" };
-
   return (
     <section
-      style={sectionStyle}
-      className="relative w-full overflow-hidden"
+      style={heroHeightStyle}
+      className={heroStyles.root}
       onClick={() => isMobile && setPauseImg((p) => !p)}
     >
       <Image
@@ -62,7 +63,7 @@ export default function Banner({ title, subtitle, imgSrc }) {
           <span className="pointer-events-none hidden md:block absolute bottom-6 right-6 w-12 h-12 border-b-[8px] border-r-[8px] border-white" />
 
           <h1
-            className={`${playfair.className} text-center text-4xl font-extrabold tracking-wider uppercase md:text-6xl drop-shadow text-white`}
+            className={`${playfair.className} ${heroStyles.title}`}
           >
             {title}
           </h1>

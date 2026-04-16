@@ -1,11 +1,14 @@
-// pages/about.js
+"use client";
+
 import Image from "next/image";
 import { useMemo, useRef, useEffect, useState, Fragment } from "react";
 import { motion } from "framer-motion";
 import { useHeaderHeight } from "@/lib/hooks/useHeaderHeight";
 import { playfair, garamond } from "@/lib/fonts";
+import PageHero from "@/components/ui/PageHero";
+import SectionHeading from "@/components/ui/SectionHeading";
 
-export default function AboutPage() {
+export default function AboutPageClient() {
   const headerH = useHeaderHeight();
 
   const beliefs = useMemo(
@@ -19,37 +22,14 @@ export default function AboutPage() {
 
   return (
     <>
-      {/* HERO — full-width without the -ml-[50vw] trick that causes horizontal scroll */}
-      <section
-        className="relative w-full overflow-hidden"
-        style={{ height: "var(--hero-h)" }}
-      >
-        <Image
-          src="/imgs/banner-about 1.png"
-          alt="Про нас — Viator"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-top"
-        />
-        <div className="absolute inset-0 bg-black/25" />
-
-        <div className="relative h-full">
-          <div className="max-w-xl mx-auto h-full flex flex-col justify-between px-6 pt-6 pb-10">
-            <h1
-              className={`${playfair.className} text-center text-4xl font-extrabold tracking-wider uppercase md:text-6xl drop-shadow text-white`}
-            >
-              Про нас
-            </h1>
-
-            <p
-              className={`${garamond.className} text-lg sm:text-xl lg:text-2xl text-center bg-black/70 p-2 text-white`}
-            >
-              Ми і наші пупси
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHero
+        title="Про нас"
+        subtitle="Ми і наші пупси"
+        imgSrc="/imgs/banner-about 1.png"
+        alt="Про нас — Viator"
+        overlayClassName="bg-black/25"
+        contentClassName="relative max-w-xl mx-auto h-full flex flex-col justify-between px-6 pt-6 pb-10"
+      />
 
       <main className="container max-w-4xl mx-auto px-6 lg:px-10 py-12 lg:py-16 space-y-16">
         <section className="mx-auto space-y-10">
@@ -58,7 +38,7 @@ export default function AboutPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.35 }}
             transition={{ duration: 0.65, ease: [0.22, 0.61, 0.36, 1] }}
-            className="rounded-[26px] border-8 border-[#FFF2DB] bg-[#94B4C1]/60 px-8 py-7 shadow-[0_10px_25px_rgba(0,0,0,0.03)]"
+            className="rounded-[26px] border-8 border-viator-cream bg-viator-sky/60 px-8 py-7 shadow-[0_10px_25px_rgba(0,0,0,0.03)]"
           >
             <div
               className={`${garamond.className} text-[19px] lg:text-[22px] leading-relaxed space-y-4 text-justify`}
@@ -83,14 +63,8 @@ export default function AboutPage() {
           />
         </section>
 
-        {/* overflow-x:clip isolates framer-motion x-slide animations (±64px)
-            without creating a scroll container, so nothing else breaks */}
         <section className="container mx-auto space-y-8" style={{ overflowX: "clip" }}>
-          <h2
-            className={`${playfair.className} text-3xl md:text-4xl font-extrabold text-center uppercase tracking-wider text-[#416472]`}
-          >
-            Ядро нашої команди
-          </h2>
+          <SectionHeading>Ядро нашої команди</SectionHeading>
 
           <div className="space-y-8">
             <TeamMember
@@ -136,7 +110,7 @@ function BelievePanel({ items, headerOffset = 0, garamondClassName = "" }) {
 
   useEffect(() => {
     const sec = sectionRef.current;
-    if (!sec) return;
+    if (!sec) return undefined;
 
     let raf = 0;
     const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -207,7 +181,7 @@ function BelievePanel({ items, headerOffset = 0, garamondClassName = "" }) {
                   {i < n - 1 && (
                     <div
                       aria-hidden
-                      className="justify-self-center self-stretch w-[2px] rounded-full bg-[#C1D6E2]/90"
+                      className="justify-self-center self-stretch w-[2px] rounded-full bg-viator-line/90"
                     />
                   )}
                 </Fragment>
@@ -244,12 +218,12 @@ function BelieveStackItem({ index, children, i, t, garamondClassName }) {
       }}
       className="relative"
     >
-      <div className="relative rounded-[999px] border border-[#D4E5EE] bg-[#F5FAFE] px-8 py-6 shadow-[0_10px_24px_rgba(0,0,0,0.05)]">
+      <div className="relative rounded-[999px] border border-viator-pale-border bg-viator-pale px-8 py-6 shadow-[0_10px_24px_rgba(0,0,0,0.05)]">
         <div className="absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2">
           <div
             className={[
               "flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold text-white transition-colors duration-300",
-              active ? "bg-[#416472]" : "bg-[#94B4C1]",
+              active ? "bg-viator-ink" : "bg-viator-sky",
             ].join(" ")}
           >
             {index}
@@ -279,9 +253,9 @@ function TeamMember({ name, subtitle, children, photoSrc, photoAlt, from = "left
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, amount: 0.25 }}
       transition={{ duration: 0.7, ease: [0.22, 0.61, 0.36, 1] }}
-      className="group flex flex-col md:flex-row items-start gap-5 md:gap-8 bg-[#FFF2DB] rounded-2xl p-6 lg:p-8 shadow-sm"
+      className="group flex flex-col md:flex-row items-start gap-5 md:gap-8 bg-viator-cream rounded-2xl p-6 lg:p-8 shadow-sm"
     >
-      <div className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 border-4 border-white rounded-full bg-[#94B4C1] flex-shrink-0 self-center md:self-start overflow-hidden">
+      <div className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 border-4 border-white rounded-full bg-viator-sky flex-shrink-0 self-center md:self-start overflow-hidden">
         {photoSrc && (
           <Image
             src={photoSrc}
