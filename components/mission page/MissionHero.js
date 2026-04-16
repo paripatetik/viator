@@ -175,16 +175,24 @@ export default function MissionHero({
   return (
     <section
       ref={heroRef}
-      className={`relative w-full overflow-hidden ${inter.className} mb-9`}
+      className={`relative isolate w-full overflow-hidden ${inter.className} mb-9`}
       style={heroMinHeightStyle}
       aria-label="Mission hero"
     >
-      <div className="pointer-events-none absolute inset-0 -z-10">
+      <div
+        className="pointer-events-none absolute inset-0 z-0"
+        style={{
+          backgroundImage: `url("${bgSrc}")`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
         <Image
           src={bgSrc}
           alt=""
           fill
           priority
+          unoptimized
           sizes="100vw"
           className="object-cover"
         />
@@ -309,7 +317,7 @@ export default function MissionHero({
       )}
 
       <div
-        className="relative mx-auto flex w-full flex-col text-white"
+        className="relative z-10 mx-auto flex w-full flex-col text-white"
         style={heroMinHeightStyle}
       >
         <div className="flex items-end justify-center px-6 pt-6 pb-10">

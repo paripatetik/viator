@@ -63,6 +63,7 @@ export default function Header() {
                 height={80}
                 className="object-contain w-full h-full hover:animate-pulse"
                 priority
+                unoptimized
               />
             </div>
             <span className={`${playfair.className} italic text-2xl md:text-3xl lg:text-[35px] font-bold leading-none tracking-tight whitespace-nowrap`}>
@@ -91,7 +92,14 @@ export default function Header() {
       {/* DRAWER */}
       <aside className={`fixed inset-0 w-full h-full md:hidden z-50 bg-gradient-to-r from-slate-100 via-white to-slate-200 bg-opacity-95 backdrop-blur-md shadow-xl transform transition-transform duration-300 ${open ? "translate-x-0" : "translate-x-full"}`}>
         <div className="flex flex-col items-center gap-8 px-6 py-10 h-full overflow-y-auto">
-          <Image src="/imgs/logo.png" alt="Viator logo" width={140} height={140} className="animate-pulse" />
+          <Image
+            src="/imgs/logo.png"
+            alt="Viator logo"
+            width={140}
+            height={140}
+            className="animate-pulse"
+            unoptimized
+          />
           <div className="relative w-full max-w-sm">
             <input
               type="search"

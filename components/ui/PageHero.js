@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { garamond, playfair } from "@/lib/fonts";
-import { cn, heroHeightStyle, heroImageBlurDataUrl, heroStyles } from "@/lib/styles";
+import { cn, heroHeightStyle, heroStyles } from "@/lib/styles";
 
 export default function PageHero({
   title,
@@ -14,14 +14,21 @@ export default function PageHero({
   subtitleClassName = "",
 }) {
   return (
-    <section className={heroStyles.root} style={heroHeightStyle}>
+    <section
+      className={heroStyles.root}
+      style={{
+        ...heroHeightStyle,
+        backgroundImage: `url("${imgSrc}")`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
       <Image
         src={imgSrc}
         alt={alt}
         fill
         priority
-        placeholder="blur"
-        blurDataURL={heroImageBlurDataUrl}
+        unoptimized
         sizes="100vw"
         className={imageClassName}
       />

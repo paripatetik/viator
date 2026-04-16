@@ -1,11 +1,6 @@
 import Image from "next/image";
 import { Clock } from "lucide-react";
-import {
-  accentStyles,
-  heroHeightStyle,
-  heroImageBlurDataUrl,
-  heroStyles,
-} from "@/lib/styles";
+import { accentStyles, heroHeightStyle, heroStyles } from "@/lib/styles";
 
 export function Hero({
   title,
@@ -16,14 +11,20 @@ export function Hero({
   epigraph,
 }) {
   return (
-    <section className={heroStyles.root} style={heroHeightStyle}>
+    <section
+      className={heroStyles.root}
+      style={{
+        ...heroHeightStyle,
+        backgroundImage: img ? `url("${img}")` : undefined,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
       <Image
         src={img}
         alt=""
         fill
         priority
-        placeholder="blur"
-        blurDataURL={heroImageBlurDataUrl}
         sizes="100vw"
         className="object-cover object-center md:object-[50%_20%]"
       />

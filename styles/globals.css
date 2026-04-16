@@ -44,12 +44,6 @@
 */
 html {
   scrollbar-gutter: stable;
-  background: #F7F3EC;
-}
-
-body {
-  background: #F7F3EC;
-  color: #1E2A32;
 }
 
 @plugin "@tailwindcss/typography"
