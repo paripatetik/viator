@@ -18,10 +18,6 @@ export default function RootLayout({ children }) {
         <Script id="scroll-restoration" strategy="beforeInteractive">
           {`
             history.scrollRestoration = 'manual';
-            window.__scrollDebug = {
-              scrollYAtScript: window.scrollY,
-              timestamp: performance.now()
-            };
           `}
         </Script>
         <AppProviders>

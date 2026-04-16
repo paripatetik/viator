@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import clsx from "clsx";
 import { playfair } from "@/lib/fonts";
-import { heroHeightStyle, heroStyles } from "@/lib/styles";
+import { heroHeightStyle, heroImageBlurDataUrl, heroStyles } from "@/lib/styles";
 
 export default function Banner({ title, subtitle, imgSrc }) {
   const [pauseText, setPauseText] = useState(false);
@@ -29,6 +29,8 @@ export default function Banner({ title, subtitle, imgSrc }) {
         alt=""
         fill
         priority
+        placeholder="blur"
+        blurDataURL={heroImageBlurDataUrl}
         sizes="100vw"
         className={clsx(
           "object-cover object-left md:object-center",

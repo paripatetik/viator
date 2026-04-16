@@ -39,26 +39,33 @@ export default function Header() {
       <header
         id="site-header"
         className={[
-          "fixed inset-x-0 top-0 z-40 h-16 md:h-20",
+          "fixed inset-x-0 top-0 z-40 overflow-hidden",
           "transition-[background-color,box-shadow,backdrop-filter] duration-300",
           isSticky
             ? "bg-viator-sky/95 backdrop-blur-md shadow-lg border-b border-black/10"
             : "bg-transparent backdrop-blur-0 shadow-none border-b border-transparent",
         ].join(" ")}
+        style={{ height: "var(--header-h, 4rem)" }}
       >
         <div className="container mx-auto h-full flex items-center px-4 sm:px-6 lg:px-8 gap-7 md:gap-10">
-          <Link href="/" className="flex items-center gap-2 lg:gap-3">
-            <div className="w-14 h-14 md:w-16 md:h-16 shrink-0 flex items-center justify-center">
+          <Link href="/" className="flex h-full shrink-0 items-center gap-2 lg:gap-3">
+            <div
+              className="shrink-0 flex items-center justify-center"
+              style={{
+                width: "calc(var(--header-h, 4rem) * 0.8)",
+                height: "calc(var(--header-h, 4rem) * 0.8)",
+              }}
+            >
               <Image
                 src="/imgs/logo.png"
                 alt="Viator logo"
-                width={70}
-                height={70}
+                width={80}
+                height={80}
                 className="object-contain w-full h-full hover:animate-pulse"
                 priority
               />
             </div>
-            <span className={`${playfair.className} italic text-2xl md:text-3xl lg:text-[35px] font-bold tracking-tight`}>
+            <span className={`${playfair.className} italic text-2xl md:text-3xl lg:text-[35px] font-bold leading-none tracking-tight whitespace-nowrap`}>
               Viator
             </span>
           </Link>
@@ -71,7 +78,8 @@ export default function Header() {
       <button
         aria-label="Toggle mobile menu"
         onClick={toggle}
-        className="md:hidden fixed top-0 right-4 sm:right-6 lg:right-8 w-14 h-16 z-[60] grid place-items-center"
+        className="md:hidden fixed top-0 right-4 sm:right-6 lg:right-8 w-14 z-[60] grid place-items-center"
+        style={{ height: "var(--header-h, 4rem)" }}
       >
         <div className="relative w-9 h-[22px]">
           <span className={`absolute left-0 w-full h-[3px] bg-gray-900 rounded transition-transform duration-300 origin-center ${open ? "rotate-45 top-[9.5px]" : "top-0"}`} />
