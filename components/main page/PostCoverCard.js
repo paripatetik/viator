@@ -54,9 +54,9 @@ export default function PostCoverCard({ post, isActive = false, className = "" }
       {/* Image */}
       <Image
         fill
-        priority
         src={img}
         alt={post.title.rendered}
+        sizes="(min-width: 1024px) 45vw, (min-width: 768px) 55vw, 80vw"
         className={clsx(
           "object-cover object-center transition-transform duration-500 ease-in-out opacity-90",
           isActive && "group-hover:scale-105"

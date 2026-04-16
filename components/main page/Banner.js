@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import clsx from "clsx";
 import { playfair } from "@/lib/fonts";
 import { heroHeightStyle, heroStyles } from "@/lib/styles";
@@ -11,29 +10,24 @@ export default function Banner({ title, subtitle, imgSrc }) {
   const [pauseImg, setPauseImg] = useState(false);
 
   return (
-    <section
-      style={{
-        ...heroHeightStyle,
-        backgroundImage: `url("${imgSrc}")`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-      className={heroStyles.root}
-      onClick={() => setPauseImg((p) => !p)}
-    >
-      <Image
-        src={imgSrc}
-        alt=""
-        fill
-        priority
-        unoptimized
-        sizes="100vw"
-        className={clsx(
-          "object-cover object-left md:object-center",
-          "viator-banner-img-pan"
-        )}
-        style={{ animationPlayState: pauseImg ? "paused" : "running" }}
-      />
+    <>
+      <link rel="preload" as="image" href={imgSrc} fetchPriority="high" />
+      <section
+        style={{
+          ...heroHeightStyle,
+          backgroundColor: "#111",
+        }}
+        className={heroStyles.root}
+        onClick={() => setPauseImg((p) => !p)}
+      >
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 viator-banner-bg-pan"
+          style={{
+            backgroundImage: `url("${imgSrc}")`,
+            animationPlayState: pauseImg ? "paused" : "running",
+          }}
+        />
 
       <div
         className={clsx("absolute inset-y-0 flex items-center", "w-full md:w-auto")}
@@ -72,16 +66,18 @@ export default function Banner({ title, subtitle, imgSrc }) {
           100% { transform: translateX(0); }
         }
         @keyframes viatorBannerImagePan {
-          0%   { object-position: 0% 50%; }
-          50%  { object-position: 50% 50%; }
-          100% { object-position: 100% 50%; }
+          0%   { background-position: 0% 50%; }
+          50%  { background-position: 50% 50%; }
+          100% { background-position: 100% 50%; }
         }
         .viator-banner-text-pan {
           animation: viatorBannerTextSlide 60s linear infinite alternate;
         }
-        .viator-banner-img-pan {
+        .viator-banner-bg-pan {
           animation: viatorBannerImagePan 28s linear infinite alternate;
-          object-fit: cover;
+          background-size: cover;
+          background-position: 0% 50%;
+          background-repeat: no-repeat;
         }
         @media (max-width: 767px) {
           .viator-banner-text-pan {
@@ -90,9 +86,13 @@ export default function Banner({ title, subtitle, imgSrc }) {
           }
         }
         @media (min-width: 768px) {
-          .viator-banner-img-pan { animation: none; }
+          .viator-banner-bg-pan {
+            animation: none;
+            background-position: center;
+          }
         }
       `}</style>
-    </section>
+      </section>
+    </>
   );
 }

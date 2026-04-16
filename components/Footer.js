@@ -1,9 +1,11 @@
 import Link from "next/link";
-import Image from "next/image";
 import SocialLinks from "./SocialLinks";
 import NavLinks from "./NavLinks";
 import NewsletterForm from "./NewsletterForm";
 import { layoutStyles } from "@/lib/styles";
+import Image from "next/image";
+
+/* eslint-disable @next/next/no-img-element */
 
 /**
  * Site‑wide footer with newsletter form, logo, social links and legal nav.
@@ -16,16 +18,16 @@ export default function Footer() {
       <div className={`${layoutStyles.pageCompact} py-10 gap-10`}>
         <div className="flex flex-col md:flex-row md:items-stretch gap-6 md:gap-10 w-full h-auto md:h-[96px] mb-10">
       {/* Logo link */}
-      <Link href="/" className=" flex items-center self-center" aria-label="На головну">
-        <Image
-          src="/imgs/logo.png"
-          alt="Viator logo"
-          width={120}
-          height={120}
-          priority
-          className="h-full w-auto max-h-full object-contain hover:opacity-90 transition-opacity animate-pulse"
-        />
-      </Link>
+      <Link href="/" className="flex items-center self-center shrink-0" aria-label="На головну">
+  <Image
+    src="/imgs/logo.png"
+    alt="Viator logo"
+    width={96}
+    height={96}
+    priority
+    className="h-16 md:h-24 w-auto object-contain hover:opacity-90 transition-opacity animate-pulse"
+  />
+</Link>
 
       {/* Navigation links */}
       <div className="flex gap-2 text-center">

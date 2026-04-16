@@ -173,29 +173,23 @@ export default function MissionHero({
   );
 
   return (
-    <section
-      ref={heroRef}
-      className={`relative isolate w-full overflow-hidden ${inter.className} mb-9`}
-      style={heroMinHeightStyle}
-      aria-label="Mission hero"
-    >
+    <>
+      <link rel="preload" as="image" href={bgSrc} fetchPriority="high" />
+      <section
+        ref={heroRef}
+        className={`relative isolate w-full overflow-hidden ${inter.className} mb-9`}
+        style={heroMinHeightStyle}
+        aria-label="Mission hero"
+      >
       <div
         className="pointer-events-none absolute inset-0 z-0"
         style={{
           backgroundImage: `url("${bgSrc}")`,
           backgroundSize: "cover",
           backgroundPosition: "center",
+          backgroundColor: "#111",
         }}
       >
-        <Image
-          src={bgSrc}
-          alt=""
-          fill
-          priority
-          unoptimized
-          sizes="100vw"
-          className="object-cover"
-        />
         <div className="absolute inset-0 bg-slate-900/40" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/35" />
       </div>
@@ -221,6 +215,7 @@ export default function MissionHero({
               width={845}
               height={891}
               sizes="200px"
+              unoptimized
               style={{ 
                 width: 'auto',
                 height: 'auto',
@@ -248,6 +243,7 @@ export default function MissionHero({
               width={845}
               height={891}
               sizes="(min-width: 768px) 28vw, 320px"
+              unoptimized
               style={{ 
                 width: 'min(320px, 28vw)',
                 height: 'auto',
@@ -279,6 +275,7 @@ export default function MissionHero({
               width={1007}
               height={1218}
               sizes="120px"
+              unoptimized
               style={{ 
                 width: 'auto',
                 height: 'auto',
@@ -306,6 +303,7 @@ export default function MissionHero({
               width={1007}
               height={1218}
               sizes="(min-width: 768px) 28vw, 320px"
+              unoptimized
               style={{ 
                 width: 'min(320px, 28vw)',
                 height: 'auto',
@@ -345,6 +343,7 @@ export default function MissionHero({
                   width={560}
                   height={560}
                   priority
+                  unoptimized
                   className="h-auto w-full"
                 />
                 <div
@@ -395,7 +394,8 @@ export default function MissionHero({
           </p>
         </div>
       </div>
-    </section>
+      </section>
+    </>
   );
 }
 
@@ -418,6 +418,7 @@ function CircleIcon({ src, sizePx }) {
         sizes={`${size}px`}
         className="h-full w-full object-cover"
         draggable="false"
+        unoptimized
       />
     </div>
   );

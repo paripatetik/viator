@@ -1,8 +1,8 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { Mail } from "lucide-react";
 import NavLinks from "@/components/NavLinks";
 import SocialLinks from "@/components/SocialLinks";
@@ -56,14 +56,14 @@ export default function Header() {
                 height: "calc(var(--header-h, 4rem) * 0.8)",
               }}
             >
-              <Image
+              <img
                 src="/imgs/logo.png"
                 alt="Viator logo"
                 width={80}
                 height={80}
                 className="object-contain w-full h-full hover:animate-pulse"
-                priority
-                unoptimized
+                fetchPriority="high"
+                decoding="sync"
               />
             </div>
             <span className={`${playfair.className} italic text-2xl md:text-3xl lg:text-[35px] font-bold leading-none tracking-tight whitespace-nowrap`}>
@@ -92,13 +92,14 @@ export default function Header() {
       {/* DRAWER */}
       <aside className={`fixed inset-0 w-full h-full md:hidden z-50 bg-gradient-to-r from-slate-100 via-white to-slate-200 bg-opacity-95 backdrop-blur-md shadow-xl transform transition-transform duration-300 ${open ? "translate-x-0" : "translate-x-full"}`}>
         <div className="flex flex-col items-center gap-8 px-6 py-10 h-full overflow-y-auto">
-          <Image
+          <img
             src="/imgs/logo.png"
             alt="Viator logo"
             width={140}
             height={140}
             className="animate-pulse"
-            unoptimized
+            loading="lazy"
+            decoding="async"
           />
           <div className="relative w-full max-w-sm">
             <input
