@@ -24,8 +24,10 @@ export default async function Home() {
         imgSrc="/imgs/banner.jpg"
       />
 
-      <PostsCubeCarousel posts={posts} />
-      <CategorySection categories={categories} initialPosts={posts} />
+      <div className="viator-evening-page">
+        <PostsCubeCarousel posts={posts} />
+        <CategorySection categories={categories} initialPosts={posts} />
+      </div>
     </>
   );
 }

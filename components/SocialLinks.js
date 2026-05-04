@@ -10,7 +10,9 @@ export default function SocialLinks({ variant = "footer" }) {
 
   // Нейтральна база + м'які hover-кольори (менше “кислоти” у хедері)
   const iconBase =
-    "opacity-80 hover:opacity-100 text-slate-800";
+    variant === "footer"
+      ? "opacity-90 hover:opacity-100 text-[#F8FBFC]"
+      : "opacity-80 hover:opacity-100 text-slate-800";
 
   const headerSize = "text-[22px] lg:text-[26px]";
   const otherSize = "text-[32px]";

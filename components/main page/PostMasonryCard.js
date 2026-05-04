@@ -57,7 +57,7 @@ export default function PostMasonryCard({ post, index = 0 }) {
       className="break-inside-avoid mb-6"
     >
       <Link href={`/posts/${post.slug}`} className="group block">
-        <article className="rounded-2xl overflow-hidden shadow-md ring-1 ring-slate-200 hover:shadow-xl transition-shadow duration-300 bg-white">
+        <article className="rounded-2xl overflow-hidden shadow-[0_14px_34px_rgba(30,42,50,0.16)] ring-1 ring-[#B9CBD3] hover:shadow-[0_18px_42px_rgba(30,42,50,0.22)] transition-shadow duration-300 bg-[#FCFEFE]">
 
           {/* Image — natural height, no crop */}
           <div className="w-full overflow-hidden">
@@ -76,15 +76,15 @@ export default function PostMasonryCard({ post, index = 0 }) {
 
             {/* Title */}
             <h3
-              className="text-lg font-bold leading-snug text-slate-900 group-hover:text-viator-deep transition-colors duration-200"
+              className="text-lg font-bold leading-snug text-[#1E2A32] group-hover:text-[#416472] transition-colors duration-200"
               dangerouslySetInnerHTML={{ __html: post.title.rendered }}
             />
 
             {/* Accent line */}
-            <div className="w-10 h-[3px] rounded-full bg-viator-sky" />
+            <div className="w-10 h-[3px] rounded-full bg-[#8EB7C6]" />
 
             {excerpt && (
-              <p className="text-slate-600 text-sm leading-relaxed pt-1">
+              <p className="text-[#5C6670] text-sm leading-relaxed pt-1">
                 {excerpt}
               </p>
             )}
@@ -95,7 +95,7 @@ export default function PostMasonryCard({ post, index = 0 }) {
                 {categories.map((name) => (
                   <span
                     key={name}
-                    className="inline-block px-3 py-0.5 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-viator-cream text-viator-category border border-viator-sun/40"
+                    className="inline-block px-3 py-0.5 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-[#E7ECEE] text-[#416472] border border-[#C1D6E2]"
                   >
                     {name}
                   </span>

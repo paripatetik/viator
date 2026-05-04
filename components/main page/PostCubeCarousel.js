@@ -42,11 +42,11 @@ export default function PostsCubeCarousel({ posts = [] }) {
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, amount: 0.25, margin: "0px 0px -12% 0px" }}
-      className="bg-slate-100/90 flex flex-col pb-6"
+      className="flex flex-col pb-6"
       style={heroHeightStyle}
     >
       <div className={`${layoutStyles.pageCompact} flex flex-col flex-1 relative`}>
-        <SectionHeading className="pb-6 mt-6 md:mt-12">
+        <SectionHeading className="pb-6 mt-6 md:mt-12 text-[#416472]">
           Останні публікації
         </SectionHeading>
 

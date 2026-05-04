@@ -44,13 +44,23 @@ export default function NavLinks({ variant = "desktop", onClick }) {
   }
 
   if (variant === "footer") {
+    const footerBase =
+      `${inter.className} transition-colors duration-150 underline-offset-[6px] ` +
+      "hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/10 rounded-sm";
+    const footerLink = `${footerBase} text-lg md:text-lg font-bold text-[#F8FBFC] hover:text-white decoration-white/45 drop-shadow-sm`;
 
-    const footerLink = `${base} text-lg md:text-lg font-bold`; 
-    const footerLegal = `${base} text-lg md:text-base font-normal`;
-
-
-    return ( <div className="flex flex-col gap-4 text-black justify-center text-left"> {/* Primary nav */} <nav className="flex flex-wrap md:gap-6 gap-3 flex-col md:flex-row "> {mainLinks.map((l) => ( <Link key={l.href} href={l.href} className={footerLink}> {l.label} </Link> ))} </nav> {/* <nav className="flex flex-wrap gap-6"> {legalLinks.map((l) => ( <Link key={l.href} href={l.href} className={${footerLink} text-black/85 font-normal} > {l.label} </Link> ))} </nav> */} </div> ); }
+    return (
+      <div className="flex flex-col gap-4 justify-center text-left">
+        <nav className="flex flex-wrap md:gap-6 gap-3 flex-col md:flex-row">
+          {mainLinks.map((l) => (
+            <Link key={l.href} href={l.href} className={footerLink}>
+              {l.label}
+            </Link>
+          ))}
+        </nav>
+      </div>
+    );
+  }
 
   return null;
 }
-

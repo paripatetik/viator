@@ -5,8 +5,6 @@ import NewsletterForm from "./NewsletterForm";
 import { layoutStyles } from "@/lib/styles";
 import Image from "next/image";
 
-/* eslint-disable @next/next/no-img-element */
-
 /**
  * Site‑wide footer with newsletter form, logo, social links and legal nav.
  * The form is non‑functional – wire it to your provider (Mailchimp, Buttondown, etc.) later.
@@ -14,8 +12,13 @@ import Image from "next/image";
 export default function Footer() {
   const thisYear = new Date().getFullYear();
   return (
-    <footer className="bg-viator-sun/90 text-white">
-      <div className={`${layoutStyles.pageCompact} py-10 gap-10`}>
+    <footer
+      className="viator-footer text-[#1E2A32]"
+      style={{
+        background: "linear-gradient(180deg, #9EAFB7 0%, #637B88 34%, #36566A 68%, #10283D 100%)",
+      }}
+    >
+      <div className={`${layoutStyles.pageCompact} relative z-10 py-10 gap-10`}>
         <div className="flex flex-col md:flex-row md:items-stretch gap-6 md:gap-10 w-full h-auto md:h-[96px] mb-10">
       {/* Logo link */}
       <Link href="/" className="flex items-center self-center shrink-0" aria-label="На головну">
@@ -39,7 +42,7 @@ export default function Footer() {
        <div className="flex flex-col-reverse md:flex-row gap-10 justify-between md:items-start">
 
       
-        <div className="bg-viator-cream text-black p-4 rounded-lg">
+        <div className="bg-[#F7F3EC] text-[#1E2A32] p-4 rounded-lg shadow-[0_10px_28px_rgba(30,42,50,0.12)] ring-1 ring-[rgba(65,100,114,0.22)]">
         <h2 className="text-3xl md:text-4xl font-extrabold leading-tight mb-4">
           Підписатися на Viator
         </h2>
@@ -51,12 +54,12 @@ export default function Footer() {
         <NewsletterForm />   
       </div>
         
-        <div className="flex justify-between text-black">           {/* contact section */}
+        <div className="flex justify-between text-[#1E2A32]">           {/* contact section */}
 
           <div>
             <a
               href="mailto:hello@viator.blog"
-              className="text-2xl md:text-3xl font-bold hover:underline break-all text-nowrap "
+              className="text-2xl md:text-3xl font-bold hover:underline break-all text-nowrap text-[#F8FBFC] drop-shadow-sm"
             >
               hello@viator.blog
             </a>
@@ -70,7 +73,7 @@ export default function Footer() {
         </div>
 
        </div>
-         <div className="mt-12 md:mt-20  flex justify-between text-black items-center">          
+         <div className="mt-12 md:mt-20  flex justify-between text-[#F2F7FA] items-center">
             
             <p>© {thisYear} Viator </p> <p> Powered By Reason </p>
           </div>
