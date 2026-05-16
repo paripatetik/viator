@@ -26,6 +26,7 @@ export default function AboutPageClient() {
         title="Про нас"
         subtitle="Ми і наші пупси"
         imgSrc="/imgs/banner-about 1.png"
+        backgroundPosition="center top"
         alt="Про нас — Viator"
         overlayClassName="bg-black/25"
         contentClassName="relative max-w-xl mx-auto h-full flex flex-col justify-between px-6 pt-6 pb-10"

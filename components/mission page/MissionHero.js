@@ -186,7 +186,7 @@ export default function MissionHero({
         style={{
           backgroundImage: `url("${bgSrc}")`,
           backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundPosition: "center top",
           backgroundColor: "#111",
         }}
       >

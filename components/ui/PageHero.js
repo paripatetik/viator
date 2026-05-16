@@ -5,6 +5,7 @@ export default function PageHero({
   title,
   subtitle,
   imgSrc,
+  backgroundPosition = "center",
   overlayClassName = "bg-black/45",
   contentClassName = "relative flex h-full flex-col items-center justify-between px-6 pt-6 pb-10 text-center",
   titleClassName = "",
@@ -19,7 +20,7 @@ export default function PageHero({
           ...heroHeightStyle,
           backgroundImage: `url("${imgSrc}")`,
           backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundPosition,
           backgroundColor: "#111",
         }}
       >

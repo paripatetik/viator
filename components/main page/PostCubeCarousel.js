@@ -1,12 +1,10 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { EffectCoverflow, Navigation, Pagination, Keyboard } from "swiper/modules";
+import { EffectCoverflow, Keyboard } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
 
 import { motion, useReducedMotion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -17,8 +15,65 @@ import SectionHeading from "@/components/ui/SectionHeading";
 
 export default function PostsCubeCarousel({ posts = [] }) {
   const displayPosts = useMemo(() => posts.slice(0, 7), [posts]);
+  const hasLoopBuffer = displayPosts.length > 1;
+  const loopCycles = hasLoopBuffer ? 9 : 1;
+  const middleCycle = Math.floor(loopCycles / 2);
+  const carouselPosts = useMemo(() => {
+    if (!hasLoopBuffer) {
+      return displayPosts.map((post, realIndex) => ({
+        key: post.id,
+        post,
+        realIndex,
+      }));
+    }
+
+    return Array.from({ length: loopCycles }, (_, cycle) =>
+      displayPosts.map((post, realIndex) => ({
+        key: `${cycle}-${post.id}`,
+        post,
+        realIndex,
+      }))
+    ).flat();
+  }, [displayPosts, hasLoopBuffer, loopCycles]);
+  const firstSlideIndex = hasLoopBuffer ? displayPosts.length * middleCycle : 0;
   const [activeIdx, setActiveIdx] = useState(0);
+  const [activeSlideIdx, setActiveSlideIdx] = useState(firstSlideIndex);
+  const [swiper, setSwiper] = useState(null);
   const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    setActiveIdx(0);
+    setActiveSlideIdx(firstSlideIndex);
+  }, [firstSlideIndex, displayPosts]);
+
+  const syncActiveFromSwiper = (s) => {
+    const realIndex = Number(s.slides[s.activeIndex]?.dataset.realIndex ?? 0);
+    setActiveIdx(realIndex);
+    setActiveSlideIdx(s.activeIndex);
+  };
+
+  const handleTransitionEnd = (s) => {
+    if (!hasLoopBuffer) {
+      syncActiveFromSwiper(s);
+      return;
+    }
+
+    const cycleSize = displayPosts.length;
+    const activeIndex = s.activeIndex;
+    const realIndex = Number(s.slides[activeIndex]?.dataset.realIndex ?? 0);
+    const safeStart = cycleSize * 2;
+    const safeEnd = cycleSize * (loopCycles - 2);
+
+    if (activeIndex < safeStart || activeIndex >= safeEnd) {
+      const normalizedIndex = cycleSize * middleCycle + realIndex;
+      s.slideTo(normalizedIndex, 0, false);
+      setActiveIdx(realIndex);
+      setActiveSlideIdx(normalizedIndex);
+      return;
+    }
+
+    syncActiveFromSwiper(s);
+  };
 
   const fromTop = {
     hidden: {
@@ -51,9 +106,11 @@ export default function PostsCubeCarousel({ posts = [] }) {
         </SectionHeading>
 
         <Swiper
+          onSwiper={setSwiper}
           effect="coverflow"
           centeredSlides
           grabCursor
+          initialSlide={firstSlideIndex}
           slidesPerView="auto"
           spaceBetween={60}
           speed={600}
@@ -65,55 +122,54 @@ export default function PostsCubeCarousel({ posts = [] }) {
             modifier: 1,
             slideShadows: true,
           }}
-          navigation={{ nextEl: ".cube-next", prevEl: ".cube-prev" }}
-          pagination={{ el: ".cube-dots", clickable: true }}
-          modules={[EffectCoverflow, Navigation, Pagination, Keyboard]}
-          onSlideChange={(s) => setActiveIdx(s.realIndex)}
+          modules={[EffectCoverflow, Keyboard]}
+          onTransitionEnd={handleTransitionEnd}
           className="w-full flex-1 h-full min-h-0"
         >
-          {displayPosts.map((p, i) => (
+          {carouselPosts.map(({ key, post, realIndex }, i) => (
             <SwiperSlide
-              key={p.id}
+              key={key}
+              data-real-index={realIndex}
               className="w-[80vw] sm:w-[70vw] md:w-[55vw] lg:w-[45vw] max-w-[880px] h-full flex"
             >
-              <PostCoverCard post={p} isActive={i === activeIdx} />
+              <PostCoverCard post={post} isActive={i === activeSlideIdx && realIndex === activeIdx} />
             </SwiperSlide>
           ))}
         </Swiper>
 
         <button
+          type="button"
           aria-label="Попередній"
+          onClick={() => swiper?.slidePrev()}
           className="cube-prev hidden lg:flex items-center justify-center absolute top-1/2 -translate-y-1/2 left-2 xl:left-6 z-20 w-14 h-14 rounded-full bg-slate-400/90 text-slate-50 hover:bg-white hover:text-black shadow-lg backdrop-blur-sm transition-colors"
         >
           <ChevronLeft size={36} />
         </button>
 
         <button
+          type="button"
           aria-label="Наступний"
+          onClick={() => swiper?.slideNext()}
           className="cube-next hidden lg:flex items-center justify-center absolute top-1/2 -translate-y-1/2 right-2 xl:right-6 z-20 w-14 h-14 rounded-full bg-slate-400/90 text-slate-50 hover:bg-white hover:text-black shadow-lg backdrop-blur-sm transition-colors"
         >
           <ChevronRight size={36} />
         </button>
 
-        <div className="cube-dots flex justify-center mt-8 space-x-3" />
+        <div className="cube-dots flex justify-center mt-8 space-x-3">
+          {displayPosts.map((post, i) => (
+            <button
+              key={post.id}
+              type="button"
+              aria-label={`Перейти до публікації ${i + 1}`}
+              aria-current={i === activeIdx ? "true" : undefined}
+              onClick={() => swiper?.slideTo(hasLoopBuffer ? displayPosts.length * middleCycle + i : i)}
+              className={`h-3.5 w-3.5 rounded-full transition duration-500 ${
+                i === activeIdx ? "scale-125 bg-black" : "bg-black/30 hover:bg-black/50"
+              }`}
+            />
+          ))}
+        </div>
       </div>
-
-      <style jsx global>{`
-        .cube-dots .swiper-pagination-bullet {
-          transition: transform 1s ease, opacity 1s ease;
-        }
-        .cube-dots .swiper-pagination-bullet-active {
-          transform: scale(1.4);
-        }
-        .cube-dots {
-          --swiper-pagination-bullet-width: 14px;
-          --swiper-pagination-bullet-height: 14px;
-          --swiper-pagination-color: #000;
-          --swiper-pagination-bullet-inactive-color: #000;
-          --swiper-pagination-bullet-inactive-opacity: 0.3;
-          --swiper-pagination-bullet-opacity: 1;
-        }
-      `}</style>
     </motion.section>
   );
 }

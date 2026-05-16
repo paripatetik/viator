@@ -16,6 +16,7 @@ export default function SupportPage() {
         title="Підтримати"
         subtitle="Навіть Діоген мав свою бочку, Viator має свою банку."
         imgSrc="/imgs/banner-support.png"
+        backgroundPosition="center top"
         alt="Підтримати Viator"
       />
 
