@@ -68,11 +68,16 @@ export default function PostCoverCard({ post, isActive = false, className = "" }
         alt={post.title.rendered}
         // ✅ Fix 3: фіксований sizes замість responsive —
         // браузер не свапає srcset під час scale-анімації coverflow
-        sizes="880px"
+     
         className="object-cover object-center opacity-90"
         // ✅ Fix 4: eager loading для всіх слайдів каруселі —
         // зображення вже завантажені до того як стають видимими
         loading="eager"
+          style={{
+          transform: "translateZ(0)",
+          backfaceVisibility: "hidden",
+          WebkitBackfaceVisibility: "hidden",
+  }}
       />
 
       <motion.div

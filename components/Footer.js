@@ -58,10 +58,10 @@ export default function Footer() {
 
           <div>
             <a
-              href="mailto:hello@viator.blog"
+              href="mailto:hello@viator.com.ua"
               className="text-2xl md:text-3xl font-bold hover:underline break-all text-nowrap text-[#F8FBFC] drop-shadow-sm"
             >
-              hello@viator.blog
+              hello@viator.com.ua
             </a>
 
             {/* socials */}
