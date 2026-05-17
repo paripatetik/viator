@@ -45,7 +45,7 @@ export default function MissionPage() {
       {lastSection && (
         <section
           id={lastSection.id}
-          className="py-10 md:py-16 bg-viator-paper text-justify"
+          className="py-10 md:py-16 text-justify"
         >
           <div className={cn(layoutStyles.proseWide, "text-justify")}>
             <SectionHeading font="garamond" className="mb-6">

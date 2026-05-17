@@ -49,7 +49,7 @@ html {
 .viator-evening-page {
   position: relative;
   isolation: isolate;
-  overflow: hidden;
+  overflow-x: clip;
   background:
     linear-gradient(
       180deg,

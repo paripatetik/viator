@@ -8,7 +8,7 @@ export default function Layout({ children }) {
       style={{ paddingTop: "var(--header-h, 4rem)" }}
     >
       <Header />
-      <main className="flex-1">
+      <main className="viator-evening-page flex-1">
         {children}
       </main>
       <Footer />
