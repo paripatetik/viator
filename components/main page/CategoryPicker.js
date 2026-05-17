@@ -8,6 +8,7 @@ import { buttonStyles } from "@/lib/styles";
 
 export default function CategoryPicker({ categories = [], selected, onToggle }) {
   const [sheetOpen, setSheetOpen] = useState(false);
+  const mobileSelectedPillClass = `${buttonStyles.categoryPill} text-sm bg-white/70`;
 
   const isActive = (id) =>
     id === "all" ? selected.size === 0 : selected.has(id);
@@ -35,7 +36,7 @@ export default function CategoryPicker({ categories = [], selected, onToggle }) 
   return (
     <>
       {/* DESKTOP — варіант A: WRAP без скролу (не ріже translate/shadow) */}
-      <div className="hidden sm:flex flex-wrap gap-3 mb-4 pb-6 pt-2 -mt-2 overflow-visible">
+      <div className="hidden sm:flex flex-wrap justify-center gap-3 mb-4 pb-6 pt-2 -mt-2 overflow-visible">
         {chipList}
       </div>
 
@@ -52,7 +53,7 @@ export default function CategoryPicker({ categories = [], selected, onToggle }) 
       */}
 
       {/* MOBILE trigger + selected under it */}
-      <div className="sm:hidden pb-6 flex flex-col items-end gap-3">
+      <div className="sm:hidden pb-6 flex flex-col items-center gap-3">
         <Button
           variant="categoryTrigger"
           type="button"
@@ -63,12 +64,12 @@ export default function CategoryPicker({ categories = [], selected, onToggle }) 
           <BookOpen size={19} strokeWidth={2} />
         </Button>
 
-        <div className="flex flex-wrap gap-2 justify-start w-full">
+        <div className="flex flex-wrap gap-2 justify-center w-full">
           {selected.size === 0 ? (
             <button
               type="button"
               onClick={() => onToggle("all")}
-              className={buttonStyles.categoryPill}
+              className={mobileSelectedPillClass}
               title="Зараз: усі теми"
             >
               Усі
@@ -79,7 +80,7 @@ export default function CategoryPicker({ categories = [], selected, onToggle }) 
                 key={c.id}
                 type="button"
                 onClick={() => onToggle(c.id)}
-                className={`${buttonStyles.categoryPill} text-sm`}
+                className={mobileSelectedPillClass}
                 title="Торкнись, щоб прибрати"
               >
                 {c.name}

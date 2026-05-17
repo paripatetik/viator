@@ -19,16 +19,16 @@ export default function Footer() {
       }}
     >
       <div className={`${layoutStyles.pageCompact} relative z-10 py-10 gap-10`}>
-        <div className="flex flex-col md:flex-row md:items-stretch gap-6 md:gap-10 w-full h-auto md:h-[96px] mb-10">
+        <div className="flex flex-col md:flex-row md:items-stretch gap-6 md:gap-10 w-full h-auto md:h-[128px] mb-10">
       {/* Logo link */}
       <Link href="/" className="flex items-center self-center shrink-0" aria-label="На головну">
   <Image
     src="/imgs/logo.png"
     alt="Viator logo"
-    width={96}
-    height={96}
+    width={128}
+    height={128}
     priority
-    className="h-16 md:h-24 w-auto object-contain hover:opacity-90 transition-opacity animate-pulse"
+    className="h-24 md:h-32 w-auto object-contain hover:opacity-90 transition-opacity animate-pulse"
   />
 </Link>
 
@@ -75,7 +75,7 @@ export default function Footer() {
        </div>
          <div className="mt-12 md:mt-20  flex justify-between text-[#F2F7FA] items-center">
             
-            <p>© {thisYear} Viator </p> <p> Powered By Reason </p>
+            <p>© {thisYear} Viator </p> <p>Powered By Reason</p>
           </div>
       </div>
     </footer>
