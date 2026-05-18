@@ -116,16 +116,16 @@ export default function PostsCubeCarousel({ posts = [] }) {
           grabCursor
           initialSlide={firstSlideIndex}
           slidesPerView="auto"
-          spaceBetween={60}
-          speed={600}
+          spaceBetween={28}
+          speed={520}
           keyboard={{ enabled: true }}
           coverflowEffect={{
-            rotate: 8,
-            depth: 220,
-            stretch: 20,
+            rotate: 0,
+            depth: 120,
+            stretch: 8,
             modifier: 1,
-            scale: 0.94,
-            slideShadows: true,
+            scale: 0.9,
+            slideShadows: false,
           }}
           modules={[EffectCoverflow, Keyboard]}
           onSlideChange={handleSlideChange}
@@ -136,7 +136,7 @@ export default function PostsCubeCarousel({ posts = [] }) {
             <SwiperSlide
               key={key}
               data-real-index={realIndex}
-              className="w-[80vw] sm:w-[70vw] md:w-[55vw] lg:w-[45vw] max-w-[880px] h-full flex"
+              className="w-[84vw] sm:w-[70vw] md:w-[56vw] lg:w-[46vw] xl:w-[42vw] max-w-[760px] h-full flex"
             >
               {/* ✅ isActive залежить тільки від realIndex —
                   під час телепортації стан картки не змінюється */}
@@ -152,21 +152,21 @@ export default function PostsCubeCarousel({ posts = [] }) {
           type="button"
           aria-label="Попередній"
           onClick={() => swiper?.slidePrev()}
-          className="cube-prev hidden lg:flex items-center justify-center absolute top-1/2 -translate-y-1/2 left-2 xl:left-6 z-20 w-14 h-14 rounded-full bg-slate-400/90 text-slate-50 hover:bg-white hover:text-black shadow-lg backdrop-blur-sm transition-colors"
+          className="cube-prev hidden lg:flex items-center justify-center absolute top-1/2 -translate-y-1/2 left-2 xl:left-6 z-20 h-12 w-12 rounded-lg border border-[#24313A]/25 bg-[#F7F8F6]/90 text-[#24313A] shadow-[0_10px_26px_rgba(36,49,58,0.14)] backdrop-blur-sm transition hover:border-[#24313A] hover:bg-white"
         >
-          <ChevronLeft size={36} />
+          <ChevronLeft size={28} />
         </button>
 
         <button
           type="button"
           aria-label="Наступний"
           onClick={() => swiper?.slideNext()}
-          className="cube-next hidden lg:flex items-center justify-center absolute top-1/2 -translate-y-1/2 right-2 xl:right-6 z-20 w-14 h-14 rounded-full bg-slate-400/90 text-slate-50 hover:bg-white hover:text-black shadow-lg backdrop-blur-sm transition-colors"
+          className="cube-next hidden lg:flex items-center justify-center absolute top-1/2 -translate-y-1/2 right-2 xl:right-6 z-20 h-12 w-12 rounded-lg border border-[#24313A]/25 bg-[#F7F8F6]/90 text-[#24313A] shadow-[0_10px_26px_rgba(36,49,58,0.14)] backdrop-blur-sm transition hover:border-[#24313A] hover:bg-white"
         >
-          <ChevronRight size={36} />
+          <ChevronRight size={28} />
         </button>
 
-        <div className="cube-dots flex justify-center mt-8 space-x-3">
+        <div className="cube-dots flex justify-center gap-2 pt-5">
           {displayPosts.map((post, i) => (
             <button
               key={post.id}
@@ -178,10 +178,10 @@ export default function PostsCubeCarousel({ posts = [] }) {
                   hasLoopBuffer ? displayPosts.length * middleCycle + i : i
                 )
               }
-              className={`h-3.5 w-3.5 rounded-full transition duration-500 ${
+              className={`h-1 rounded-full transition-all duration-500 ${
                 i === activeRealIndex
-                  ? "scale-125 bg-black"
-                  : "bg-black/30 hover:bg-black/50"
+                  ? "w-10 bg-[#24313A]"
+                  : "w-5 bg-[#24313A]/25 hover:bg-[#24313A]/45"
               }`}
             />
           ))}

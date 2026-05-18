@@ -1,9 +1,7 @@
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import clsx from "clsx";
 import { motion } from "framer-motion";
-import { ChevronUp, ChevronDown } from "lucide-react";
 
 const metaVariants = {
   hidden: { opacity: 0, pointerEvents: "none" },
@@ -14,27 +12,21 @@ const metaVariants = {
   },
 };
 
-const excerptVariants = {
-  hidden: { opacity: 0, height: 0 },
-  visible: {
-    opacity: 1,
-    height: 130,
-    transition: {
-      height: { duration: 0.35, ease: [0.4, 0, 0.2, 1] },
-      opacity: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
-    },
-  },
-};
-
 export default function PostCoverCard({ post, isActive = false, className = "" }) {
-  const [showExcerpt, setShowExcerpt] = useState(false);
-
-  useEffect(() => {
-    if (!isActive) setShowExcerpt(false);
-  }, [isActive]);
-
   const img =
     post._embedded?.["wp:featuredmedia"]?.[0]?.source_url || "/fallback.jpg";
+
+  const categories = (post._embedded?.["wp:term"]?.[0] || [])
+    .map((term) => term?.name)
+    .filter(Boolean);
+
+  const date = post.date
+    ? new Intl.DateTimeFormat("uk-UA", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      }).format(new Date(post.date))
+    : null;
 
   const excerpt = post.excerpt?.rendered
     ?.replace(/<[^>]+>/g, "")
@@ -44,11 +36,9 @@ export default function PostCoverCard({ post, isActive = false, className = "" }
   return (
     <Link
       href={`/posts/${post.slug}`}
-      onMouseEnter={() => isActive && setShowExcerpt(true)}
-      onMouseLeave={() => isActive && setShowExcerpt(false)}
       className={clsx(
-        "group relative block w-full h-full select-none bg-black shadow-xl",
-        "rounded-xl border-3 border-viator-sky/75",
+        "group relative block w-full h-full select-none bg-[#111820]",
+        "rounded-lg border border-[#24313A]/20 shadow-[0_22px_60px_rgba(36,49,58,0.22)]",
         !isActive && "pointer-events-none cursor-default",
         className
       )}
@@ -59,7 +49,7 @@ export default function PostCoverCard({ post, isActive = false, className = "" }
         backfaceVisibility: "hidden",
         // ✅ Fix 2: clip-path замість overflow-hidden —
         // не створює новий stacking context, не конфліктує з 3D
-        clipPath: "inset(0 round 0.75rem)",
+        clipPath: "inset(0 round 0.5rem)",
       }}
     >
       <Image
@@ -69,7 +59,7 @@ export default function PostCoverCard({ post, isActive = false, className = "" }
         // ✅ Fix 3: фіксований sizes замість responsive —
         // браузер не свапає srcset під час scale-анімації coverflow
      
-        className="object-cover object-center opacity-90"
+        className="object-cover object-center opacity-95 transition-transform duration-700 group-hover:scale-[1.025]"
         // ✅ Fix 4: eager loading для всіх слайдів каруселі —
         // зображення вже завантажені до того як стають видимими
         loading="eager"
@@ -79,45 +69,41 @@ export default function PostCoverCard({ post, isActive = false, className = "" }
           WebkitBackfaceVisibility: "hidden",
   }}
       />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(17,24,32,0.02)_0%,rgba(17,24,32,0.18)_42%,rgba(17,24,32,0.7)_100%)]" />
 
       <motion.div
         variants={metaVariants}
         initial="hidden"
         animate={isActive ? "visible" : "hidden"}
-        className="absolute bottom-0 left-0 w-full bg-white/90 px-4 pt-4 pb-4 text-black space-y-2 overflow-hidden"
+        className="absolute inset-x-3 bottom-3 max-h-[56%] overflow-hidden bg-[#F7F8F6]/95 px-4 py-4 text-[#24313A] shadow-[0_16px_36px_rgba(17,24,32,0.22)] ring-1 ring-[#24313A]/10 backdrop-blur-sm md:inset-x-5 md:bottom-5 md:max-h-[52%] md:px-6 md:py-5"
       >
-        <div className="flex items-start justify-between gap-2">
-          <h3
-            className="text-xl font-semibold leading-tight uppercase tracking-wide flex-1"
-            dangerouslySetInnerHTML={{ __html: post.title.rendered }}
-          />
-
-          {excerpt && (
-            <button
-              type="button"
-              onClick={(e) => { e.preventDefault(); setShowExcerpt((s) => !s); }}
-              aria-label="Toggle excerpt"
-              className="lg:hidden shrink-0 mt-0.5 p-1.5 rounded-full bg-black/15 border border-black/20"
-            >
-              {showExcerpt
-                ? <ChevronDown size={20} className="text-black" />
-                : <ChevronUp size={20} className="text-black" />}
-            </button>
+        <div className="mb-3 flex items-center justify-between gap-3 border-b border-[#24313A]/15 pb-3">
+          <div className="min-w-0 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#7B6D57] md:text-[11px]">
+            <span className="truncate">
+              {categories[0] || "Публікація"}
+            </span>
+          </div>
+          {date && (
+            <time className="shrink-0 text-[11px] text-[#59656D]" dateTime={post.date}>
+              {date}
+            </time>
           )}
         </div>
 
+        <div className="flex items-start">
+          <h3
+            className="flex-1 text-[1.35rem] font-semibold leading-[1.05] text-[#18242C] md:text-3xl lg:text-[2rem]"
+            dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+          />
+        </div>
+
         {excerpt && (
-          <motion.div
-            variants={excerptVariants}
-            initial="hidden"
-            animate={showExcerpt ? "visible" : "hidden"}
-            className="overflow-y-auto md:overflow-hidden scrollbar-thin scrollbar-thumb-gray-400 pr-2"
-          >
+          <div className="mt-3 max-h-24 overflow-y-auto pr-2 md:max-h-32">
             <p
-              className="text-base md:text-lg leading-snug"
+              className="text-sm leading-relaxed text-[#4D5961] md:text-base"
               dangerouslySetInnerHTML={{ __html: excerpt }}
             />
-          </motion.div>
+          </div>
         )}
       </motion.div>
     </Link>
