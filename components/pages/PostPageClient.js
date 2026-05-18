@@ -28,6 +28,11 @@ export default function PostPageClient({ post }) {
   const date = new Date(post.date).toLocaleDateString("uk-UA");
   const author = post._embedded?.author?.[0]?.name;
   const epigraph = post.acf?.epigraph || "";
+  const epigraphParts = epigraph
+    .replace(/\r\n/g, "\n")
+    .split(/<\/?br\s*\/?>|\n+/i);
+  const epigraphQuote = epigraphParts[0]?.trim() || "";
+  const epigraphSource = epigraphParts.slice(1).join(" ").trim();
 
   const postId = post.id;
   const authorId = post.author;
@@ -127,23 +132,44 @@ export default function PostPageClient({ post }) {
         date={date}
         readingTime={readingTime}
         headerH={headerH}
-        epigraph={epigraph}
       />
 
       <main
         className={cn(
           layoutStyles.page,
-          "pb-10 pt-7 flex flex-col min-[900px]:flex-row min-[900px]:gap-7 justify-center"
+          "pb-10 pt-5 md:pt-7"
         )}
       >
-        <TocCard toc={toc} onSelect={scrollToHeading} />
-        <article
-          ref={articleRef}
-          className={`${garamond.className} flex-1 prose max-w-5xl text-[20px] lg:text-[23px] text-black
-                     prose-img:max-w-full prose-img:h-auto prose-pre:overflow-x-auto
-                     prose-code:break-words break-words leading-[1.72] lg:leading-[1.64] text-pretty prose-p:mt-2 prose-p:mb-3 mt-[22px] min-[900px]:mt-[39px]`}
-          dangerouslySetInnerHTML={{ __html: html }}
-        />
+        {epigraph && (
+          <div className="mb-7 flex flex-col min-[900px]:flex-row min-[900px]:gap-7 min-[900px]:justify-center">
+            <div className="hidden min-[900px]:block w-[220px] shrink-0" />
+            <blockquote
+              className={`${garamond.className} flex-1 max-w-5xl border-y border-[#B9CBD3] px-3 py-4 text-center text-[21px] leading-[1.5] text-[#1E2A32] md:text-[24px]`}
+            >
+              <span
+                className="italic"
+                dangerouslySetInnerHTML={{ __html: epigraphQuote }}
+              />
+              {epigraphSource && (
+                <span
+                  className="mt-4 block not-italic"
+                  dangerouslySetInnerHTML={{ __html: epigraphSource }}
+                />
+              )}
+            </blockquote>
+          </div>
+        )}
+
+        <div className="flex flex-col min-[900px]:flex-row min-[900px]:gap-7 justify-center">
+          <TocCard toc={toc} onSelect={scrollToHeading} />
+          <article
+            ref={articleRef}
+            className={`${garamond.className} flex-1 prose max-w-5xl text-[20px] lg:text-[23px] text-black
+                       prose-img:max-w-full prose-img:h-auto prose-pre:overflow-x-auto
+                       prose-code:break-words break-words leading-[1.72] lg:leading-[1.64] text-pretty prose-p:mt-2 prose-p:mb-3 mt-[22px] min-[900px]:mt-[39px]`}
+            dangerouslySetInnerHTML={{ __html: html }}
+          />
+        </div>
       </main>
 
       <ProgressCircle progress={progress} />

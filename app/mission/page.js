@@ -5,6 +5,7 @@ import SECTIONS from "@/components/mission page/missionSections";
 import MissionHero from "@/components/mission page/MissionHero";
 import MissionSection from "@/components/mission page/MissionSection";
 import SectionHeading from "@/components/ui/SectionHeading";
+import { pageMetadata } from "@/lib/seo";
 
 const LOTTIES = {
   traveler: "/animations/traveller_anim 1.json",
@@ -13,11 +14,13 @@ const LOTTIES = {
   return: "/animations/return_anim.json",
 };
 
-export const metadata = {
+export const metadata = pageMetadata({
   title: "Місія",
   description:
-    "Viator: мандрівник, криза мислення, майстерня мислення, повернення до себе.",
-};
+    "Місія Viator: мандрівник, криза мислення, майстерня мислення і повернення до себе.",
+  path: "/mission",
+  image: "/imgs/banner_mission.png",
+});
 
 export default function MissionPage() {
   const mainSections = SECTIONS.slice(0, -1);

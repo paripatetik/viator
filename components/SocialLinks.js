@@ -5,7 +5,7 @@ export default function SocialLinks({ variant = "footer" }) {
   const styles = {
     header: "hidden md:flex gap-3 lg:gap-4 items-center",
     drawer: "flex gap-8 justify-center",
-    footer: "flex gap-5 justify-between mt-5",
+    footer: "flex gap-5  mt-5",
   };
 
   // Нейтральна база + м'які hover-кольори (менше “кислоти” у хедері)
@@ -27,9 +27,9 @@ export default function SocialLinks({ variant = "footer" }) {
       <a href="https://instagram.com" aria-label="Instagram" className={base}>
         <FaInstagram className={`${size} ${iconBase} hover:text-[#E1306C]`} />
       </a>
-      <a href="https://youtube.com" aria-label="YouTube" className={base}>
+  {/*  <a href="https://youtube.com" aria-label="YouTube" className={base}>
         <FaYoutube className={`${size} ${iconBase} hover:text-[#FF0000]`} />
-      </a>
+      </a> */} 
     </div>
   );
 }

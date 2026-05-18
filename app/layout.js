@@ -1,6 +1,7 @@
 import Script from "next/script";
 import AppProviders from "@/components/AppProviders";
 import Layout from "@/components/Layout";
+import { defaultOgImage, siteName, siteUrl } from "@/lib/seo";
 import "@/styles/globals.css";
 
 const criticalLayoutCss = `
@@ -29,16 +30,46 @@ const criticalLayoutCss = `
 `;
 
 export const metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
-    default: "Viator",
+    default: "Viator - розвідки про філософію, науку та культуру",
     template: "%s - Viator",
   },
   description: "Розвідки про філософію, науку та культуру.",
+  applicationName: siteName,
+  authors: [{ name: siteName }],
+  creator: siteName,
+  publisher: siteName,
+  alternates: {
+    canonical: siteUrl,
+  },
+  openGraph: {
+    type: "website",
+    locale: "uk_UA",
+    url: siteUrl,
+    siteName,
+    title: "Viator - розвідки про філософію, науку та культуру",
+    description: "Розвідки про філософію, науку та культуру.",
+    images: [{ url: defaultOgImage }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Viator - розвідки про філософію, науку та культуру",
+    description: "Розвідки про філософію, науку та культуру.",
+    images: [defaultOgImage],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  verification: {
+    google: "KM7wDZ4JWp6L_P3zGNZQ6G0cMJ8eQLs1OUZ_oLylS-0",
+  },
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="uk">
       <body className="antialiased">
         <style
           id="critical-layout-vars"

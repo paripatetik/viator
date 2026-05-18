@@ -2,13 +2,17 @@ import Banner from "@/components/main page/Banner";
 import PostsCubeCarousel from "@/components/main page/PostCubeCarousel";
 import CategorySection from "@/components/main page/CategorySection";
 import { getPosts, getAllCategories } from "@/lib/api/rest";
+import { pageMetadata } from "@/lib/seo";
 
 export const revalidate = 600;
 
-export const metadata = {
+export const metadata = pageMetadata({
   title: "Блог Viator",
-  description: "Наші розвідки про філософію, науку та культуру.",
-};
+  description:
+    "Розвідки Viator про філософію, науку, культуру та історію думки українською.",
+  path: "/",
+  image: "/imgs/banner.jpg",
+});
 
 export default async function Home() {
   const [posts, categories] = await Promise.all([

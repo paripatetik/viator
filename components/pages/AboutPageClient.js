@@ -254,9 +254,9 @@ function TeamMember({ name, subtitle, children, photoSrc, photoAlt, from = "left
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, amount: 0.25 }}
       transition={{ duration: 0.7, ease: [0.22, 0.61, 0.36, 1] }}
-      className="group flex flex-col md:flex-row items-start gap-5 md:gap-8 bg-viator-cream rounded-2xl p-6 lg:p-8 shadow-sm"
+      className="group relative flex flex-col md:flex-row items-start gap-5 md:gap-8 overflow-hidden rounded-lg border border-[#AFC5CD] bg-[#FAFBF8]/82 p-6 shadow-[0_12px_30px_rgba(30,42,50,0.09)] before:absolute before:left-0 before:top-6 before:bottom-6 before:w-[2px] before:bg-[#416472]/55 lg:p-8"
     >
-      <div className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 border-4 border-white rounded-full bg-viator-sky flex-shrink-0 self-center md:self-start overflow-hidden">
+      <div className="relative z-10 w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 border border-[#B9CBD3] ring-4 ring-white/70 rounded-full bg-[#DCE6E8] flex-shrink-0 self-center md:self-start overflow-hidden">
         {photoSrc && (
           <Image
             src={photoSrc}
@@ -268,7 +268,7 @@ function TeamMember({ name, subtitle, children, photoSrc, photoAlt, from = "left
         )}
       </div>
 
-      <div className={`${garamond.className} text-[18px] lg:text-[20px] leading-relaxed`}>
+      <div className={`${garamond.className} relative z-10 text-[18px] lg:text-[20px] leading-relaxed`}>
         <h3 className={`${playfair.className} text-2xl md:text-3xl font-extrabold mb-1`}>
           {name}
         </h3>

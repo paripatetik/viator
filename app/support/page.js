@@ -3,11 +3,15 @@ import { cn, layoutStyles, typeStyles } from "@/lib/styles";
 import ImageActionLink from "@/components/ui/ImageActionLink";
 import PageHero from "@/components/ui/PageHero";
 import SectionHeading from "@/components/ui/SectionHeading";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = {
+export const metadata = pageMetadata({
   title: "Підтримати",
-  description: "Підтримати Viator на Patreon або разовим донатом.",
-};
+  description:
+    "Підтримати Viator на Patreon або разовим донатом і допомогти розвивати філософський контент українською.",
+  path: "/support",
+  image: "/imgs/banner-support.png",
+});
 
 export default function SupportPage() {
   return (
