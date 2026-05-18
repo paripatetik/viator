@@ -5,6 +5,8 @@ import Layout from "@/components/Layout";
 import { defaultOgImage, siteName, siteUrl } from "@/lib/seo";
 import "@/styles/globals.css";
 
+const GA_MEASUREMENT_ID = "G-TRW0KC1TSV";
+
 const criticalLayoutCss = `
   :root {
     --header-h: 4rem;
@@ -79,6 +81,18 @@ export default function RootLayout({ children }) {
         <Script id="scroll-restoration" strategy="beforeInteractive">
           {`
             history.scrollRestoration = 'manual';
+          `}
+        </Script>
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}');
           `}
         </Script>
         <AppProviders>
