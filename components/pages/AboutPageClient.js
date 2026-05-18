@@ -13,8 +13,8 @@ export default function AboutPageClient() {
 
   const beliefs = useMemo(
     () => [
-      "Віримо, що великі зміни починаються з малих кроків і невеликих спільнот, які поділяють одну пристрасть.",
-      "Віримо, що в такі часи, як наш, вміння зупинитися й подумати є необхідністю, аби жити змістовно.",
+      "Великі зміни починаються з малих кроків і невеликих спільнот, які поділяють одну пристрасть.",
+      "В такі часи, як наш, вміння зупинитися й подумати є необхідністю, аби жити змістовно.",
       "Віримо, що наших однодумців не бракуватиме і що Viator зростатиме разом із ними.",
     ],
     []
@@ -39,10 +39,20 @@ export default function AboutPageClient() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.35 }}
             transition={{ duration: 0.65, ease: [0.22, 0.61, 0.36, 1] }}
-            className="rounded-[26px] border-8 border-viator-cream bg-viator-sky/60 px-8 py-7 shadow-[0_10px_25px_rgba(0,0,0,0.03)]"
+            className="relative px-4 py-8 md:px-8"
           >
+            <div className="pointer-events-none absolute inset-x-6 top-0 flex items-center gap-3">
+              <span className="h-px flex-1 bg-[#416472]/30" />
+              <span className="h-1.5 w-1.5 rotate-45 border border-[#416472]/45" />
+              <span className="h-px flex-1 bg-[#416472]/30" />
+            </div>
+            <div className="pointer-events-none absolute inset-x-6 bottom-0 flex items-center gap-3">
+              <span className="h-px flex-1 bg-[#416472]/30" />
+              <span className="h-1.5 w-1.5 rotate-45 border border-[#416472]/45" />
+              <span className="h-px flex-1 bg-[#416472]/30" />
+            </div>
             <div
-              className={`${garamond.className} text-[19px] lg:text-[22px] leading-relaxed space-y-4 text-justify`}
+              className={`${garamond.className} text-[20px] lg:text-[23px] leading-[1.72] space-y-5 text-justify text-[#1E2A32] [&>p:first-child:first-letter]:float-left [&>p:first-child:first-letter]:mr-3 [&>p:first-child:first-letter]:mt-2 [&>p:first-child:first-letter]:font-serif [&>p:first-child:first-letter]:text-[3.6em] [&>p:first-child:first-letter]:font-bold [&>p:first-child:first-letter]:leading-[0.78]`}
             >
               <p>
                 Viator — це онлайн-простір про філософію, науку й культуру, де ми
@@ -82,7 +92,7 @@ export default function AboutPageClient() {
 
             <TeamMember
               from="right"
-              name="Саган Максим"
+              name="Максим Саган"
               subtitle="Співзасновник · Оптимістичний Скептик"
               photoSrc="/imgs/max.png"
             >
@@ -100,9 +110,13 @@ export default function AboutPageClient() {
 function BelievePanel({ items, headerOffset = 0, garamondClassName = "" }) {
   const sectionRef = useRef(null);
   const [t, setT] = useState(0);
+  const [mounted, setMounted] = useState(false);
   const n = Math.max(1, items.length);
 
-  const stickyTop = Math.max(0, headerOffset + 18);
+  const stickyTop = mounted ? Math.max(0, headerOffset + 18) : null;
+  const stickyTopStyle = mounted
+    ? `${stickyTop}px`
+    : "calc(var(--header-h, 4rem) + 18px)";
 
   const perStepVh = 95;
   const leadInVh = 16;
@@ -110,6 +124,12 @@ function BelievePanel({ items, headerOffset = 0, garamondClassName = "" }) {
   const driverH = 100 + leadInVh + Math.max(0, n - 1) * perStepVh + tailVh;
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return undefined;
+
     const sec = sectionRef.current;
     if (!sec) return undefined;
 
@@ -150,7 +170,7 @@ function BelievePanel({ items, headerOffset = 0, garamondClassName = "" }) {
       window.removeEventListener("resize", onScroll);
       if (raf) window.cancelAnimationFrame(raf);
     };
-  }, [n, stickyTop, perStepVh, leadInVh]);
+  }, [n, mounted, stickyTop, perStepVh, leadInVh]);
 
   const rows = [];
   for (let i = 0; i < n; i++) {
@@ -161,10 +181,10 @@ function BelievePanel({ items, headerOffset = 0, garamondClassName = "" }) {
 
   return (
     <section ref={sectionRef} className="relative" style={{ height: `${driverH}vh` }}>
-      <div className="sticky" style={{ top: stickyTop }}>
+      <div className="sticky" style={{ top: stickyTopStyle }}>
         <div
           className="relative mx-auto w-full max-w-4xl rounded-[26px] bg-transparent overflow-hidden"
-          style={{ height: `calc(100vh - ${stickyTop}px - 18px)` }}
+          style={{ height: `calc(100vh - ${stickyTopStyle} - 18px)` }}
         >
           <div className="relative z-10 h-full px-6 py-10">
             <div className="grid h-full items-center text-center" style={{ gridTemplateRows }}>
@@ -254,9 +274,9 @@ function TeamMember({ name, subtitle, children, photoSrc, photoAlt, from = "left
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, amount: 0.25 }}
       transition={{ duration: 0.7, ease: [0.22, 0.61, 0.36, 1] }}
-      className="group relative flex flex-col md:flex-row items-start gap-5 md:gap-8 overflow-hidden rounded-lg border border-[#AFC5CD] bg-[#FAFBF8]/82 p-6 shadow-[0_12px_30px_rgba(30,42,50,0.09)] before:absolute before:left-0 before:top-6 before:bottom-6 before:w-[2px] before:bg-[#416472]/55 lg:p-8"
+      className="group relative flex flex-col md:flex-row items-start gap-5 md:gap-8 overflow-hidden rounded-lg border border-[#D6C9AD]/70 bg-[#FBF7EC]/90 p-6 shadow-[0_14px_34px_rgba(30,42,50,0.07)] lg:p-8"
     >
-      <div className="relative z-10 w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 border border-[#B9CBD3] ring-4 ring-white/70 rounded-full bg-[#DCE6E8] flex-shrink-0 self-center md:self-start overflow-hidden">
+      <div className="relative z-10 w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 border border-[#C9BFA7]/80 ring-[5px] ring-[#FFFDF7]/85 rounded-full bg-[#E9DFCA] flex-shrink-0 self-center md:self-start overflow-hidden shadow-[0_8px_18px_rgba(30,42,50,0.075)]">
         {photoSrc && (
           <Image
             src={photoSrc}
@@ -268,12 +288,12 @@ function TeamMember({ name, subtitle, children, photoSrc, photoAlt, from = "left
         )}
       </div>
 
-      <div className={`${garamond.className} relative z-10 text-[18px] lg:text-[20px] leading-relaxed`}>
+      <div className={`${garamond.className} relative z-10 text-[18px] lg:text-[20px] leading-relaxed md:border-l md:border-[#D6C9AD]/70 md:pl-7`}>
         <h3 className={`${playfair.className} text-2xl md:text-3xl font-extrabold mb-1`}>
           {name}
         </h3>
-        {subtitle && <p className="text-base md:text-lg text-slate-700 mb-3">{subtitle}</p>}
-        <p className="text-justify">{children}</p>
+        {subtitle && <p className="text-base md:text-lg text-[#5F6A70] mb-3">{subtitle}</p>}
+        <p className="text-justify text-[#1E2A32]/95">{children}</p>
       </div>
     </motion.article>
   );
