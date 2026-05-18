@@ -4,6 +4,7 @@ import { getPostBySlug, getAllSlugs } from "@/lib/api/rest";
 import { absoluteUrl, siteName } from "@/lib/seo";
 
 export const revalidate = 600;
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
   const slugs = await getAllSlugs();
