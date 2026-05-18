@@ -1,4 +1,5 @@
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
 import AppProviders from "@/components/AppProviders";
 import Layout from "@/components/Layout";
 import { defaultOgImage, siteName, siteUrl } from "@/lib/seo";
@@ -83,6 +84,7 @@ export default function RootLayout({ children }) {
         <AppProviders>
           <Layout>{children}</Layout>
         </AppProviders>
+        <Analytics />
       </body>
     </html>
   );

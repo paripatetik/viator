@@ -7,9 +7,9 @@ import { pageMetadata } from "@/lib/seo";
 export const revalidate = 600;
 
 export const metadata = pageMetadata({
-  title: "Блог Viator",
+  title: "Viator",
   description:
-    "Розвідки Viator про філософію, науку, культуру та історію думки українською.",
+    "Розвідки Viator про філософію, науку, культуру та історію думки.",
   path: "/",
   image: "/imgs/banner.jpg",
 });
