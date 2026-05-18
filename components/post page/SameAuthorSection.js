@@ -9,7 +9,7 @@ import SectionHeading from "@/components/ui/SectionHeading";
 export default function SameAuthorSection({ authorId, excludeId }) {
   const { posts, loading, error } = usePostsByAuthor(authorId, excludeId);
 
-  if (error || (!loading && posts.length === 0)) return null;
+  if (error || (!loading && posts.length < 2)) return null;
 
   return (
     <section className="pb-6">
@@ -21,7 +21,7 @@ export default function SameAuthorSection({ authorId, excludeId }) {
         {loading ? (
           <p className="py-12 text-center">Завантаження…</p>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-2 lg:grid-cols-3">
             {posts.map((p) => (
               <PostMasonryCard key={p.id} post={p} />
             ))}

@@ -47,7 +47,7 @@ export default function NavLinks({ variant = "desktop", onClick }) {
     const footerBase =
       `${inter.className} transition-colors duration-150 underline-offset-[6px] ` +
       "hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/10 rounded-sm";
-    const footerLink = `${footerBase} text-lg md:text-lg font-bold text-[#F8FBFC] hover:text-white decoration-white/45 drop-shadow-sm`;
+    const footerLink = `${footerBase} text-lg md:text-lg font-bold text-[#1E2A32] hover:text-[#0F2533] decoration-[#1E2A32]/45`;
 
     return (
       <div className="flex flex-col gap-4 justify-center text-left">

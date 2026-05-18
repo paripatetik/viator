@@ -40,20 +40,20 @@ export default function Header() {
         id="site-header"
         className={[
           "fixed inset-x-0 top-0 z-40 overflow-hidden",
-          "transition-[background-color,box-shadow,backdrop-filter] duration-300",
+          "border-b transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300",
           isSticky
-            ? "bg-viator-sky/95 backdrop-blur-md shadow-lg border-b border-black/10"
-            : "bg-transparent backdrop-blur-0 shadow-none border-b border-transparent",
+            ? "border-[#24313A]/20 bg-viator-sky/95 shadow-[0_12px_30px_rgba(30,42,50,0.18)] backdrop-blur-md"
+            : "border-[#416472]/25 bg-[#F7F3EC]/95 shadow-[0_10px_26px_rgba(30,42,50,0.12)] backdrop-blur-md",
         ].join(" ")}
         style={{ height: "var(--header-h, 4rem)" }}
       >
         <div className="container mx-auto h-full flex items-center px-4 sm:px-6 lg:px-8 gap-7 md:gap-10">
-          <Link href="/" className="flex h-full shrink-0 items-center gap-2 lg:gap-3">
+          <Link href="/" className="flex h-full shrink-0 items-center gap-2.5 lg:gap-3.5 text-[#1E2A32]">
             <div
               className="shrink-0 flex items-center justify-center"
               style={{
-                width: "calc(var(--header-h, 4rem) * 0.8)",
-                height: "calc(var(--header-h, 4rem) * 0.8)",
+                width: "calc(var(--header-h, 4rem) * 0.92)",
+                height: "calc(var(--header-h, 4rem) * 0.92)",
               }}
             >
               <img
@@ -66,7 +66,7 @@ export default function Header() {
                 decoding="sync"
               />
             </div>
-            <span className={`${playfair.className} italic text-2xl md:text-3xl lg:text-[35px] font-bold leading-none tracking-tight whitespace-nowrap`}>
+            <span className={`${playfair.className} italic text-[1.7rem] md:text-[2.05rem] lg:text-[2.35rem] font-bold leading-none tracking-tight whitespace-nowrap`}>
               Viator
             </span>
           </Link>

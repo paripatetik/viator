@@ -27,6 +27,9 @@ export default function PostPageClient({ post }) {
     post._embedded?.["wp:featuredmedia"]?.[0]?.source_url || "/fallback.jpg";
   const date = new Date(post.date).toLocaleDateString("uk-UA");
   const author = post._embedded?.author?.[0]?.name;
+  const category = post._embedded?.["wp:term"]
+    ?.flat()
+    ?.find((term) => term?.taxonomy === "category")?.name;
   const epigraph = post.acf?.epigraph || "";
   const epigraphParts = epigraph
     .replace(/\r\n/g, "\n")
@@ -130,6 +133,7 @@ export default function PostPageClient({ post }) {
         img={img}
         author={author}
         date={date}
+        category={category}
         readingTime={readingTime}
         headerH={headerH}
       />
@@ -137,7 +141,7 @@ export default function PostPageClient({ post }) {
       <main
         className={cn(
           layoutStyles.page,
-          "pb-10 pt-5 md:pt-7"
+          "pb-10 pt-8 md:pt-10"
         )}
       >
         {epigraph && (
@@ -164,9 +168,9 @@ export default function PostPageClient({ post }) {
           <TocCard toc={toc} onSelect={scrollToHeading} />
           <article
             ref={articleRef}
-            className={`${garamond.className} flex-1 prose max-w-5xl text-[20px] lg:text-[23px] text-black
+            className={`${garamond.className} viator-post-article w-full min-w-0 flex-1 prose max-w-[780px] text-[21px] md:text-[22px] lg:text-[23px] text-[#18242C]
                        prose-img:max-w-full prose-img:h-auto prose-pre:overflow-x-auto
-                       prose-code:break-words break-words leading-[1.72] lg:leading-[1.64] text-pretty prose-p:mt-2 prose-p:mb-3 mt-[22px] min-[900px]:mt-[39px]`}
+                       prose-code:break-words break-words leading-[1.8] lg:leading-[1.78] text-pretty prose-p:my-[0.95em] mt-[22px] min-[900px]:mt-[39px]`}
             dangerouslySetInnerHTML={{ __html: html }}
           />
         </div>

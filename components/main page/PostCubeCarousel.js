@@ -13,6 +13,11 @@ import PostCoverCard from "./PostCoverCard";
 import { heroHeightStyle, layoutStyles } from "@/lib/styles";
 import SectionHeading from "@/components/ui/SectionHeading";
 
+const carouselHeightStyle = {
+  ...heroHeightStyle,
+  height: "calc(var(--hero-h, calc(100vh - var(--header-h, 4rem))) * 0.84)",
+};
+
 export default function PostsCubeCarousel({ posts = [] }) {
   const displayPosts = useMemo(() => posts.slice(0, 7), [posts]);
   const hasLoopBuffer = displayPosts.length > 1;
@@ -102,7 +107,7 @@ export default function PostsCubeCarousel({ posts = [] }) {
       whileInView="show"
       viewport={{ once: true, amount: 0.25, margin: "0px 0px -12% 0px" }}
       className="flex flex-col pb-6"
-      style={heroHeightStyle}
+      style={carouselHeightStyle}
     >
       <div className={`${layoutStyles.pageCompact} flex flex-col flex-1 relative`}>
         <SectionHeading className="pb-6 mt-6 md:mt-12 text-[#416472]">

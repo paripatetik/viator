@@ -58,7 +58,7 @@ export default function Footer() {
           <div>
             <a
               href="mailto:hello@viator.com.ua"
-              className="text-2xl md:text-3xl font-bold hover:underline break-all text-nowrap text-[#F8FBFC] drop-shadow-sm"
+              className="text-2xl md:text-3xl font-bold hover:underline break-all text-nowrap text-[#1E2A32]"
             >
               hello@viator.com.ua
             </a>

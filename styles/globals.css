@@ -49,6 +49,7 @@ html {
 .viator-evening-page {
   position: relative;
   isolation: isolate;
+  z-index: 1;
   overflow-x: clip;
   background:
     linear-gradient(
@@ -72,37 +73,37 @@ html {
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .viator-bg-icon {
   position: absolute;
-  width: clamp(12rem, 20vw, 22rem);
+  width: clamp(16rem, 26vw, 30rem);
   height: auto;
-  opacity: 0.28;
-  filter: saturate(0.9) contrast(1.05);
+  opacity: 0.1;
+  filter: saturate(0.65) contrast(0.9);
   transform-origin: 50% 50%;
   user-select: none;
   will-change: transform;
 }
 
 .viator-bg-icon-owl {
-  top: calc(var(--hero-h, 100vh) + 54rem);
-  left: clamp(-5rem, -4vw, -1.5rem);
+  top: calc(var(--hero-h, 100vh) + 50rem);
+  left: clamp(-11rem, -9vw, -6rem);
   animation: viator-icon-float-owl 9s ease-in-out infinite;
 }
 
 .viator-bg-icon-column {
-  top: calc(var(--hero-h, 100vh) + 58rem);
-  right: clamp(-5rem, -4vw, -1.5rem);
-  width: clamp(13rem, 21vw, 23rem);
+  top: calc(var(--hero-h, 100vh) + 57rem);
+  right: clamp(-12rem, -10vw, -6.5rem);
+  width: clamp(17rem, 27vw, 31rem);
   animation: viator-icon-float-column 10.5s ease-in-out infinite;
 }
 
 .viator-bg-icon-books {
-  top: calc(var(--hero-h, 100vh) + 128rem);
-  left: clamp(-3.25rem, -2.5vw, -0.5rem);
-  width: clamp(11.5rem, 19vw, 20rem);
+  top: calc(var(--hero-h, 100vh) + 132rem);
+  left: clamp(-10rem, -8vw, -5.5rem);
+  width: clamp(15rem, 24vw, 28rem);
   animation: viator-icon-float-books 11.5s ease-in-out infinite;
 }
 
@@ -154,25 +155,25 @@ html {
 
 @media (max-width: 767px) {
   .viator-bg-icon {
-    width: clamp(8rem, 38vw, 11rem);
-    opacity: 0.2;
+    width: clamp(10rem, 48vw, 14rem);
+    opacity: 0.08;
   }
 
   .viator-bg-icon-owl {
     top: calc(var(--hero-h, 100vh) + 54rem);
-    left: -3.25rem;
+    left: -6rem;
   }
 
   .viator-bg-icon-column {
     top: calc(var(--hero-h, 100vh) + 47rem);
-    right: -3.5rem;
-    width: clamp(8.75rem, 42vw, 12rem);
+    right: -6.5rem;
+    width: clamp(11rem, 52vw, 15rem);
   }
 
   .viator-bg-icon-books {
-    top: calc(var(--hero-h, 100vh) + 108rem);
-    left: -2.25rem;
-    width: clamp(8rem, 38vw, 11rem);
+    top: calc(var(--hero-h, 100vh) + 112rem);
+    left: -5.75rem;
+    width: clamp(10rem, 48vw, 14rem);
   }
 }
 
@@ -210,6 +211,7 @@ html {
 
 .viator-footer {
   position: relative;
+  z-index: 0;
   overflow: hidden;
   margin-top: -1px;
 }

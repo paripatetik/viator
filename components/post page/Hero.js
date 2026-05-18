@@ -1,14 +1,23 @@
 import Image from "next/image";
 import { Clock } from "lucide-react";
 import { heroHeightStyle, heroStyles } from "@/lib/styles";
+import { playfair } from "@/lib/fonts";
 
 export function Hero({
   title,
   author,
   date,
+  category,
   readingTime,
   img,
 }) {
+  const meta = [
+    author,
+    date,
+    category,
+    readingTime,
+  ].filter(Boolean);
+
   return (
     <section
       className={heroStyles.root}
@@ -30,30 +39,26 @@ export function Hero({
       <div className="absolute inset-0 bg-black/50" />
 
       <div className="relative flex h-full flex-col justify-end">
-        <div className="container relative mx-auto px-6 pb-8 md:pb-10 text-white">
+        <div className="container relative mx-auto px-6 pb-14 text-white md:pb-20 lg:pb-24">
           <h1
-            className="font-extrabold leading-tight text-3xl sm:text-5xl md:text-6xl"
+            className={`${playfair.className} max-w-5xl text-4xl font-bold leading-[1.05] text-white sm:text-5xl md:text-6xl lg:text-[4.5rem]`}
             dangerouslySetInnerHTML={{ __html: title }}
           />
-          <div className="mt-2 h-1 w-20 bg-viator-sky" />
+          <div className="mt-4 h-px w-24 bg-viator-sky/85" />
 
-          <p
-            className="
-              mt-2 flex items-center gap-2 justify-start
-              text-white/80 whitespace-nowrap
-            "
-          >
-            {author && <span>{author}</span>}
-            {author && date && <span className="mx-1">|</span>}
-            {date && <span>{date}</span>}
-            {(author || date) && readingTime && <span className="mx-1">|</span>}
-            {readingTime && (
-              <>
-                <Clock size={16} strokeWidth={2} className="-mt-[2px]" />
-                <span>{readingTime}</span>
-              </>
-            )}
-          </p>
+          {meta.length > 0 && (
+            <p className="mt-4 flex max-w-4xl flex-wrap items-center gap-x-3 gap-y-1 text-sm font-medium uppercase tracking-[0.16em] text-white/80 md:text-[15px]">
+              {meta.map((item, index) => (
+                <span key={`${item}-${index}`} className="inline-flex items-center gap-1.5">
+                  {item === readingTime && <Clock size={15} strokeWidth={1.8} />}
+                  <span>{item}</span>
+                  {index < meta.length - 1 && (
+                    <span className="ml-1 text-white/40">/</span>
+                  )}
+                </span>
+              ))}
+            </p>
+          )}
         </div>
       </div>
     </section>

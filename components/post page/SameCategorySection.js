@@ -14,7 +14,7 @@ export default function SameCategorySection({ categoryId, excludeId }) {
   // weed out the current post if the API didn’t
   const filtered = posts.filter((p) => p.id !== excludeId);
 
-  if (error || (!loading && filtered.length === 0)) return null;
+  if (error || (!loading && filtered.length < 2)) return null;
 
   return (
     <section className="pb-6">
@@ -26,7 +26,7 @@ export default function SameCategorySection({ categoryId, excludeId }) {
         {loading ? (
           <p className="py-12 text-center">Завантаження…</p>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filtered.map((p) => (
               <PostMasonryCard key={p.id} post={p} />
             ))}
