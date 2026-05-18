@@ -60,7 +60,7 @@ export function TocCard({ toc = [], onSelect, defaultOpen = true }) {
     <>
       {/* MOBILE (card on top). Hidden ≥900px) */}
  <nav className="min-[900px]:hidden">
-  <div className="rounded-xl bg-viator-sky/30 p-4 shadow-sm ring-1 ring-slate-100">
+  <div className="max-w-[20rem] rounded-lg bg-white/55 p-4 shadow-sm ring-1 ring-[#B9CBD3]/70">
     <button
       type="button"
       onClick={() => setOpen(!open)}
@@ -68,7 +68,7 @@ export function TocCard({ toc = [], onSelect, defaultOpen = true }) {
       aria-controls="toc-list"
       className="w-full flex items-center justify-between"
     >
-      <h2 className="font-semibold text-xl">Зміст</h2>
+      <h2 className="text-left text-base font-semibold uppercase tracking-[0.14em] text-[#416472]">Зміст</h2>
       <svg
         className={`w-6 h-6 transition-transform ${open ? "" : "-rotate-90"}`}
         viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
@@ -81,7 +81,7 @@ export function TocCard({ toc = [], onSelect, defaultOpen = true }) {
       {open && (
         <motion.ol
           id="toc-list"
-          className="overflow-hidden mt-3 space-y-3 list-disc pl-5 marker:text-viator-muted-blue text-[15px] leading-6"
+          className="mt-3 list-disc space-y-2.5 overflow-hidden pl-5 text-[15px] leading-6 marker:text-viator-muted-blue"
           initial={{ height: 0, opacity: 0, y: -6 }}
           animate={{ height: "auto", opacity: 1, y: 0 }}
           exit={{ height: 0, opacity: 0, y: -6 }}
@@ -92,7 +92,7 @@ export function TocCard({ toc = [], onSelect, defaultOpen = true }) {
               <button
                 type="button"
                 onClick={() => onSelect(id)}   // ← simple & reliable
-                className="text-left transition-colors hover:text-viator-muted-blue text-slate-700"
+                className="text-left text-slate-700 transition-colors hover:text-viator-muted-blue"
               >
                 {text}
               </button>
@@ -105,10 +105,10 @@ export function TocCard({ toc = [], onSelect, defaultOpen = true }) {
 </nav>
 
       {/* DESKTOP (sticky left) */}
-      <aside className="hidden min-[900px]:block w-[260px] shrink-0 mt-2">
+      <aside className="hidden min-[900px]:block w-[220px] shrink-0 mt-2">
         <div className="sticky" style={{ top: "var(--header-offset, 88px)" }} aria-label="Зміст статті">
-          <h2 className="text-center font-semibold text-[24px] mb-4">Зміст</h2>
-          <ol className="text-[17px] leading-6 pr-2 space-y-1 border-l border-slate-200 pl-4 max-h-[calc(100vh-var(--header-offset,88px)-24px)] overflow-auto">
+          <h2 className="mb-3 text-left text-[14px] font-semibold uppercase tracking-[0.16em] text-[#416472]">Зміст</h2>
+          <ol className="max-h-[calc(100vh-var(--header-offset,88px)-24px)] space-y-1.5 overflow-auto border-l border-[#B9CBD3] pl-4 pr-2 text-[15px] leading-6">
             {toc.map(({ id, text }) => {
               const isActive = id === active;
               return (
@@ -121,10 +121,10 @@ export function TocCard({ toc = [], onSelect, defaultOpen = true }) {
                     }}
                     aria-current={isActive ? "true" : undefined}
                     className={[
-                      "block w-full text-left py-1 rounded-md transition-all duration-200",
+                      "block w-full rounded-sm py-1 text-left transition-all duration-200",
                       isActive
-                        ? "font-semibold text-viator-toc-active bg-viator-note -mr-[6px] pr-4 pl-2 border-r-4 border-viator-toc-active"
-                        : "pl-3 pr-2 text-slate-600 hover:text-viator-toc-active"
+                        ? "bg-viator-note pl-2 pr-2 font-semibold text-viator-toc-active"
+                        : "pl-2 pr-2 text-slate-600 hover:text-viator-toc-active"
                     ].join(" ")}
                   >
                     {text}

@@ -133,15 +133,15 @@ export default function PostPageClient({ post }) {
       <main
         className={cn(
           layoutStyles.page,
-          "pb-10 pt-7 flex flex-col min-[900px]:flex-row min-[900px]:gap-11 justify-center"
+          "pb-10 pt-7 flex flex-col min-[900px]:flex-row min-[900px]:gap-7 justify-center"
         )}
       >
         <TocCard toc={toc} onSelect={scrollToHeading} />
         <article
           ref={articleRef}
-          className={`${garamond.className} flex-1 prose max-w-5xl text-[19px] lg:text-[23px] text-black
+          className={`${garamond.className} flex-1 prose max-w-5xl text-[20px] lg:text-[23px] text-black
                      prose-img:max-w-full prose-img:h-auto prose-pre:overflow-x-auto
-                     prose-code:break-words break-words leading-8 text-pretty prose-p:mt-2 prose-p:mb-3 mt-[22px] min-[900px]:mt-[39px]`}
+                     prose-code:break-words break-words leading-[1.72] lg:leading-[1.64] text-pretty prose-p:mt-2 prose-p:mb-3 mt-[22px] min-[900px]:mt-[39px]`}
           dangerouslySetInnerHTML={{ __html: html }}
         />
       </main>
