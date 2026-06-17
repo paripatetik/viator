@@ -36,10 +36,10 @@ export function Hero({
         sizes="100vw"
         className="object-cover object-center md:object-[50%_20%]"
       />
-      <div className="absolute inset-0 bg-black/50" />
+      <div className="absolute inset-x-0 bottom-0 h-[58%] bg-gradient-to-t from-black/85 via-black/62 to-transparent md:h-[64%]" />
 
       <div className="relative flex h-full flex-col justify-end">
-        <div className="container relative mx-auto px-6 pb-6 text-white md:pb-20 lg:pb-24">
+        <div className="container relative mx-auto px-6 pb-2 text-white md:pb-10 lg:pb-12">
           <h1
             className={`${playfair.className} max-w-5xl text-4xl font-bold leading-[1.05] text-white sm:text-5xl md:text-6xl lg:text-[4.5rem]`}
             dangerouslySetInnerHTML={{ __html: title }}
