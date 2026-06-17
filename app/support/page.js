@@ -15,7 +15,7 @@ export const metadata = pageMetadata({
 
 export default function SupportPage() {
   return (
-    <>
+    <div className="viator-support-page">
       <PageHero
         title="Підтримати"
         subtitle="Навіть Діоген мав свою бочку, Viator має свою банку."
@@ -24,7 +24,7 @@ export default function SupportPage() {
         alt="Підтримати Viator"
       />
 
-      <main className={cn(layoutStyles.page, layoutStyles.pageY, "space-y-16")}>
+      <main className={cn(layoutStyles.page, "pt-10 pb-8 lg:pt-12 lg:pb-10 space-y-10 lg:space-y-12")}>
         <section
           className={cn(
             garamond.className,
@@ -50,7 +50,7 @@ export default function SupportPage() {
           </p>
         </section>
 
-        <section className="max-w-3xl p-2 ml-auto mr-auto mb-6">
+        <section className="max-w-3xl p-2 mx-auto">
           <SectionHeading className="mb-6">Стати патроном</SectionHeading>
 
           <div className="flex justify-center">
@@ -62,7 +62,7 @@ export default function SupportPage() {
           </div>
         </section>
 
-        <section className="max-w-3xl mx-auto space-y-5 mt-10">
+        <section className="max-w-3xl mx-auto space-y-5">
           <SectionHeading className="mb-6">Підтримати разовим донатом</SectionHeading>
 
           <div className="flex flex-col gap-4 md:flex-row justify-center md:gap-6">
@@ -81,6 +81,6 @@ export default function SupportPage() {
           </div>
         </section>
       </main>
-    </>
+    </div>
   );
 }

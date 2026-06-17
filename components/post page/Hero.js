@@ -39,7 +39,7 @@ export function Hero({
       <div className="absolute inset-0 bg-black/50" />
 
       <div className="relative flex h-full flex-col justify-end">
-        <div className="container relative mx-auto px-6 pb-14 text-white md:pb-20 lg:pb-24">
+        <div className="container relative mx-auto px-6 pb-6 text-white md:pb-20 lg:pb-24">
           <h1
             className={`${playfair.className} max-w-5xl text-4xl font-bold leading-[1.05] text-white sm:text-5xl md:text-6xl lg:text-[4.5rem]`}
             dangerouslySetInnerHTML={{ __html: title }}

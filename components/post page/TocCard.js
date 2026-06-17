@@ -111,7 +111,7 @@ export function TocCard({ toc = [], onSelect, defaultOpen = true }) {
           style={{ top: "var(--header-offset, 88px)" }}
           aria-label="Зміст статті"
         >
-          <h2 className="mb-4 text-left text-[16px] font-semibold text-[#1E2A32]">Зміст</h2>
+          <h2 className="mb-4 text-center text-[16px] font-semibold text-[#1E2A32]">Зміст</h2>
           <ol className="max-h-[calc(100vh-var(--header-offset,88px)-48px)] space-y-1.5 overflow-auto pr-1 text-[15px] leading-6">
             {toc.map(({ id, text }) => {
               const isActive = id === active;

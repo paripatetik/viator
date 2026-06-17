@@ -76,6 +76,10 @@ html {
   overflow: visible;
 }
 
+.viator-evening-page:has(.viator-support-page) .viator-bg-icons {
+  overflow: hidden;
+}
+
 .viator-bg-icon {
   position: absolute;
   width: clamp(16rem, 26vw, 30rem);
