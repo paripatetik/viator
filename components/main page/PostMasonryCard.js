@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Clock, User } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { htmlToPlainText } from "@/lib/text";
 
 function readTime(html = "") {
   const text = html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
@@ -21,10 +22,7 @@ export default function PostMasonryCard({ post, index = 0 }) {
 
   const author = post._embedded?.author?.[0]?.name;
 
-  const excerpt = post.excerpt?.rendered
-    ?.replace(/<[^>]+>/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
+  const excerpt = htmlToPlainText(post.excerpt?.rendered);
 
   const minutes = Number(post.reading_time) || readTime(post.content?.rendered);
 

@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import clsx from "clsx";
 import { motion } from "framer-motion";
+import { htmlToPlainText } from "@/lib/text";
 
 const metaVariants = {
   hidden: { opacity: 0, pointerEvents: "none" },
@@ -28,10 +29,7 @@ export default function PostCoverCard({ post, isActive = false, className = "" }
       }).format(new Date(post.date))
     : null;
 
-  const excerpt = post.excerpt?.rendered
-    ?.replace(/<[^>]+>/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
+  const excerpt = htmlToPlainText(post.excerpt?.rendered);
 
   return (
     <Link
@@ -105,10 +103,9 @@ export default function PostCoverCard({ post, isActive = false, className = "" }
 
         {excerpt && (
           <div className="mt-3 max-h-24 overflow-y-auto pr-2 md:max-h-32">
-            <p
-              className="text-sm leading-relaxed text-[#4D5961] md:text-base"
-              dangerouslySetInnerHTML={{ __html: excerpt }}
-            />
+            <p className="text-sm leading-relaxed text-[#4D5961] md:text-base">
+              {excerpt}
+            </p>
           </div>
         )}
       </motion.div>

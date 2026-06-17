@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import PostPageClient from "@/components/pages/PostPageClient";
 import { getPostBySlug, getAllSlugs } from "@/lib/api/rest";
 import { absoluteUrl, siteName } from "@/lib/seo";
+import { htmlToPlainText } from "@/lib/text";
 
 export const revalidate = 600;
 export const dynamicParams = true;
@@ -21,9 +22,9 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  const title = stripHtml(post.title?.rendered || "Допис");
+  const title = htmlToPlainText(post.title?.rendered || "Допис");
   const description =
-    stripHtml(post.excerpt?.rendered || post.content?.rendered || "")
+    htmlToPlainText(post.excerpt?.rendered || post.content?.rendered || "")
       .slice(0, 160) || "Допис Viator про філософію, науку та культуру.";
   const image = post._embedded?.["wp:featuredmedia"]?.[0]?.source_url;
   const author = post._embedded?.author?.[0]?.name;
@@ -66,8 +67,4 @@ export default async function PostRoute({ params }) {
   if (!post) notFound();
 
   return <PostPageClient post={post} />;
-}
-
-function stripHtml(value) {
-  return value.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
 }
