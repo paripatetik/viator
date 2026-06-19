@@ -12,6 +12,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { inter, playfair, garamond } from "@/lib/fonts";
+import usePageReady from "@/lib/hooks/usePageReady";
 import { heroMinHeightStyle, heroStyles } from "@/lib/styles";
 
 export default function MissionHero({
@@ -40,6 +41,7 @@ export default function MissionHero({
   showKant = true,
 }) {
   const prefersReducedMotion = useReducedMotion();
+  const animationReady = usePageReady(260);
 
   const STAGE_CSS = "clamp(300px, 74vmin, 600px)";
   const IMG_FRAC_SM = 0.78;
@@ -96,7 +98,7 @@ export default function MissionHero({
   const [active, setActive] = useState([]);
 
   useEffect(() => {
-    if (prefersReducedMotion || !ready || R <= 0) return;
+    if (prefersReducedMotion || !animationReady || !ready || R <= 0) return;
 
     const id = setInterval(() => {
       const nextKey = keyCounter.current++;
@@ -113,7 +115,16 @@ export default function MissionHero({
     }, tickMs);
 
     return () => clearInterval(id);
-  }, [prefersReducedMotion, ready, R, ANGLES, icons.length, maxVisible, tickMs]);
+  }, [
+    prefersReducedMotion,
+    animationReady,
+    ready,
+    R,
+    ANGLES,
+    icons.length,
+    maxVisible,
+    tickMs,
+  ]);
 
   const toXY = (angleIdx) => {
     const a = (ANGLES[angleIdx] * Math.PI) / 180;
@@ -195,7 +206,7 @@ export default function MissionHero({
       </div>
 
       {/* НІЦШЕ */}
-      {showNietzsche && !prefersReducedMotion && (
+      {showNietzsche && !prefersReducedMotion && animationReady && (
         <>
           {/* Мобілка */}
           <motion.div
@@ -255,7 +266,7 @@ export default function MissionHero({
       )}
 
       {/* КАНТ */}
-      {showKant && !prefersReducedMotion && (
+      {showKant && !prefersReducedMotion && animationReady && (
         <>
           {/* Мобілка */}
           <motion.div
@@ -357,7 +368,7 @@ export default function MissionHero({
               </div>
             </div>
 
-            {!prefersReducedMotion && ready && R > 0 && (
+            {!prefersReducedMotion && animationReady && ready && R > 0 && (
               <div className="pointer-events-none absolute inset-0">
                 <AnimatePresence initial={false}>
                   {active.map(({ key, iconIdx, angleIdx }) => {

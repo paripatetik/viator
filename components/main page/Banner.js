@@ -3,9 +3,11 @@
 import { useState } from "react";
 import clsx from "clsx";
 import { playfair } from "@/lib/fonts";
+import usePageReady from "@/lib/hooks/usePageReady";
 import { heroHeightStyle, heroStyles } from "@/lib/styles";
 
 export default function Banner({ title, subtitle, imgSrc }) {
+  const animationReady = usePageReady(220);
   const [pauseText, setPauseText] = useState(false);
   const [pauseImg, setPauseImg] = useState(false);
 
@@ -25,7 +27,7 @@ export default function Banner({ title, subtitle, imgSrc }) {
           className="absolute inset-0 viator-banner-bg-pan"
           style={{
             backgroundImage: `url("${imgSrc}")`,
-            animationPlayState: pauseImg ? "paused" : "running",
+            animationPlayState: !animationReady || pauseImg ? "paused" : "running",
           }}
         />
 
@@ -43,7 +45,10 @@ export default function Banner({ title, subtitle, imgSrc }) {
           )}
           onMouseEnter={() => setPauseText(true)}
           onMouseLeave={() => setPauseText(false)}
-          style={{ animationPlayState: pauseText ? "paused" : "running" }}
+          style={{
+            animationPlayState:
+              !animationReady || pauseText ? "paused" : "running",
+          }}
         >
           <span className="pointer-events-none hidden md:block absolute top-6 left-6 w-12 h-12 border-t-[8px] border-l-[8px] border-white" />
           <span className="pointer-events-none hidden md:block absolute bottom-6 right-6 w-12 h-12 border-b-[8px] border-r-[8px] border-white" />

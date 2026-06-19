@@ -4,6 +4,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { inter, playfair } from "@/lib/fonts";
+import usePageReady from "@/lib/hooks/usePageReady";
 import { layoutStyles } from "@/lib/styles";
 import SectionHeading from "@/components/ui/SectionHeading";
 
@@ -150,6 +151,7 @@ export default function MissionSection({
 }) {
   const sectionRef = useRef(null);
   const animPaneRef = useRef(null);
+  const animationReady = usePageReady(220);
 
   // Smooth text reveal (keep your stagger)
   const [revealed, setRevealed] = useState(false);
@@ -162,7 +164,7 @@ export default function MissionSection({
 
   // Text reveal when ~40% visible (smooth fade-in)
   useEffect(() => {
-    if (!sectionRef.current || revealed) return;
+    if (!animationReady || !sectionRef.current || revealed) return;
     const io = new IntersectionObserver(
       ([e]) => {
         if (!revealed && e.isIntersecting && e.intersectionRatio >= 0.4) {
@@ -173,11 +175,11 @@ export default function MissionSection({
     );
     io.observe(sectionRef.current);
     return () => io.disconnect();
-  }, [revealed]);
+  }, [animationReady, revealed]);
 
   // Start JSON queue early (way before the pane is on screen)
   useEffect(() => {
-    if (!animPaneRef.current || shouldLoadAnim) return;
+    if (!animationReady || !animPaneRef.current || shouldLoadAnim) return;
     const io = new IntersectionObserver(
       ([e]) => {
         if (e.isIntersecting) {
@@ -189,7 +191,7 @@ export default function MissionSection({
     );
     io.observe(animPaneRef.current);
     return () => io.disconnect();
-  }, [shouldLoadAnim]);
+  }, [animationReady, shouldLoadAnim]);
 
   // Play/pause when pane touches viewport
   useEffect(() => {
@@ -202,7 +204,7 @@ export default function MissionSection({
     return () => io.disconnect();
   }, []);
 
-  const playAnim = onScreen;
+  const playAnim = animationReady && onScreen;
 
   // Motion (unchanged feel)
   const list = { hidden: {}, shown: { transition: { staggerChildren: 0.16, delayChildren: 0.12 } } };
@@ -256,7 +258,7 @@ export default function MissionSection({
           <motion.div
             variants={list}
             initial="hidden"
-            animate={revealed ? "shown" : "hidden"}
+            animate={animationReady && revealed ? "shown" : "hidden"}
             className={`${playfair.className} space-y-4 lg:space-y-5 text-lg lg:text-xl leading-relaxed`}
           >
             {paras.map((p, i) => (

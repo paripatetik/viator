@@ -12,7 +12,7 @@ function readTime(html = "") {
   return Math.max(1, Math.ceil(text.split(" ").length / 200));
 }
 
-export default function PostMasonryCard({ post, index = 0 }) {
+export default function PostMasonryCard({ post, index = 0, animationReady = true }) {
   const img =
     post._embedded?.["wp:featuredmedia"]?.[0]?.source_url || "/fallback.jpg";
 
@@ -28,6 +28,7 @@ export default function PostMasonryCard({ post, index = 0 }) {
 
   const prefersReducedMotion = useReducedMotion();
   const [isMobile, setIsMobile] = useState(false);
+  const [hasEnteredView, setHasEnteredView] = useState(false);
 
   useEffect(() => {
     const media = window.matchMedia("(max-width: 767px)");
@@ -66,7 +67,8 @@ export default function PostMasonryCard({ post, index = 0 }) {
     <motion.div
       variants={card}
       initial="hidden"
-      whileInView="show"
+      animate={animationReady && hasEnteredView ? "show" : "hidden"}
+      onViewportEnter={() => setHasEnteredView(true)}
       viewport={{
         once: true,
         amount: isMobile ? 0.08 : 0.18,

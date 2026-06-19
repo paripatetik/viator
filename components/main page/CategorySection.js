@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
 import usePostsByCategories from "@/lib/hooks/usePostsByCategories";
+import usePageReady from "@/lib/hooks/usePageReady";
 import CategoryPicker from "./CategoryPicker";
 import PostMasonryCard from "./PostMasonryCard";
 import Button from "@/components/ui/Button";
@@ -29,6 +30,7 @@ const {
   const [displayPosts, setDisplayPosts] = useState(posts);
   const [lockH, setLockH] = useState(null);
   const gridRef = useRef(null);
+  const animationReady = usePageReady(220);
 
   useEffect(() => {
     if (loading && gridRef.current) {
@@ -94,7 +96,7 @@ const {
         <motion.div
           variants={fade}
           initial="hidden"
-          animate="visible"
+          animate={animationReady ? "visible" : "hidden"}
           transition={{ duration: 0.25 }}
         >
           {error ? (
@@ -109,7 +111,12 @@ const {
             <>
               <div className="columns-1 md:columns-2 lg:columns-3 gap-3 md:gap-6 space-y-6">
                 {displayPosts.map((p, i) => (
-                  <PostMasonryCard key={p.id} post={p} index={i} />
+                  <PostMasonryCard
+                    key={p.id}
+                    post={p}
+                    index={i}
+                    animationReady={animationReady}
+                  />
                 ))}
               </div>
 

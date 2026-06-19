@@ -10,6 +10,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import PostCoverCard from "./PostCoverCard";
+import usePageReady from "@/lib/hooks/usePageReady";
 import { heroHeightStyle, layoutStyles } from "@/lib/styles";
 import SectionHeading from "@/components/ui/SectionHeading";
 
@@ -42,7 +43,9 @@ export default function PostsCubeCarousel({ posts = [] }) {
   // ✅ Зберігаємо тільки realIndex — slideIndex більше не потрібен
   const [activeRealIndex, setActiveRealIndex] = useState(0);
   const [swiper, setSwiper] = useState(null);
+  const [hasEnteredView, setHasEnteredView] = useState(false);
   const prefersReducedMotion = useReducedMotion();
+  const animationReady = usePageReady(220);
   const isTeleporting = useRef(false);
 
   useEffect(() => {
@@ -104,7 +107,8 @@ export default function PostsCubeCarousel({ posts = [] }) {
     <motion.section
       variants={fromTop}
       initial="hidden"
-      whileInView="show"
+      animate={animationReady && hasEnteredView ? "show" : "hidden"}
+      onViewportEnter={() => setHasEnteredView(true)}
       viewport={{ once: true, amount: 0.25, margin: "0px 0px -12% 0px" }}
       className="flex flex-col pb-6"
       style={carouselHeightStyle}
