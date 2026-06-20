@@ -99,12 +99,7 @@ export default function PostCoverCard({ post, isActive = false, className = "" }
           isActive ? "pointer-events-auto" : "pointer-events-none"
         )}
       >
-        <div className="relative overflow-visible rounded-md border border-[#D7E2E5]/70 bg-[#F8F5EE]/92 px-4 pb-4 pt-7 shadow-[0_18px_42px_rgba(17,24,32,0.20)] ring-1 ring-white/45 backdrop-blur-md md:px-6 md:pb-5 md:pt-7">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-x-4 top-0 h-px bg-[#416472]/30 md:inset-x-6"
-          />
-
+        <div className="relative overflow-visible rounded-md border border-[#D7E2E5]/70 bg-[#F8F5EE]/92 px-4 py-4 shadow-[0_18px_42px_rgba(17,24,32,0.20)] ring-1 ring-white/45 backdrop-blur-md md:px-6 md:py-5">
           {excerpt && (
             <button
               type="button"
@@ -112,7 +107,7 @@ export default function PostCoverCard({ post, isActive = false, className = "" }
               aria-expanded={isExcerptOpen}
               disabled={!isActive}
               onClick={() => setIsExcerptOpen((open) => !open)}
-              className="absolute left-1/2 top-0 z-30 flex h-10 w-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[#D7E2E5] bg-[#F8F5EE]/96 text-[#24313A] shadow-[0_10px_24px_rgba(17,24,32,0.22)] ring-4 ring-[#F8F5EE]/30 backdrop-blur-md transition-[border-color,background-color,color,transform,box-shadow] duration-200 hover:-translate-y-[58%] hover:border-[#416472]/55 hover:bg-white hover:shadow-[0_14px_28px_rgba(17,24,32,0.24)] disabled:pointer-events-none disabled:opacity-0"
+              className="absolute left-1/2 top-0 z-30 flex h-10 w-10 -translate-x-1/2 -translate-y-[calc(100%+0.35rem)] items-center justify-center rounded-full border border-[#D7E2E5] bg-[#F8F5EE]/96 text-[#24313A] shadow-[0_10px_24px_rgba(17,24,32,0.22)] ring-4 ring-[#F8F5EE]/30 backdrop-blur-md transition-[border-color,background-color,color,transform,box-shadow] duration-200 hover:-translate-y-[calc(100%+0.5rem)] hover:border-[#416472]/55 hover:bg-white hover:shadow-[0_14px_28px_rgba(17,24,32,0.24)] disabled:pointer-events-none disabled:opacity-0"
             >
               <ChevronUp
                 size={20}
