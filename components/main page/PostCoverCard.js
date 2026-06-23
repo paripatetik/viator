@@ -120,12 +120,7 @@ export default function PostCoverCard({
         }}
       />
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(17,24,32,0.02)_0%,rgba(17,24,32,0.18)_42%,rgba(17,24,32,0.7)_100%)]" />
-      <div
-        className={clsx(
-          "absolute inset-0 bg-[#111820] transition-opacity duration-500",
-          isActive ? "opacity-0" : "opacity-35"
-        )}
-      />
+      <div className="absolute inset-0 bg-[#111820]/10" />
 
       <motion.div
         variants={metaVariants}
