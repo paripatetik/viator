@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { motion } from "framer-motion";
 import { ChevronUp } from "lucide-react";
@@ -17,8 +17,15 @@ const metaVariants = {
   },
 };
 
-export default function PostCoverCard({ post, isActive = false, className = "" }) {
+export default function PostCoverCard({
+  post,
+  isActive = false,
+  className = "",
+  imagePriority = false,
+  shouldBlockNavigation,
+}) {
   const [isExcerptOpen, setIsExcerptOpen] = useState(false);
+  const gesture = useRef({ x: 0, y: 0, moved: false });
   const img =
     post._embedded?.["wp:featuredmedia"]?.[0]?.source_url || "/fallback.jpg";
 
@@ -41,8 +48,39 @@ export default function PostCoverCard({ post, isActive = false, className = "" }
     if (!isActive) setIsExcerptOpen(false);
   }, [isActive]);
 
+  const startGesture = useCallback((x, y) => {
+    gesture.current = { x, y, moved: false };
+  }, []);
+
+  const updateGesture = useCallback((x, y) => {
+    const dx = Math.abs(x - gesture.current.x);
+    const dy = Math.abs(y - gesture.current.y);
+    if (dx > 6 || dy > 10) gesture.current.moved = true;
+  }, []);
+
+  const handleNavigationClick = useCallback(
+    (event) => {
+      if (gesture.current.moved || shouldBlockNavigation?.()) {
+        event.preventDefault();
+        event.stopPropagation();
+        gesture.current.moved = false;
+      }
+    },
+    [shouldBlockNavigation]
+  );
+
   return (
     <article
+      onPointerDown={(event) => startGesture(event.clientX, event.clientY)}
+      onPointerMove={(event) => updateGesture(event.clientX, event.clientY)}
+      onTouchStart={(event) => {
+        const touch = event.touches?.[0];
+        if (touch) startGesture(touch.clientX, touch.clientY);
+      }}
+      onTouchMove={(event) => {
+        const touch = event.touches?.[0];
+        if (touch) updateGesture(touch.clientX, touch.clientY);
+      }}
       className={clsx(
         "group relative block w-full h-full select-none bg-[#111820]",
         "rounded-lg border border-[#24313A]/20 shadow-[0_22px_60px_rgba(36,49,58,0.22)]",
@@ -50,18 +88,19 @@ export default function PostCoverCard({ post, isActive = false, className = "" }
         className
       )}
       style={{
-        // ✅ Fix 1: власний GPU-шар для карточки —
-        // браузер більше не перераховує clip під час 3D-трансформ Swiper
-        willChange: "transform",
+        willChange: isActive ? "transform" : "auto",
         backfaceVisibility: "hidden",
-        // ✅ Fix 2: clip-path замість overflow-hidden —
-        // не створює новий stacking context, не конфліктує з 3D
+        WebkitBackfaceVisibility: "hidden",
         clipPath: "inset(0 round 0.5rem)",
+        WebkitTapHighlightColor: "transparent",
+        touchAction: "pan-y",
       }}
     >
       <Link
         href={postHref}
         aria-label={htmlToPlainText(post.title.rendered)}
+        onClickCapture={handleNavigationClick}
+        draggable={false}
         className={clsx("absolute inset-0 z-10", !isActive && "pointer-events-none")}
       />
 
@@ -69,18 +108,16 @@ export default function PostCoverCard({ post, isActive = false, className = "" }
         fill
         src={img}
         alt={post.title.rendered}
-        // ✅ Fix 3: фіксований sizes замість responsive —
-        // браузер не свапає srcset під час scale-анімації coverflow
-     
-        className="object-cover object-center opacity-95 transition-transform duration-700 group-hover:scale-[1.025]"
-        // ✅ Fix 4: eager loading для всіх слайдів каруселі —
-        // зображення вже завантажені до того як стають видимими
-        loading="eager"
-          style={{
+        sizes="(max-width: 640px) 84vw, (max-width: 768px) 70vw, (max-width: 1024px) 56vw, (max-width: 1280px) 46vw, 760px"
+        className="object-cover object-center opacity-95 transition-transform duration-700 md:group-hover:scale-[1.025]"
+        loading={imagePriority ? "eager" : "lazy"}
+        fetchPriority={imagePriority ? "high" : "auto"}
+        draggable={false}
+        style={{
           transform: "translateZ(0)",
           backfaceVisibility: "hidden",
           WebkitBackfaceVisibility: "hidden",
-  }}
+        }}
       />
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(17,24,32,0.02)_0%,rgba(17,24,32,0.18)_42%,rgba(17,24,32,0.7)_100%)]" />
       <div
@@ -153,10 +190,15 @@ export default function PostCoverCard({ post, isActive = false, className = "" }
             </motion.div>
           )}
 
-          <Link href={postHref} className="block">
+          <Link
+            href={postHref}
+            onClickCapture={handleNavigationClick}
+            draggable={false}
+            className="block"
+          >
             <div className="flex items-start">
               <h3
-                className={`${playfair.className} flex-1 text-[1.35rem] font-bold leading-[1.1] text-[#18242C] md:text-[1.7rem] lg:text-[1.9rem]`}
+                className={`${playfair.className} flex-1 text-[1.35rem] font-bold italic leading-[1.1] text-[#18242C] md:text-[1.7rem] lg:text-[1.9rem]`}
                 dangerouslySetInnerHTML={{ __html: post.title.rendered }}
               />
             </div>

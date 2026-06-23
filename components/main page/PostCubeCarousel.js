@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Keyboard } from "swiper/modules";
 import "swiper/css";
@@ -20,71 +20,59 @@ const carouselHeightStyle = {
 };
 
 export default function PostsCubeCarousel({ posts = [] }) {
+  const [isTouchCarousel, setIsTouchCarousel] = useState(false);
   const displayPosts = useMemo(() => posts.slice(0, 7), [posts]);
-  const hasLoopBuffer = displayPosts.length > 1;
-  const loopCycles = hasLoopBuffer ? 9 : 1;
-  const middleCycle = Math.floor(loopCycles / 2);
+  const canLoop = displayPosts.length > 1;
 
-  const carouselPosts = useMemo(() => {
-    if (!hasLoopBuffer) {
-      return displayPosts.map((post, realIndex) => ({ key: post.id, post, realIndex }));
-    }
-    return Array.from({ length: loopCycles }, (_, cycle) =>
-      displayPosts.map((post, realIndex) => ({
-        key: `${cycle}-${post.id}`,
-        post,
-        realIndex,
-      }))
-    ).flat();
-  }, [displayPosts, hasLoopBuffer, loopCycles]);
-
-  const firstSlideIndex = hasLoopBuffer ? displayPosts.length * middleCycle : 0;
-
-  // ✅ Зберігаємо тільки realIndex — slideIndex більше не потрібен
   const [activeRealIndex, setActiveRealIndex] = useState(0);
   const [swiper, setSwiper] = useState(null);
   const [hasEnteredView, setHasEnteredView] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const animationReady = usePageReady(220);
-  const isTeleporting = useRef(false);
+  const blockNavigationUntil = useRef(0);
 
   useEffect(() => {
     setActiveRealIndex(0);
   }, [displayPosts]);
 
-  const getRealIndex = (s) =>
-    Number(s.slides[s.activeIndex]?.dataset.realIndex ?? 0);
+  useEffect(() => {
+    const media = window.matchMedia("(hover: none), (pointer: coarse)");
+    const sync = () => setIsTouchCarousel(media.matches);
 
-  // ✅ Оновлюємо activeRealIndex одразу при зміні слайда,
-  //    але пропускаємо події що виникають під час телепортації
-  const handleSlideChange = (s) => {
-    if (isTeleporting.current) return;
+    sync();
+    if (media.addEventListener) {
+      media.addEventListener("change", sync);
+      return () => media.removeEventListener("change", sync);
+    }
+
+    media.addListener(sync);
+    return () => media.removeListener(sync);
+  }, []);
+
+  const markDragIntent = useCallback((duration = 450) => {
+    blockNavigationUntil.current = Date.now() + duration;
+  }, []);
+
+  const shouldBlockNavigation = useCallback(
+    () => Date.now() < blockNavigationUntil.current,
+    []
+  );
+
+  const getRealIndex = (s) => Number(s.realIndex ?? 0);
+
+  const handleSwiper = (s) => {
+    setSwiper(s);
     setActiveRealIndex(getRealIndex(s));
   };
 
-  // ✅ Телепортація — тільки позиційна, без зміни видимого стану
-  const handleTransitionEnd = (s) => {
-    if (!hasLoopBuffer) return;
-    if (isTeleporting.current) return;
+  const handleSlideChange = (s) => {
+    setActiveRealIndex(getRealIndex(s));
+  };
 
-    const cycleSize = displayPosts.length;
-    const safeStart = cycleSize * 2;
-    const safeEnd = cycleSize * (loopCycles - 2);
-
-    if (s.activeIndex < safeStart || s.activeIndex >= safeEnd) {
-      const realIndex = getRealIndex(s);
-      const normalizedIndex = cycleSize * middleCycle + realIndex;
-
-      isTeleporting.current = true;
-      s.slideTo(normalizedIndex, 0, false);
-
-      // Два rAF — гарантуємо що slideTo повністю завершився
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          isTeleporting.current = false;
-        });
-      });
-    }
+  const isNearActiveSlide = (slideIndex) => {
+    if (!displayPosts.length) return false;
+    const distance = Math.abs(slideIndex - activeRealIndex);
+    return Math.min(distance, displayPosts.length - distance) <= 1;
   };
 
   const fromTop = {
@@ -119,15 +107,25 @@ export default function PostsCubeCarousel({ posts = [] }) {
         </SectionHeading>
 
         <Swiper
-          onSwiper={setSwiper}
-          effect="coverflow"
+          key={`${isTouchCarousel ? "touch" : "desktop"}-${displayPosts.length}`}
+          onSwiper={handleSwiper}
+          effect={isTouchCarousel ? "slide" : "coverflow"}
           centeredSlides
           grabCursor
-          initialSlide={firstSlideIndex}
           slidesPerView="auto"
-          spaceBetween={28}
-          speed={520}
+          spaceBetween={isTouchCarousel ? 18 : 28}
+          speed={isTouchCarousel ? 300 : 520}
           keyboard={{ enabled: true }}
+          loop={canLoop}
+          loopAdditionalSlides={isTouchCarousel ? 1 : 2}
+          threshold={4}
+          touchRatio={isTouchCarousel ? 1.25 : 1}
+          resistanceRatio={isTouchCarousel ? 0.35 : 0.85}
+          preventClicks
+          preventClicksPropagation
+          touchMoveStopPropagation={false}
+          longSwipesRatio={isTouchCarousel ? 0.18 : 0.5}
+          longSwipesMs={isTouchCarousel ? 180 : 300}
           coverflowEffect={{
             rotate: 0,
             depth: 120,
@@ -137,21 +135,26 @@ export default function PostsCubeCarousel({ posts = [] }) {
             slideShadows: false,
           }}
           modules={[EffectCoverflow, Keyboard]}
+          onSliderMove={() => markDragIntent()}
+          onTouchMove={() => markDragIntent()}
+          onTouchEnd={() => {
+            if (shouldBlockNavigation()) markDragIntent(350);
+          }}
           onSlideChange={handleSlideChange}
-          onTransitionEnd={handleTransitionEnd}
           className="w-full flex-1 h-full min-h-0 !overflow-visible"
+          style={{ touchAction: "pan-y" }}
         >
-          {carouselPosts.map(({ key, post, realIndex }) => (
+          {displayPosts.map((post, realIndex) => (
             <SwiperSlide
-              key={key}
+              key={post.id}
               data-real-index={realIndex}
               className="w-[84vw] sm:w-[70vw] md:w-[56vw] lg:w-[46vw] xl:w-[42vw] max-w-[760px] h-full flex"
             >
-              {/* ✅ isActive залежить тільки від realIndex —
-                  під час телепортації стан картки не змінюється */}
               <PostCoverCard
                 post={post}
                 isActive={realIndex === activeRealIndex}
+                imagePriority={isNearActiveSlide(realIndex)}
+                shouldBlockNavigation={shouldBlockNavigation}
               />
             </SwiperSlide>
           ))}
@@ -182,11 +185,14 @@ export default function PostsCubeCarousel({ posts = [] }) {
               type="button"
               aria-label={`Перейти до публікації ${i + 1}`}
               aria-current={i === activeRealIndex ? "true" : undefined}
-              onClick={() =>
-                swiper?.slideTo(
-                  hasLoopBuffer ? displayPosts.length * middleCycle + i : i
-                )
-              }
+              onClick={() => {
+                if (!swiper) return;
+                if (canLoop && typeof swiper.slideToLoop === "function") {
+                  swiper.slideToLoop(i);
+                  return;
+                }
+                swiper.slideTo(i);
+              }}
               className={`h-1 rounded-full transition-all duration-500 ${
                 i === activeRealIndex
                   ? "w-10 bg-[#24313A]"

@@ -9,7 +9,6 @@ import { heroHeightStyle, heroStyles } from "@/lib/styles";
 export default function Banner({ title, subtitle, imgSrc }) {
   const animationReady = usePageReady(220);
   const [pauseText, setPauseText] = useState(false);
-  const [pauseImg, setPauseImg] = useState(false);
 
   return (
     <>
@@ -20,14 +19,12 @@ export default function Banner({ title, subtitle, imgSrc }) {
           backgroundColor: "#111",
         }}
         className={heroStyles.root}
-        onClick={() => setPauseImg((p) => !p)}
       >
         <div
           aria-hidden="true"
           className="absolute inset-0 viator-banner-bg-pan"
           style={{
             backgroundImage: `url("${imgSrc}")`,
-            animationPlayState: !animationReady || pauseImg ? "paused" : "running",
           }}
         />
 
@@ -70,30 +67,28 @@ export default function Banner({ title, subtitle, imgSrc }) {
           50%  { transform: translateX(calc(100vw - 100%)); }
           100% { transform: translateX(0); }
         }
-        @keyframes viatorBannerImagePan {
-          0%   { background-position: 0% 50%; }
-          50%  { background-position: 50% 50%; }
-          100% { background-position: 100% 50%; }
-        }
         .viator-banner-text-pan {
           animation: viatorBannerTextSlide 60s linear infinite alternate;
+          will-change: transform;
         }
         .viator-banner-bg-pan {
-          animation: viatorBannerImagePan 28s linear infinite alternate;
           background-size: cover;
-          background-position: 0% 50%;
+          background-position: center;
           background-repeat: no-repeat;
+          transform: translateZ(0);
         }
         @media (max-width: 767px) {
           .viator-banner-text-pan {
             animation: none;
             transform: none;
+            will-change: auto;
           }
         }
-        @media (min-width: 768px) {
-          .viator-banner-bg-pan {
+        @media (prefers-reduced-motion: reduce) {
+          .viator-banner-text-pan {
             animation: none;
-            background-position: center;
+            transform: none;
+            will-change: auto;
           }
         }
       `}</style>
