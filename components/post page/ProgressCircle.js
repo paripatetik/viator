@@ -1,3 +1,5 @@
+import { useScrollProgress } from "@/lib/hooks/useScrollProgress";
+
 export function ProgressCircle({ progress }) {
   return (
     <div className="fixed right-2 top-25 z-40">
@@ -24,4 +26,10 @@ export function ProgressCircle({ progress }) {
       </svg>
     </div>
   );
+}
+
+export function ArticleProgressCircle({ targetRef }) {
+  const progress = useScrollProgress(targetRef);
+
+  return <ProgressCircle progress={progress} />;
 }

@@ -4,11 +4,10 @@ import { useRef, useCallback, useEffect } from "react";
 
 import { useHeaderHeight } from "@/lib/hooks/useHeaderHeight";
 import { usePostContent } from "@/lib/hooks/usePostContent";
-import { useScrollProgress } from "@/lib/hooks/useScrollProgress";
 
 import { Hero } from "@/components/post page/Hero";
 import { TocCard } from "@/components/post page/TocCard";
-import { ProgressCircle } from "@/components/post page/ProgressCircle";
+import { ArticleProgressCircle } from "@/components/post page/ProgressCircle";
 import SameAuthorSection from "@/components/post page/SameAuthorSection";
 import SameCategorySection from "@/components/post page/SameCategorySection";
 
@@ -19,7 +18,6 @@ export default function PostPageClient({ post }) {
   const headerH = useHeaderHeight();
   const articleRef = useRef(null);
   const { html, toc, readingTime } = usePostContent(post.content.rendered);
-  const progress = useScrollProgress(articleRef);
   const scrollListenerRef = useRef(null);
 
   const title = post.title.rendered;
@@ -176,7 +174,7 @@ export default function PostPageClient({ post }) {
         </div>
       </main>
 
-      <ProgressCircle progress={progress} />
+      <ArticleProgressCircle targetRef={articleRef} />
 
       <SameAuthorSection authorId={authorId} excludeId={postId} />
       <SameCategorySection categoryId={primaryCat} excludeId={postId} />
