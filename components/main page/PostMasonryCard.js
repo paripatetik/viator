@@ -74,7 +74,7 @@ export default function PostMasonryCard({ post, index = 0, animationReady = true
         amount: isMobile ? 0.08 : 0.18,
         margin: isMobile ? "0px 0px -4% 0px" : "0px 0px -10% 0px",
       }}
-      className="break-inside-avoid mb-6"
+      className="break-inside-avoid"
     >
       <Link href={`/posts/${post.slug}`} className="group block">
         <article className="overflow-hidden rounded-lg border border-[#AFC5CD] bg-[#FAFBF8] shadow-[0_12px_30px_rgba(30,42,50,0.11)] transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:border-[#416472]/65 hover:shadow-[0_18px_38px_rgba(30,42,50,0.15)]">

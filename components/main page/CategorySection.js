@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
 import usePostsByCategories from "@/lib/hooks/usePostsByCategories";
@@ -13,6 +13,46 @@ import { layoutStyles } from "@/lib/styles";
 
 const fade = { hidden: { opacity: 0, y: 6 }, visible: { opacity: 1, y: 0 } };
 const PER_PAGE = 10; // ask WP for 10 posts per page
+
+function useMasonryColumnCount() {
+  const [columnCount, setColumnCount] = useState(1);
+
+  useEffect(() => {
+    const md = window.matchMedia("(min-width: 768px)");
+    const lg = window.matchMedia("(min-width: 1024px)");
+
+    const sync = () => {
+      if (lg.matches) {
+        setColumnCount(3);
+      } else if (md.matches) {
+        setColumnCount(2);
+      } else {
+        setColumnCount(1);
+      }
+    };
+
+    const addListener = (media) => {
+      if (media.addEventListener) {
+        media.addEventListener("change", sync);
+        return () => media.removeEventListener("change", sync);
+      }
+
+      media.addListener(sync);
+      return () => media.removeListener(sync);
+    };
+
+    sync();
+    const removeMd = addListener(md);
+    const removeLg = addListener(lg);
+
+    return () => {
+      removeMd();
+      removeLg();
+    };
+  }, []);
+
+  return columnCount;
+}
 
 export default function CategorySection({ categories = [], initialPosts = [] }){ 
   /* -------- category chips ---------------------------------- */
@@ -31,6 +71,16 @@ const {
   const [lockH, setLockH] = useState(null);
   const gridRef = useRef(null);
   const animationReady = usePageReady(220);
+  const columnCount = useMasonryColumnCount();
+  const postColumns = useMemo(() => {
+    const columns = Array.from({ length: columnCount }, () => []);
+
+    displayPosts.forEach((post, index) => {
+      columns[index % columnCount].push({ post, index });
+    });
+
+    return columns;
+  }, [columnCount, displayPosts]);
 
   useEffect(() => {
     if (loading && gridRef.current) {
@@ -109,24 +159,29 @@ const {
             <p className="py-20 text-center">Немає постів у вибраних категоріях.</p>
           ) : (
             <>
-              <div className="columns-1 md:columns-2 lg:columns-3 gap-3 md:gap-6 space-y-6">
-                {displayPosts.map((p, i) => (
-                  <PostMasonryCard
-                    key={p.id}
-                    post={p}
-                    index={i}
-                    animationReady={animationReady}
-                  />
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
+                {postColumns.map((column, columnIndex) => (
+                  <div key={columnIndex} className="flex min-w-0 flex-col gap-6">
+                    {column.map(({ post: p, index: i }) => (
+                      <PostMasonryCard
+                        key={p.id}
+                        post={p}
+                        index={i}
+                        animationReady={animationReady}
+                      />
+                    ))}
+                  </div>
                 ))}
               </div>
 
-              {hasMore && !loading && (
+              {hasMore && (
                 <div className="mt-10 text-center">
                   <Button
                     variant="loadMore"
+                    disabled={loading}
                     onClick={loadNextPage}
                   >
-                    Більше дописів
+                    {loading ? "Завантаження..." : "Більше дописів"}
                   </Button>
                 </div>
               )}
