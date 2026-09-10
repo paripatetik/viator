@@ -28,7 +28,7 @@ export default async function Home() {
         imgSrc="/imgs/banner.jpg"
       />
 
-      <div>
+      <div className="viator-home-content">
         <PostsCubeCarousel posts={posts} />
         <CategorySection categories={categories} initialPosts={posts} />
       </div>

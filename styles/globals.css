@@ -63,6 +63,23 @@ html {
   color: #1E2A32;
 }
 
+/* Keep the home page light longer, then meet the footer's opening tone. */
+.viator-evening-page:has(.viator-home-content),
+.viator-evening-page:has(.viator-home-content) + .viator-footer {
+  --viator-footer-start: #AFC0C5;
+}
+
+.viator-evening-page:has(.viator-home-content) {
+  background: linear-gradient(
+    180deg,
+    #F3F5F2 0%,
+    #EEF1F2 50%,
+    #E3E9EC 80%,
+    #CCD7DC 94%,
+    var(--viator-footer-start) 100%
+  );
+}
+
 .viator-page-content {
   position: relative;
   z-index: 2;
@@ -220,24 +237,45 @@ html {
   margin-top: -1px;
 }
 
-.viator-footer::before {
+.viator-footer::before,
+.viator-footer-grain {
   content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: 0.9;
-  background:
-    radial-gradient(circle at 8% 24%, #fff 0 1.1px, rgba(242, 247, 250, 0.72) 1.2px 2.1px, transparent 3.3px),
-    radial-gradient(circle at 16% 62%, #fff 0 0.9px, rgba(242, 247, 250, 0.5) 1px 1.8px, transparent 3px),
-    radial-gradient(circle at 28% 34%, #fff 0 1px, rgba(242, 247, 250, 0.62) 1.1px 2px, transparent 3.2px),
-    radial-gradient(circle at 43% 76%, #fff 0 0.8px, rgba(242, 247, 250, 0.45) 0.9px 1.7px, transparent 2.8px),
-    radial-gradient(circle at 57% 28%, #fff 0 1px, rgba(242, 247, 250, 0.6) 1.1px 2px, transparent 3.1px),
-    radial-gradient(circle at 68% 66%, #fff 0 0.8px, rgba(242, 247, 250, 0.48) 0.9px 1.7px, transparent 2.9px),
-    radial-gradient(circle at 82% 22%, #fff 0 1.1px, rgba(242, 247, 250, 0.72) 1.2px 2.1px, transparent 3.3px),
-    radial-gradient(circle at 92% 58%, #fff 0 0.8px, rgba(242, 247, 250, 0.5) 0.9px 1.7px, transparent 2.9px);
-  filter: drop-shadow(0 0 3px rgba(242, 247, 250, 0.7));
+  opacity: 0.65;
   mask-image: linear-gradient(180deg, transparent 0%, #000 34%, #000 100%);
+}
+
+.viator-footer::before {
+  opacity: 0.9;
   animation: viator-footer-stars-twinkle 3.8s ease-in-out infinite;
+  background:
+    radial-gradient(circle at 8% 24%, #F2F7FA 0 1.3px, transparent 1.8px),
+    radial-gradient(circle at 16% 62%, rgba(242, 247, 250, 0.8) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 28% 34%, #F2F7FA 0 1.2px, transparent 1.7px),
+    radial-gradient(circle at 43% 76%, rgba(242, 247, 250, 0.7) 0 0.9px, transparent 1.4px),
+    radial-gradient(circle at 57% 28%, rgba(242, 247, 250, 0.9) 0 1.2px, transparent 1.7px),
+    radial-gradient(circle at 68% 66%, rgba(242, 247, 250, 0.75) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 82% 22%, #F2F7FA 0 1.3px, transparent 1.8px),
+    radial-gradient(circle at 92% 58%, rgba(242, 247, 250, 0.85) 0 1.1px, transparent 1.6px);
+}
+
+/* Keep paper grain still while only the stars change brightness. */
+.viator-footer-grain {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cfilter id='grain' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='.12'/%3E%3C/svg%3E");
+}
+
+@keyframes viator-footer-stars-twinkle {
+  0%, 100% { opacity: 0.4; }
+  42% { opacity: 1; }
+  70% { opacity: 0.65; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .viator-footer::before {
+    animation: none;
+  }
 }
 
 .viator-footer::after {
@@ -247,31 +285,9 @@ html {
   height: 2.5rem;
   pointer-events: none;
   background:
-    linear-gradient(180deg, transparent 0 64%, #0B2235 64% 100%),
+    linear-gradient(180deg, transparent 0 64%, #091C2C 64% 100%),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 48' preserveAspectRatio='none'%3E%3Cpath d='M0 28 C80 -2 170 50 300 24 S500 -6 670 30 930 52 1200 6' fill='none' stroke='%23F2F7FA' stroke-width='1.65' stroke-linecap='round' opacity='.62'/%3E%3C/svg%3E") center top / 100% 64% no-repeat;
   opacity: 0.58;
-}
-
-@keyframes viator-footer-stars-twinkle {
-  0%,
-  100% {
-    opacity: 0.55;
-    filter: drop-shadow(0 0 1px rgba(242, 247, 250, 0.32));
-  }
-  42% {
-    opacity: 1;
-    filter: drop-shadow(0 0 6px rgba(242, 247, 250, 0.95));
-  }
-  70% {
-    opacity: 0.7;
-    filter: drop-shadow(0 0 3px rgba(242, 247, 250, 0.55));
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .viator-footer::before {
-    animation: none;
-  }
 }
 
 @plugin "@tailwindcss/typography"

@@ -15,9 +15,10 @@ export default function Footer() {
     <footer
       className="viator-footer text-[#1E2A32]"
       style={{
-        background: "linear-gradient(180deg, #9EAFB7 0%, #637B88 34%, #36566A 68%, #10283D 100%)",
+        background: "linear-gradient(180deg, var(--viator-footer-start, #9EAFB7) 0%, #637B88 34%, #36566A 68%, #0C2032 100%)",
       }}
     >
+      <span className="viator-footer-grain" aria-hidden="true" />
       <div className={`${layoutStyles.pageCompact} relative z-10 py-10 gap-10`}>
         <div className="flex flex-col md:flex-row md:items-stretch gap-6 md:gap-10 w-full h-auto md:h-[128px] mb-10">
       {/* Logo link */}

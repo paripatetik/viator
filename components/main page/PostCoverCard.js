@@ -87,7 +87,10 @@ export default function PostCoverCard({
         src={img}
         alt={post.title.rendered}
         sizes="(max-width: 640px) 84vw, (max-width: 768px) 70vw, (max-width: 1024px) 56vw, (max-width: 1280px) 46vw, 760px"
-        className="object-cover object-center opacity-95 transition-transform duration-700 md:group-hover:scale-[1.025]"
+        className={clsx(
+          "object-cover object-center opacity-95 transition-[transform,filter] duration-700 md:group-hover:scale-[1.025]",
+          !isActive && "brightness-[1.05] contrast-[1.08]"
+        )}
         loading={imagePriority ? "eager" : "lazy"}
         fetchPriority={imagePriority ? "high" : "auto"}
         draggable={false}
