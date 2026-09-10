@@ -1,14 +1,21 @@
-// components/SameAuthorSection.js
-import React from 'react'; 
+import "server-only";
 
 import RelatedPostCard from './RelatedPostCard';
-import usePostsByAuthor from '@/lib/hooks/usePostsByAuthor';
+import { getPostsByAuthorMeta } from '@/lib/api/rest';
 import { layoutStyles } from "@/lib/styles";
 
-export default function SameAuthorSection({ authorId, excludeId }) {
-  const { posts, loading, error } = usePostsByAuthor(authorId, excludeId);
+export default async function SameAuthorSection({ authorId, excludeId }) {
+  if (!authorId) return null;
 
-  if (error || (!loading && posts.length < 2)) return null;
+  let posts;
+  try {
+    const { data } = await getPostsByAuthorMeta(authorId, 3, { exclude: excludeId });
+    posts = data;
+  } catch (error) {
+    console.error("Could not load related posts by author:", error);
+    return null;
+  }
+  if (posts.length < 2) return null;
 
   return (
     <section className="pb-6 pt-4">
@@ -18,15 +25,11 @@ export default function SameAuthorSection({ authorId, excludeId }) {
             Інші дописи автора
           </h2>
 
-          {loading ? (
-            <p className="py-8 text-center text-[#53606A]">Завантаження…</p>
-          ) : (
-            <div className="grid gap-4 md:grid-cols-2">
-              {posts.slice(0, 4).map((p) => (
-                <RelatedPostCard key={p.id} post={p} />
-              ))}
-            </div>
-          )}
+          <div className="grid gap-4 md:grid-cols-2">
+            {posts.slice(0, 4).map((p) => (
+              <RelatedPostCard key={p.id} post={p} />
+            ))}
+          </div>
         </div>
       </div>
     </section>

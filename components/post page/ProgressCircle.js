@@ -1,8 +1,17 @@
+"use client";
+
 import { useScrollProgress } from "@/lib/hooks/useScrollProgress";
 
 export function ProgressCircle({ progress }) {
   return (
-    <div className="fixed right-2 top-25 z-40">
+    <div
+      className="fixed right-2 top-25 z-40"
+      role="progressbar"
+      aria-label="Прогрес читання статті"
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={progress}
+    >
       <svg viewBox="0 0 36 36" className="w-14 h-14 -rotate-90">
         <circle
           cx="18"
@@ -28,8 +37,8 @@ export function ProgressCircle({ progress }) {
   );
 }
 
-export function ArticleProgressCircle({ targetRef }) {
-  const progress = useScrollProgress(targetRef);
+export function ArticleProgressCircle({ targetId }) {
+  const progress = useScrollProgress(targetId);
 
   return <ProgressCircle progress={progress} />;
 }

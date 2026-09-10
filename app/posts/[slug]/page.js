@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import PostPageClient from "@/components/pages/PostPageClient";
+import PostPage from "@/components/pages/PostPage";
 import { getPostBySlug, getAllSlugs } from "@/lib/api/rest";
 import { absoluteUrl, siteName } from "@/lib/seo";
 import { htmlToPlainText } from "@/lib/text";
@@ -66,5 +66,5 @@ export default async function PostRoute({ params }) {
 
   if (!post) notFound();
 
-  return <PostPageClient post={post} />;
+  return <PostPage post={post} />;
 }

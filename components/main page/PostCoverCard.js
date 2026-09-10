@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import clsx from "clsx";
 import { motion } from "framer-motion";
 import { ChevronUp } from "lucide-react";
@@ -25,7 +25,6 @@ export default function PostCoverCard({
   shouldBlockNavigation,
 }) {
   const [isExcerptOpen, setIsExcerptOpen] = useState(false);
-  const gesture = useRef({ x: 0, y: 0, moved: false });
   const img =
     post._embedded?.["wp:featuredmedia"]?.[0]?.source_url || "/fallback.jpg";
 
@@ -48,39 +47,18 @@ export default function PostCoverCard({
     if (!isActive) setIsExcerptOpen(false);
   }, [isActive]);
 
-  const startGesture = useCallback((x, y) => {
-    gesture.current = { x, y, moved: false };
-  }, []);
-
-  const updateGesture = useCallback((x, y) => {
-    const dx = Math.abs(x - gesture.current.x);
-    const dy = Math.abs(y - gesture.current.y);
-    if (dx > 6 || dy > 10) gesture.current.moved = true;
-  }, []);
-
   const handleNavigationClick = useCallback(
     (event) => {
-      if (gesture.current.moved || shouldBlockNavigation?.()) {
+      if (!isActive || shouldBlockNavigation?.(event)) {
         event.preventDefault();
         event.stopPropagation();
-        gesture.current.moved = false;
       }
     },
-    [shouldBlockNavigation]
+    [isActive, shouldBlockNavigation]
   );
 
   return (
     <article
-      onPointerDown={(event) => startGesture(event.clientX, event.clientY)}
-      onPointerMove={(event) => updateGesture(event.clientX, event.clientY)}
-      onTouchStart={(event) => {
-        const touch = event.touches?.[0];
-        if (touch) startGesture(touch.clientX, touch.clientY);
-      }}
-      onTouchMove={(event) => {
-        const touch = event.touches?.[0];
-        if (touch) updateGesture(touch.clientX, touch.clientY);
-      }}
       className={clsx(
         "group relative block w-full h-full select-none bg-[#111820]",
         "rounded-lg border border-[#24313A]/20 shadow-[0_22px_60px_rgba(36,49,58,0.22)]",

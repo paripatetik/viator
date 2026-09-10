@@ -6,11 +6,7 @@ import { Clock, User } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { htmlToPlainText } from "@/lib/text";
-
-function readTime(html = "") {
-  const text = html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
-  return Math.max(1, Math.ceil(text.split(" ").length / 200));
-}
+import { getReadingTimeMinutes } from "@/lib/readingTime";
 
 export default function PostMasonryCard({ post, index = 0, animationReady = true }) {
   const img =
@@ -24,7 +20,7 @@ export default function PostMasonryCard({ post, index = 0, animationReady = true
 
   const excerpt = htmlToPlainText(post.excerpt?.rendered);
 
-  const minutes = Number(post.reading_time) || readTime(post.content?.rendered);
+  const minutes = getReadingTimeMinutes(post);
 
   const prefersReducedMotion = useReducedMotion();
   const [isMobile, setIsMobile] = useState(false);

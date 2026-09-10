@@ -1,7 +1,23 @@
-const STYLE_ID = "viator-postcontent-style";
+.viator-cite-back {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 99999;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 9999px;
+  background: var(--color-viator-sky);
+  color: #000;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 40px;
+  text-align: center;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .25);
+  cursor: pointer;
+}
 
-const POST_CONTENT_CSS = `
-        h2.viator-ribbon {
+h2.viator-ribbon {
           position: relative;
           display: block;
           margin: 72px auto 14px;
@@ -526,17 +542,3 @@ figure.viator-figure img {
         .viator-info-box-body p:last-child {
           margin-bottom: 0 !important;
         }
-      `;
-
-export function injectPostContentStyles() {
-  if (typeof document === "undefined") return;
-
-  let style = document.getElementById(STYLE_ID);
-  if (!style) {
-    style = document.createElement("style");
-    style.id = STYLE_ID;
-    document.head.appendChild(style);
-  }
-
-  style.textContent = POST_CONTENT_CSS;
-}

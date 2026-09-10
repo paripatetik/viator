@@ -1,19 +1,23 @@
-import React from 'react'; 
-import usePostsByCategories from '@/lib/hooks/usePostsByCategories';
+import "server-only";
+import { getPostsByCategories } from '@/lib/api/rest';
 import RelatedPostCard from './RelatedPostCard';
 import { layoutStyles } from "@/lib/styles";
 
-export default function SameCategorySection({ categoryId, excludeId }) {
-  // reuse your paginated hook but set perPage=3 and no chips/UI
-  const { posts, loading, error } = usePostsByCategories(
-    [categoryId],
-    3        // perPage
-  );
+export default async function SameCategorySection({ categoryId, excludeId }) {
+  if (!categoryId) return null;
+
+  let posts;
+  try {
+    posts = await getPostsByCategories([categoryId], 3);
+  } catch (error) {
+    console.error("Could not load related posts by category:", error);
+    return null;
+  }
 
   // weed out the current post if the API didn’t
   const filtered = posts.filter((p) => p.id !== excludeId);
 
-  if (error || (!loading && filtered.length < 2)) return null;
+  if (filtered.length < 2) return null;
 
   return (
     <section className="pb-6 pt-4">
@@ -23,15 +27,11 @@ export default function SameCategorySection({ categoryId, excludeId }) {
             Схожі дописи за темою
           </h2>
 
-          {loading ? (
-            <p className="py-8 text-center text-[#53606A]">Завантаження…</p>
-          ) : (
-            <div className="grid gap-4 md:grid-cols-2">
-              {filtered.slice(0, 4).map((p) => (
-                <RelatedPostCard key={p.id} post={p} />
-              ))}
-            </div>
-          )}
+          <div className="grid gap-4 md:grid-cols-2">
+            {filtered.slice(0, 4).map((p) => (
+              <RelatedPostCard key={p.id} post={p} />
+            ))}
+          </div>
         </div>
       </div>
     </section>

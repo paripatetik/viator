@@ -29,7 +29,8 @@ export default function PostsCubeCarousel({ posts = [] }) {
   const [hasEnteredView, setHasEnteredView] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const animationReady = usePageReady(220);
-  const blockNavigationUntil = useRef(0);
+  const swiperRef = useRef(null);
+  const blockedGesture = useRef(false);
 
   useEffect(() => {
     setActiveRealIndex(0);
@@ -49,18 +50,20 @@ export default function PostsCubeCarousel({ posts = [] }) {
     return () => media.removeListener(sync);
   }, []);
 
-  const markDragIntent = useCallback((duration = 450) => {
-    blockNavigationUntil.current = Date.now() + duration;
-  }, []);
-
   const shouldBlockNavigation = useCallback(
-    () => Date.now() < blockNavigationUntil.current,
+    (event) => {
+      // Keyboard activation does not belong to the previous pointer gesture.
+      if (event.detail === 0 && !event.nativeEvent?.pointerType) return false;
+      return blockedGesture.current || swiperRef.current?.allowClick === false;
+    },
     []
   );
 
   const getRealIndex = (s) => Number(s.realIndex ?? 0);
 
   const handleSwiper = (s) => {
+    swiperRef.current = s;
+    blockedGesture.current = false;
     setSwiper(s);
     setActiveRealIndex(getRealIndex(s));
   };
@@ -98,7 +101,7 @@ export default function PostsCubeCarousel({ posts = [] }) {
       animate={animationReady && hasEnteredView ? "show" : "hidden"}
       onViewportEnter={() => setHasEnteredView(true)}
       viewport={{ once: true, amount: 0.25, margin: "0px 0px -12% 0px" }}
-      className="flex flex-col pb-6"
+      className="flex flex-col pb-6 max-md:!h-auto"
       style={carouselHeightStyle}
     >
       <div className={`${layoutStyles.pageCompact} flex flex-col flex-1 relative`}>
@@ -135,20 +138,27 @@ export default function PostsCubeCarousel({ posts = [] }) {
             slideShadows: false,
           }}
           modules={[EffectCoverflow, Keyboard]}
-          onSliderMove={() => markDragIntent()}
-          onTouchMove={() => markDragIntent()}
-          onTouchEnd={() => {
-            if (shouldBlockNavigation()) markDragIntent(350);
+          onTouchStart={() => {
+            blockedGesture.current = false;
+          }}
+          onTouchMoveOpposite={() => {
+            blockedGesture.current = true;
+          }}
+          onTouchEnd={(s, event) => {
+            // Swiper resets allowClick on the next tick. Keep a cancelled/swipe
+            // gesture blocked until the next touchStart, including delayed clicks.
+            blockedGesture.current ||= !s.allowClick ||
+              event.type === "touchcancel" || event.type === "pointercancel";
           }}
           onSlideChange={handleSlideChange}
-          className="w-full flex-1 h-full min-h-0 !overflow-visible"
+          className="w-full flex-1 h-full min-h-0 !overflow-visible max-md:flex-none max-md:!h-auto"
           style={{ touchAction: "pan-y" }}
         >
           {displayPosts.map((post, realIndex) => (
             <SwiperSlide
               key={post.id}
               data-real-index={realIndex}
-              className="w-[84vw] sm:w-[70vw] md:w-[56vw] lg:w-[46vw] xl:w-[42vw] max-w-[760px] h-full flex"
+              className="w-[84vw] sm:w-[70vw] md:w-[56vw] lg:w-[46vw] xl:w-[42vw] max-w-[760px] h-full flex max-md:aspect-[4/5] max-md:!h-auto"
             >
               <PostCoverCard
                 post={post}

@@ -6,13 +6,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:post-content": "node --conditions=react-server --experimental-default-type=module --test tests/post-content.test.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.52.0",
     "@vercel/analytics": "^2.0.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.19.2",
+    "linkedom": "^0.18.13",
     "lottie-react": "^2.4.1",
     "lottie-web": "^5.13.0",
     "lucide-react": "^0.517.0",
@@ -21,6 +23,7 @@
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
     "react-scroll": "^1.9.3",
+    "server-only": "^0.0.1",
     "swiper": "^11.2.10"
   },
   "devDependencies": {
