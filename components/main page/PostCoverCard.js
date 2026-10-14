@@ -2,20 +2,12 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import clsx from "clsx";
 import { motion } from "framer-motion";
 import { ChevronUp } from "lucide-react";
 import { playfair } from "@/lib/fonts";
 import { htmlToPlainText } from "@/lib/text";
-
-const metaVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { duration: 0.2, ease: [0.4, 0, 0.2, 1] },
-  },
-};
 
 export default function PostCoverCard({
   post,
@@ -43,10 +35,6 @@ export default function PostCoverCard({
   const excerpt = htmlToPlainText(post.excerpt?.rendered);
   const postHref = `/posts/${post.slug}`;
 
-  useEffect(() => {
-    if (!isActive) setIsExcerptOpen(false);
-  }, [isActive]);
-
   const handleNavigationClick = useCallback(
     (event) => {
       if (!isActive || shouldBlockNavigation?.(event)) {
@@ -66,7 +54,7 @@ export default function PostCoverCard({
         className
       )}
       style={{
-        willChange: isActive ? "transform" : "auto",
+        willChange: "transform",
         backfaceVisibility: "hidden",
         WebkitBackfaceVisibility: "hidden",
         clipPath: "inset(0 round 0.5rem)",
@@ -78,6 +66,7 @@ export default function PostCoverCard({
         href={postHref}
         aria-label={htmlToPlainText(post.title.rendered)}
         onClickCapture={handleNavigationClick}
+        tabIndex={isActive ? 0 : -1}
         draggable={false}
         className={clsx("absolute inset-0 z-10", !isActive && "pointer-events-none")}
       />
@@ -103,16 +92,14 @@ export default function PostCoverCard({
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(17,24,32,0.02)_0%,rgba(17,24,32,0.18)_42%,rgba(17,24,32,0.7)_100%)]" />
       <div className="absolute inset-0 bg-[#111820]/10" />
 
-      <motion.div
-        variants={metaVariants}
-        initial="hidden"
-        animate={isActive ? "visible" : "hidden"}
+      {/* Keep the panel visible and its layout stable while Swiper moves it. */}
+      <div
         className={clsx(
           "absolute inset-x-4 bottom-4 z-20 text-[#24313A] md:inset-x-7 md:bottom-6",
           isActive ? "pointer-events-auto" : "pointer-events-none"
         )}
       >
-        <div className="relative overflow-visible rounded-md border border-[#D7E2E5]/70 bg-[#F8F5EE]/92 px-4 py-4 shadow-[0_18px_42px_rgba(17,24,32,0.20)] ring-1 ring-white/45 backdrop-blur-md md:px-6 md:py-5">
+        <div className="relative overflow-visible rounded-md border border-[#D7E2E5]/70 bg-[#F8F5EE] px-4 py-4 shadow-[0_18px_42px_rgba(17,24,32,0.20)] ring-1 ring-white/45 md:px-6 md:py-5">
           {excerpt && (
             <button
               type="button"
@@ -120,7 +107,7 @@ export default function PostCoverCard({
               aria-expanded={isExcerptOpen}
               disabled={!isActive}
               onClick={() => setIsExcerptOpen((open) => !open)}
-              className="absolute left-1/2 top-0 z-30 flex h-10 w-10 -translate-x-1/2 -translate-y-[calc(100%+0.35rem)] items-center justify-center rounded-full border border-[#D7E2E5] bg-[#F8F5EE]/96 text-[#24313A] shadow-[0_10px_24px_rgba(17,24,32,0.22)] ring-4 ring-[#F8F5EE]/30 backdrop-blur-md transition-[border-color,background-color,color,transform,box-shadow] duration-200 hover:-translate-y-[calc(100%+0.5rem)] hover:border-[#416472]/55 hover:bg-white hover:shadow-[0_14px_28px_rgba(17,24,32,0.24)] disabled:pointer-events-none disabled:opacity-0"
+              className="absolute left-1/2 top-0 z-30 flex h-10 w-10 -translate-x-1/2 -translate-y-[calc(100%+0.35rem)] items-center justify-center rounded-full border border-[#D7E2E5] bg-[#F8F5EE] text-[#24313A] shadow-[0_10px_24px_rgba(17,24,32,0.22)] ring-4 ring-[#F8F5EE]/30 transition-[border-color,background-color,color,transform,box-shadow] duration-200 hover:-translate-y-[calc(100%+0.5rem)] hover:border-[#416472]/55 hover:bg-white hover:shadow-[0_14px_28px_rgba(17,24,32,0.24)] disabled:pointer-events-none"
             >
               <ChevronUp
                 size={20}
@@ -169,6 +156,7 @@ export default function PostCoverCard({
           <Link
             href={postHref}
             onClickCapture={handleNavigationClick}
+            tabIndex={isActive ? 0 : -1}
             draggable={false}
             className="block"
           >
@@ -180,7 +168,7 @@ export default function PostCoverCard({
             </div>
           </Link>
         </div>
-      </motion.div>
+      </div>
     </article>
   );
 }

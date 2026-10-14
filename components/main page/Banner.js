@@ -25,6 +25,7 @@ export default function Banner({ title, subtitle, imgSrc }) {
           className="absolute inset-0 viator-banner-bg-pan"
           style={{
             backgroundImage: `url("${imgSrc}")`,
+            animationPlayState: animationReady ? "running" : "paused",
           }}
         />
 
@@ -61,60 +62,6 @@ export default function Banner({ title, subtitle, imgSrc }) {
         </div>
       </div>
 
-      <style jsx global>{`
-        @keyframes viatorBannerTextSlide {
-          0%   { transform: translateX(0); }
-          50%  { transform: translateX(calc(100vw - 100%)); }
-          100% { transform: translateX(0); }
-        }
-        @keyframes viatorBannerImageDrift {
-          0%   { transform: translate3d(0, 0, 0); }
-          100% { transform: translate3d(-4%, 0, 0); }
-        }
-        @keyframes viatorBannerImageDriftMobile {
-          0%   { transform: translate3d(0, 0, 0) scale(1.02); }
-          50%  { transform: translate3d(-7%, -1.2%, 0) scale(1.02); }
-          100% { transform: translate3d(-12%, 0, 0) scale(1.02); }
-        }
-        .viator-banner-text-pan {
-          animation: viatorBannerTextSlide 60s linear infinite alternate;
-          will-change: transform;
-        }
-        .viator-banner-bg-pan {
-          inset: 0 auto 0 -4%;
-          width: 108%;
-          background-size: cover;
-          background-position: center;
-          background-repeat: no-repeat;
-          animation: viatorBannerImageDrift 28s linear infinite alternate;
-          will-change: transform;
-        }
-        @media (max-width: 767px) {
-          .viator-banner-text-pan {
-            animation: none;
-            transform: none;
-            will-change: auto;
-          }
-          .viator-banner-bg-pan {
-            inset: 0 auto 0 -18%;
-            width: 136%;
-            animation-name: viatorBannerImageDriftMobile;
-            animation-duration: 18s;
-          }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .viator-banner-text-pan {
-            animation: none;
-            transform: none;
-            will-change: auto;
-          }
-          .viator-banner-bg-pan {
-            animation: none;
-            transform: none;
-            will-change: auto;
-          }
-        }
-      `}</style>
       </section>
     </>
   );

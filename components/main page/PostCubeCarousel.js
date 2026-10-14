@@ -21,6 +21,7 @@ const carouselHeightStyle = {
 
 export default function PostsCubeCarousel({ posts = [] }) {
   const [isTouchCarousel, setIsTouchCarousel] = useState(false);
+  const slideSpeed = isTouchCarousel ? 300 : 520;
   const displayPosts = useMemo(() => posts.slice(0, 7), [posts]);
   const canLoop = displayPosts.length > 1;
 
@@ -117,7 +118,7 @@ export default function PostsCubeCarousel({ posts = [] }) {
           grabCursor
           slidesPerView="auto"
           spaceBetween={isTouchCarousel ? 18 : 28}
-          speed={isTouchCarousel ? 300 : 520}
+          speed={slideSpeed}
           keyboard={{ enabled: true }}
           loop={canLoop}
           loopAdditionalSlides={isTouchCarousel ? 1 : 2}
