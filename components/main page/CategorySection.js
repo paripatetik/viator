@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import { Search, X } from "lucide-react";
 
 import usePostsByCategories from "@/lib/hooks/usePostsByCategories";
 import usePageReady from "@/lib/hooks/usePageReady";
@@ -58,15 +59,24 @@ export default function CategorySection({ categories = [], initialPosts = [] }){
   /* -------- category chips ---------------------------------- */
   const cats = categories.filter((c) => c.count > 0);
   const [selected, setSelected] = useState(new Set()); // empty ⇒ “all”
+  const [searchInput, setSearchInput] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const searchInputRef = useRef(null);
+
+  useEffect(() => {
+    const timeout = window.setTimeout(() => setSearchQuery(searchInput.trim()), 300);
+    return () => window.clearTimeout(timeout);
+  }, [searchInput]);
 
   /* -------- paginated posts --------------------------------- */
 const {
   posts,
-  loading,
-  error,           // ← this must be here
+  loading: fetching,
+  error,
   loadNextPage,
   hasMore,
-} = usePostsByCategories([...selected], PER_PAGE, initialPosts);
+} = usePostsByCategories([...selected], PER_PAGE, initialPosts, searchQuery);
+  const loading = fetching || searchInput.trim() !== searchQuery;
   const [displayPosts, setDisplayPosts] = useState(posts);
   const [lockH, setLockH] = useState(null);
   const gridRef = useRef(null);
@@ -126,8 +136,54 @@ const {
       <CategoryPicker categories={cats} selected={selected} onToggle={toggle} />
     </div>
 
+    <form
+      role="search"
+      aria-label="Пошук дописів"
+      className="mx-auto mb-3 w-full max-w-xl"
+      onSubmit={(event) => {
+        event.preventDefault();
+        setSearchQuery(searchInput.trim());
+      }}
+    >
+      <label htmlFor="post-search" className="sr-only">Пошук за заголовком або уривком</label>
+      <div className="relative">
+        <Search aria-hidden="true" size={20} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#416472]" />
+        <input
+          ref={searchInputRef}
+          id="post-search"
+          type="search"
+          value={searchInput}
+          onChange={(event) => setSearchInput(event.target.value)}
+          placeholder="Заголовок або уривок…"
+          autoComplete="off"
+          enterKeyHint="search"
+          aria-controls="category-posts"
+          className="w-full rounded-xl border border-[#AFC5CD] bg-white/85 py-3 pl-12 pr-12 text-base text-[#1E2A32] placeholder:text-[#687B84] focus:border-[#416472] focus:outline-none focus:ring-2 focus:ring-[#416472]/20 [&::-webkit-search-cancel-button]:appearance-none"
+        />
+        {searchInput && (
+          <button
+            type="button"
+            aria-label="Очистити пошук"
+            onClick={() => {
+              setSearchInput("");
+              setSearchQuery("");
+              searchInputRef.current?.focus();
+            }}
+            className="absolute right-1 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-lg text-[#416472] hover:bg-[#E7ECEE] focus-visible:outline-2 focus-visible:outline-[#416472]"
+          >
+            <X aria-hidden="true" size={19} />
+          </button>
+        )}
+      </div>
+      <p role="status" className="sr-only">
+        {loading ? "Пошук дописів…" : error || `Показано дописів: ${posts.length}${hasMore ? ". Доступні інші дописи." : "."}`}
+      </p>
+    </form>
+
     {/* grid wrapper */}
     <div
+      id="category-posts"
+      aria-busy={loading}
       ref={gridRef}
       className="relative transition-[min-height] duration-200"
       style={lockH ? { minHeight: lockH } : undefined}
@@ -156,7 +212,11 @@ const {
               <span className="w-6 h-6 border-2 border-[#416472] border-t-transparent rounded-full animate-spin" />
             </div>
           ) : !loading && displayPosts.length === 0 ? (
-            <p className="py-20 text-center">Немає постів у вибраних категоріях.</p>
+            <p className="py-20 text-center text-[#416472]">
+              {searchQuery
+                ? "Збігів не знайдено. Спробуйте інший запит або змініть рубрики."
+                : "Немає дописів у вибраних рубриках."}
+            </p>
           ) : (
             <>
               <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-6 lg:grid-cols-3">

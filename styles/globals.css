@@ -122,19 +122,28 @@ html {
   color: #1E2A32;
 }
 
-/* Keep the home page light longer, then meet the footer's opening tone. */
+/* Keep filtering from changing the home background's color at a given position. */
 .viator-evening-page:has(.viator-home-content),
 .viator-evening-page:has(.viator-home-content) + .viator-footer {
   --viator-footer-start: #AFC0C5;
 }
 
 .viator-evening-page:has(.viator-home-content) {
+  --viator-home-background: #F3F5F2;
+  background: var(--viator-home-background);
+}
+
+/* A separate strip after the content keeps the footer transition off the cards. */
+.viator-evening-page:has(.viator-home-content)::after {
+  content: "";
+  display: block;
+  position: relative;
+  z-index: 2;
+  height: clamp(6rem, 12vw, 10rem);
+  pointer-events: none;
   background: linear-gradient(
     180deg,
-    #F3F5F2 0%,
-    #EEF1F2 50%,
-    #E3E9EC 80%,
-    #CCD7DC 94%,
+    var(--viator-home-background) 0%,
     var(--viator-footer-start) 100%
   );
 }
@@ -283,6 +292,16 @@ html {
   height: 1px;
   margin: 0.65rem auto 0;
   background: linear-gradient(90deg, transparent, rgba(30, 42, 50, 0.42), transparent);
+}
+
+.viator-evening-page h2.viator-related-heading::after {
+  margin-left: 0;
+  margin-right: 0;
+  background: linear-gradient(90deg, rgba(30, 42, 50, 0.42), transparent);
+}
+
+.viator-evening-page h2.viator-support-option-title::after {
+  display: none;
 }
 
 .viator-evening-page::selection {

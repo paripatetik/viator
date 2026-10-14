@@ -73,7 +73,7 @@ export default function PostMasonryCard({ post, index = 0, animationReady = true
       className="break-inside-avoid"
     >
       <Link href={`/posts/${post.slug}`} className="group block">
-        <article className="overflow-hidden rounded-lg border border-[#AFC5CD] bg-[#FAFBF8] shadow-[0_12px_30px_rgba(30,42,50,0.11)] transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:border-[#416472]/65 hover:shadow-[0_18px_38px_rgba(30,42,50,0.15)]">
+        <article className="overflow-hidden rounded-lg border border-[#AFC5CD] bg-[#FAFBF8] shadow-[0_12px_30px_rgba(30,42,50,0.11)] transition-[border-color,box-shadow] duration-300 hover:border-[#416472]/65 hover:shadow-[0_18px_38px_rgba(30,42,50,0.15)]">
 
           {/* Image — natural height, no crop */}
           <div className="relative w-full overflow-hidden bg-[#DCE6E8]">

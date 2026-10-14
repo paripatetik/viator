@@ -17,7 +17,7 @@ export default function NavLinks({ variant = "desktop", onClick }) {
 
   if (variant === "desktop") {
     return (
-      <nav className="hidden md:flex items-center gap-5 lg:gap-8 ml-2 mt-1">
+      <nav className="hidden md:flex items-center gap-5 lg:gap-8 ml-auto mt-1">
         {mainLinks.map((l) => (
           <Link
             key={l.href}

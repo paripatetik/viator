@@ -15,18 +15,18 @@ export default async function SameAuthorSection({ authorId, excludeId }) {
     console.error("Could not load related posts by author:", error);
     return null;
   }
-  if (posts.length < 2) return null;
+  if (!posts.length) return null;
 
   return (
     <section className="pb-6 pt-4">
       <div className={layoutStyles.pageCompact}>
         <div className="mx-auto max-w-5xl border-t border-[#94B4C1]/45 pt-7">
-          <h2 className="mb-4 text-[1.25rem] font-semibold text-[#1E2A32]">
+          <h2 className="viator-related-heading mb-4 text-[1.25rem] font-semibold text-[#1E2A32]">
             Інші дописи автора
           </h2>
 
           <div className="grid gap-4 md:grid-cols-2">
-            {posts.slice(0, 4).map((p) => (
+            {posts.slice(0, 3).map((p) => (
               <RelatedPostCard key={p.id} post={p} />
             ))}
           </div>

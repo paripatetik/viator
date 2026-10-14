@@ -25,7 +25,7 @@ export default function AboutPageClient() {
       <PageHero
         title="Про нас"
         subtitle="Ми і наші пупси"
-        imgSrc="/imgs/banner-about 1.png"
+        imgSrc="/imgs/about_banner-2.webp"
         backgroundPosition="center top"
         alt="Про нас — Viator"
         overlayClassName="bg-black/25"

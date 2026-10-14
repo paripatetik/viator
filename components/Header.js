@@ -71,7 +71,7 @@ export default function Header() {
             </span>
           </Link>
           <NavLinks variant="desktop" />
-          <div className="ml-auto"><SocialLinks variant="header" /></div>
+          <div className="shrink-0"><SocialLinks variant="header" /></div>
         </div>
       </header>
 
@@ -101,16 +101,6 @@ export default function Header() {
             loading="lazy"
             decoding="async"
           />
-          <div className="relative w-full max-w-sm">
-            <input
-              type="search"
-              placeholder="Search…"
-              className="w-full border rounded-lg py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-            <svg className="w-5 h-5 absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.65 4.65a7.5 7.5 0 0011.98 11.98z" />
-            </svg>
-          </div>
           <NavLinks variant="drawer" onClick={toggle} />
           <div className="mt-auto flex flex-col items-center gap-7 text-gray-700 text-3xl">
             <div className="flex gap-4 justify-center">

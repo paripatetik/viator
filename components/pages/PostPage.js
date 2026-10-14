@@ -34,7 +34,7 @@ export default function PostPage({ post }) {
 
   const postId = post.id;
   const authorId = post.author;
-  const primaryCat = post.categories?.[0];
+  const categoryIds = post.categories || [];
 
   return (
     <>
@@ -77,7 +77,7 @@ export default function PostPage({ post }) {
           <PostTableOfContents key={postId} toc={toc} />
           <article
             id={articleId}
-            className={`${garamond.className} viator-post-article w-full min-w-0 flex-1 prose max-w-[780px] text-[21px] md:text-[22px] lg:text-[23px] text-[#18242C]
+            className={`${garamond.className} viator-post-article w-full min-w-0 flex-1 prose max-w-[780px] text-[19px] sm:text-[21px] md:text-[22px] lg:text-[23px] text-[#18242C]
                        prose-img:max-w-full prose-img:h-auto prose-pre:overflow-x-auto
                        prose-code:break-words break-words leading-[1.8] lg:leading-[1.78] text-pretty prose-p:my-[0.95em] mt-[22px] min-[900px]:mt-[39px]`}
             dangerouslySetInnerHTML={{ __html: html }}
@@ -91,7 +91,7 @@ export default function PostPage({ post }) {
         <SameAuthorSection authorId={authorId} excludeId={postId} />
       </Suspense>
       <Suspense fallback={null}>
-        <SameCategorySection categoryId={primaryCat} excludeId={postId} />
+        <SameCategorySection categoryIds={categoryIds} excludeId={postId} />
       </Suspense>
     </>
   );

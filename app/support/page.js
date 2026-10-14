@@ -1,8 +1,7 @@
-import { garamond } from "@/lib/fonts";
+import { ArrowUpRight, Heart, Wallet } from "lucide-react";
+import { garamond, inter, playfair } from "@/lib/fonts";
 import { cn, layoutStyles, typeStyles } from "@/lib/styles";
-import ImageActionLink from "@/components/ui/ImageActionLink";
 import PageHero from "@/components/ui/PageHero";
-import SectionHeading from "@/components/ui/SectionHeading";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -50,34 +49,67 @@ export default function SupportPage() {
           </p>
         </section>
 
-        <section className="max-w-3xl p-2 mx-auto">
-          <SectionHeading className="mb-6">Стати патроном</SectionHeading>
-
-          <div className="flex justify-center">
-            <ImageActionLink
-              href="https://www.patreon.com/viator"
-              imgSrc="/imgs/icons/patreon1.png"
-              alt="Підтримати Viator на Patreon"
-            />
+        <section
+          aria-label="Способи підтримки Viator"
+          className={cn(inter.className, "mx-auto grid max-w-4xl gap-5 pb-4 md:grid-cols-2 md:gap-6")}
+        >
+          <div className="flex flex-col rounded-2xl border border-white/65 bg-[#F7F8F5] p-6 sm:p-8">
+            <div className="mb-6 flex items-center gap-3 text-[#416472]">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#E7EEEB]">
+                <Heart aria-hidden="true" size={19} strokeWidth={1.5} />
+              </span>
+              <span className="text-xs font-medium tracking-wide">Регулярна підтримка</span>
+            </div>
+            <h2 className={cn(playfair.className, "viator-support-option-title text-[26px] font-medium leading-tight tracking-tight text-[#243D46] sm:text-[30px]")}>
+              Стати патроном
+            </h2>
+            <p className="mt-4 text-[15px] leading-7 text-[#53666C]">
+              Допомагайте Viator працювати над новими текстами та поступово розвивати спільноту.
+            </p>
+            <div className="mt-auto pt-8">
+              <a
+                href="https://www.patreon.com/viator"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex min-h-12 items-center justify-between gap-4 rounded-xl bg-[#416472] px-5 py-3.5 text-[15px] font-medium text-white transition-colors hover:bg-[#345361] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#416472]"
+              >
+                Перейти на Patreon
+                <ArrowUpRight aria-hidden="true" size={19} strokeWidth={1.5} />
+              </a>
+            </div>
           </div>
-        </section>
 
-        <section className="max-w-3xl mx-auto space-y-5">
-          <SectionHeading className="mb-6">Підтримати разовим донатом</SectionHeading>
-
-          <div className="flex flex-col gap-4 md:flex-row justify-center md:gap-6">
-            <ImageActionLink
-              href="https://privatbank.example.com"
-              imgSrc="/imgs/icons/privat.png"
-              alt="Підтримати через ПриватБанк"
-              label="ПриватБанк"
-            />
-            <ImageActionLink
-              href="https://monobank.example.com"
-              imgSrc="/imgs/icons/monobank.jpeg"
-              alt="Підтримати через Monobank"
-              label="Monobank"
-            />
+          <div className="flex flex-col rounded-2xl border border-white/65 bg-[#F0F4F3] p-6 sm:p-8">
+            <div className="mb-6 flex items-center gap-3 text-[#416472]">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#E2EAEB]">
+                <Wallet aria-hidden="true" size={19} strokeWidth={1.5} />
+              </span>
+              <span className="text-xs font-medium tracking-wide">У зручний для вас момент</span>
+            </div>
+            <h2 className={cn(playfair.className, "viator-support-option-title text-[26px] font-medium leading-tight tracking-tight text-[#243D46] sm:text-[30px]")}>
+              Разовий внесок
+            </h2>
+            <p className="mt-4 text-[15px] leading-7 text-[#53666C]">
+              Підтримайте сайт і роботу над матеріалами внеском комфортного для вас розміру.
+            </p>
+            <div className="mt-auto space-y-3 pt-8">
+              {[
+                { label: "ПриватБанк", href: "https://privatbank.example.com" },
+                { label: "Monobank", href: "https://monobank.example.com" },
+              ].map(({ label, href }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Підтримати через ${label}`}
+                  className="flex min-h-12 items-center justify-between gap-4 rounded-xl border border-[#C5D3D6] bg-white/60 px-5 py-3.5 text-[15px] font-medium text-[#243D46] transition-colors hover:border-[#7E9AA4] hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#416472]"
+                >
+                  {label}
+                  <ArrowUpRight aria-hidden="true" size={19} strokeWidth={1.5} />
+                </a>
+              ))}
+            </div>
           </div>
         </section>
       </main>
