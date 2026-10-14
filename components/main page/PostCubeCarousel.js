@@ -32,6 +32,7 @@ export default function PostsCubeCarousel({ posts = [] }) {
   const animationReady = usePageReady(220);
   const swiperRef = useRef(null);
   const blockedGesture = useRef(false);
+  const gestureStart = useRef(null);
 
   useEffect(() => {
     setActiveRealIndex(0);
@@ -51,14 +52,38 @@ export default function PostsCubeCarousel({ posts = [] }) {
     return () => media.removeListener(sync);
   }, []);
 
-  const shouldBlockNavigation = useCallback(
-    (event) => {
-      // Keyboard activation does not belong to the previous pointer gesture.
-      if (event.detail === 0 && !event.nativeEvent?.pointerType) return false;
-      return blockedGesture.current || swiperRef.current?.allowClick === false;
-    },
-    []
-  );
+  const handleGestureStart = (event) => {
+    if (event.isPrimary === false || event.touches?.length > 1) {
+      blockedGesture.current = true;
+      return;
+    }
+    const point = event.touches?.[0] ?? event;
+    gestureStart.current = {
+      x: point.clientX,
+      y: point.clientY,
+      realIndex: swiperRef.current?.realIndex,
+    };
+    // A touch that stops a moving carousel must not also open an article.
+    blockedGesture.current = Boolean(swiperRef.current?.animating);
+  };
+
+  const handleGestureMove = (event) => {
+    const start = gestureStart.current;
+    if (!start) return;
+    const point = event.touches?.[0] ?? event.changedTouches?.[0] ?? event;
+    if (Math.hypot(point.clientX - start.x, point.clientY - start.y) >= 4) {
+      // Keep this set even if the finger returns to its starting position.
+      blockedGesture.current = true;
+    }
+  };
+
+  const handleGestureCancel = () => {
+    blockedGesture.current = true;
+  };
+
+  const shouldBlockNavigation = useCallback(() => (
+    blockedGesture.current || swiperRef.current?.allowClick === false
+  ), []);
 
   const getRealIndex = (s) => Number(s.realIndex ?? 0);
 
@@ -70,6 +95,9 @@ export default function PostsCubeCarousel({ posts = [] }) {
   };
 
   const handleSlideChange = (s) => {
+    if (gestureStart.current && gestureStart.current.realIndex !== s.realIndex) {
+      blockedGesture.current = true;
+    }
     setActiveRealIndex(getRealIndex(s));
   };
 
@@ -105,7 +133,30 @@ export default function PostsCubeCarousel({ posts = [] }) {
       className="flex flex-col pb-6 max-md:!h-auto"
       style={carouselHeightStyle}
     >
-      <div className={`${layoutStyles.pageCompact} flex flex-col flex-1 relative`}>
+      <div
+        className={`${layoutStyles.pageCompact} flex flex-col flex-1 relative`}
+        onPointerDownCapture={handleGestureStart}
+        onPointerMoveCapture={handleGestureMove}
+        onPointerUpCapture={handleGestureMove}
+        onPointerCancelCapture={handleGestureCancel}
+        onTouchStartCapture={handleGestureStart}
+        onTouchMoveCapture={handleGestureMove}
+        onTouchEndCapture={handleGestureMove}
+        onTouchCancelCapture={handleGestureCancel}
+        onKeyDownCapture={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            gestureStart.current = null;
+            blockedGesture.current = false;
+          }
+        }}
+        onClickCapture={(event) => {
+          // Guard links and buttons before Next.js or their click handlers run.
+          if (event.target.closest(".swiper") && shouldBlockNavigation()) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+        }}
+      >
         <SectionHeading className="pb-6 mt-6 md:mt-12 text-[#416472]">
           Останні публікації
         </SectionHeading>
@@ -139,9 +190,7 @@ export default function PostsCubeCarousel({ posts = [] }) {
             slideShadows: false,
           }}
           modules={[EffectCoverflow, Keyboard]}
-          onTouchStart={() => {
-            blockedGesture.current = false;
-          }}
+          onSliderFirstMove={handleGestureCancel}
           onTouchMoveOpposite={() => {
             blockedGesture.current = true;
           }}
